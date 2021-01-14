@@ -172,7 +172,8 @@ const HoneyNews = class {
     }
   }
   async loadFeedContent() {
-    const url = "https://media.ccc.de/news.atom";
+    // const url: string = "https://media.ccc.de/news.atom";
+    const url = "https://codepen.io/spark/feed/";
     Logger.debugMessage("audioURL: " + url);
     const audioData = await Fileloader.loadData(url);
     if (audioData) {
