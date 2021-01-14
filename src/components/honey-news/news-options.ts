@@ -3,8 +3,8 @@ export interface NewsOptions {
   enabledHostClass?:string
   disabledTitleText?: string;
   pressedTitleText?: string;
-  unpressedTitleText?: string;
-  pressedAltText?: string;
+  titleText?: string;
+  altText?: string;
   unpressedAltText?: string;
   pressedPureAltText?: string;
   unpressedPureAltText?: string;

@@ -1,4 +1,4 @@
-import { B as BUILD, c as consoleDevInfo, p as plt, w as win, H, d as doc, N as NAMESPACE, a as promiseResolve, b as bootstrapLazy } from './index-4dadc9b2.js';
+import { B as BUILD, c as consoleDevInfo, p as plt, w as win, H, d as doc, N as NAMESPACE, a as promiseResolve, b as bootstrapLazy } from './index-cb1a92c3.js';
 import { g as globalScripts } from './app-globals-0f993ce5.js';
 
 /*
@@ -118,5 +118,5 @@ const patchCloneNodeFix = (HTMLElementPrototype) => {
 
 patchBrowser().then(options => {
   globalScripts();
-  return bootstrapLazy([["honey-news",[[1,"honey-news",{"pure":[4],"textids":[1025],"texturl":[1025],"verbose":[4],"iconwidth":[1],"iconheight":[1],"audiolang":[1],"audiopitch":[2],"audiorate":[2],"audiovolume":[2],"voicename":[1],"options":[32],"texts":[32],"isPressed":[32],"updateOptions":[64],"startSpeaker":[64],"pauseSpeaker":[64],"resumeSpeaker":[64],"cancelSpeaker":[64],"toggleSpeaker":[64]},[[2,"click","onClick"],[2,"keydown","onKeyDown"]]]]]], options);
+  return bootstrapLazy([["honey-news",[[1,"honey-news",{"verbose":[4],"options":[32],"urls":[32],"updateOptions":[64]}]]]], options);
 });
