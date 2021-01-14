@@ -20,9 +20,9 @@
   },
   "keywords": [
     "honey",
-    "speech",
-    "speech-output",
-    "text2speech",
+    "news",
+    "rss",
+    "atom",
     "webcomponent",
     "custom-element"
   ],
@@ -45,7 +45,7 @@
     "node": "14.15.0"
   },
   "dependencies": {
-    "@stencil/core": "2.3.0"
+    "@stencil/core": "2.4.0-3"
   },
   "devDependencies": {
     "@types/jest": "26.0.15",
