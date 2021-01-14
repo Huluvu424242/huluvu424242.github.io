@@ -9,62 +9,6 @@ import { NewsOptions } from "./components/honey-news/news-options";
 export namespace Components {
     interface HoneyNews {
         /**
-          * i18n language ident for Web Speech API: de-DE or en or de ...
-         */
-        "audiolang": string;
-        /**
-          * pitch for Web Speech API
-         */
-        "audiopitch": number;
-        /**
-          * rate for Web Speech API
-         */
-        "audiorate": number;
-        /**
-          * volume for Web Speech API
-         */
-        "audiovolume": number;
-        /**
-          * cancel the speaker
-         */
-        "cancelSpeaker": () => Promise<void>;
-        /**
-          * icon height
-         */
-        "iconheight": string;
-        /**
-          * icon width
-         */
-        "iconwidth": string;
-        /**
-          * paused the speaker
-         */
-        "pauseSpeaker": () => Promise<void>;
-        /**
-          * use pure speaker symbol for silence state
-         */
-        "pure": boolean;
-        /**
-          * continue speaker after paused
-         */
-        "resumeSpeaker": () => Promise<void>;
-        /**
-          * bricht laufende oder pausierende Ausgaben ab und startet dia Ausgabe von vorn
-         */
-        "startSpeaker": () => Promise<void>;
-        /**
-          * An comma separated list  with ids of DOM elements which inner text should be speech.
-         */
-        "textids": string;
-        /**
-          * An url to download an text file to speech.
-         */
-        "texturl": string;
-        /**
-          * call the toggle speaker action
-         */
-        "toggleSpeaker": () => Promise<void>;
-        /**
           * Update speaker options
           * @param options : NewsOptions plain object to set the options
          */
@@ -73,10 +17,6 @@ export namespace Components {
           * enable console logging
          */
         "verbose": boolean;
-        /**
-          * voice name used of Web Speech API
-         */
-        "voicename": string;
     }
 }
 declare global {
@@ -93,69 +33,9 @@ declare global {
 declare namespace LocalJSX {
     interface HoneyNews {
         /**
-          * i18n language ident for Web Speech API: de-DE or en or de ...
-         */
-        "audiolang"?: string;
-        /**
-          * pitch for Web Speech API
-         */
-        "audiopitch"?: number;
-        /**
-          * rate for Web Speech API
-         */
-        "audiorate"?: number;
-        /**
-          * volume for Web Speech API
-         */
-        "audiovolume"?: number;
-        /**
-          * icon height
-         */
-        "iconheight"?: string;
-        /**
-          * icon width
-         */
-        "iconwidth"?: string;
-        /**
-          * Fired if the voice has failed to speak.
-         */
-        "onHoneySpeakerFailed"?: (event: CustomEvent<string>) => void;
-        /**
-          * Fired if the voice has finished with speaking.
-         */
-        "onHoneySpeakerFinished"?: (event: CustomEvent<string>) => void;
-        /**
-          * Fired if the voice is paused with speaking.
-         */
-        "onHoneySpeakerPaused"?: (event: CustomEvent<string>) => void;
-        /**
-          * Fired if the voice is resumed after paused with speaking.
-         */
-        "onHoneySpeakerResume"?: (event: CustomEvent<string>) => void;
-        /**
-          * Fired if the voice is speaking.
-         */
-        "onHoneySpeakerStarted"?: (event: CustomEvent<string>) => void;
-        /**
-          * use pure speaker symbol for silence state
-         */
-        "pure"?: boolean;
-        /**
-          * An comma separated list  with ids of DOM elements which inner text should be speech.
-         */
-        "textids"?: string;
-        /**
-          * An url to download an text file to speech.
-         */
-        "texturl"?: string;
-        /**
           * enable console logging
          */
         "verbose"?: boolean;
-        /**
-          * voice name used of Web Speech API
-         */
-        "voicename"?: string;
     }
     interface IntrinsicElements {
         "honey-news": HoneyNews;
