@@ -1,0 +1,59 @@
+{
+  "name": "@huluvu424242/honey-speaker",
+  "version": "0.0.18",
+  "description": "Text to Speech component wich is reading texts from DOM elements.",
+  "main": "dist/index.cjs.js",
+  "module": "dist/custom-elements/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/custom-elements/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/honey-speaker/honey-speaker.js",
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Huluvu424242/honey-speaker.git"
+  },
+  "keywords": [
+    "honey",
+    "speech",
+    "speech-output",
+    "text2speech",
+    "webcomponent",
+    "custom-element"
+  ],
+  "author": "Huluvu424242 alias FunThomas424242 (Thomas Schubert)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Huluvu424242/honey-speaker/issues"
+  },
+  "scripts": {
+    "build": "stencil build --docs",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "generate": "stencil generate",
+    "prepare-deliver": "npm run build",
+    "deliver": "npm publish --access=public",
+    "pruefeVersionen": "npm outdated"
+  },
+  "engines": {
+    "node": "14.15.0"
+  },
+  "dependencies": {
+    "@stencil/core": "2.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "26.0.15",
+    "@types/puppeteer": "5.4.0",
+    "jest": "26.6.3",
+    "jest-cli": "26.6.3",
+    "puppeteer": "5.4.1",
+    "ts-node": "9.0.0",
+    "typescript": "4.0.5"
+  }
+}
