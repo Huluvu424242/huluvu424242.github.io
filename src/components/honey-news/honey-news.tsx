@@ -132,14 +132,11 @@ export class HoneyNews {
 
 
   protected async loadFeedContent() {
-    // const url: string = "https://media.ccc.de/news.atom";
-    const url: string = "https://codepen.io/spark/feed/";
-    Logger.debugMessage("audioURL: " + url);
-    const audioData: string = await Fileloader.loadData(url);
-    if (audioData) {
-      this.urls = [...this.urls, audioData];
-    }
-    Logger.debugMessage('###Texte###' + this.urls);
+    // const cccContent:string = await Fileloader.loadCCCFeed();
+    // Logger.debugMessage("cccFeed: " + cccContent);
+
+    const sparkContent:string = await Fileloader.loadSparkFeed();
+    Logger.debugMessage("sparkFeed: " + sparkContent);
   }
 
   protected async loadFeeds() {
@@ -147,13 +144,8 @@ export class HoneyNews {
     await this.loadFeedContent()
   }
 
-  @Watch('textids')
-  textidsChanged(newValue: string, oldValue: string) {
-    Logger.debugMessage("textids changed from" + oldValue + " to " + newValue);
-    this.loadFeeds();
-  }
 
-  protected getTexte(): string[] {
+  protected getFeedUrls(): string[] {
     if (this.urls) {
       return this.urls;
     } else {

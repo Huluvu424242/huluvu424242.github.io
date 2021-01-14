@@ -12,7 +12,9 @@ export class Fileloader {
     if (fileLoader) {
       return await fileLoader.loadFileContent();
     } else {
-      return new Promise((resolve)=>{resolve(null);});
+      return new Promise((resolve) => {
+        resolve(null);
+      });
     }
   }
 
@@ -34,7 +36,7 @@ export class Fileloader {
   public async loadFileContent(): Promise<string> {
     // const headers: Headers = new Headers();
     const response = await fetch(this.url.toString(), {
-      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      // method: 'GET', // *GET, POST, PUT, DELETE, etc.
       // mode: 'cors', // no-cors, *cors, same-origin
       // cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
       // headers: headers,
@@ -44,7 +46,34 @@ export class Fileloader {
     if (response.ok) {
       return response.text();
     } else {
-      return new Promise((resolve)=>{resolve(null);});
+      return new Promise((resolve) => {
+        resolve(null);
+      });
+    }
+  }
+
+
+  public static async loadCCCFeed(): Promise<string> {
+    try {
+      const response = await fetch("https://media.ccc.de/news.atom");
+      return response.text();
+    } catch (fehler) {
+      console.error("ccc fetch error:" + fehler)
+      return new Promise<string>((resolve) => {
+        resolve(null);
+      });
+    }
+  }
+
+
+  public static async loadSparkFeed(): Promise<string> {
+    const response = await fetch("https://codepen.io/spark/feed");
+    if (response.ok) {
+      return response.text();
+    } else {
+      return new Promise<string>((resolve) => {
+        resolve(null);
+      });
     }
   }
 }
