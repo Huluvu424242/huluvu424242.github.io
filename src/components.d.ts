@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { SpeakerOptions } from "./components/honey-speaker/speaker-options";
+import { NewsOptions } from "./components/honey-news/news-options";
 export namespace Components {
-    interface HoneySpeaker {
+    interface HoneyNews {
         /**
           * i18n language ident for Web Speech API: de-DE or en or de ...
          */
@@ -66,9 +66,9 @@ export namespace Components {
         "toggleSpeaker": () => Promise<void>;
         /**
           * Update speaker options
-          * @param options : SpeakerOptions plain object to set the options
+          * @param options : NewsOptions plain object to set the options
          */
-        "updateOptions": (options: SpeakerOptions) => Promise<void>;
+        "updateOptions": (options: NewsOptions) => Promise<void>;
         /**
           * enable console logging
          */
@@ -80,18 +80,18 @@ export namespace Components {
     }
 }
 declare global {
-    interface HTMLHoneySpeakerElement extends Components.HoneySpeaker, HTMLStencilElement {
+    interface HTMLHoneyNewsElement extends Components.HoneyNews, HTMLStencilElement {
     }
-    var HTMLHoneySpeakerElement: {
-        prototype: HTMLHoneySpeakerElement;
-        new (): HTMLHoneySpeakerElement;
+    var HTMLHoneyNewsElement: {
+        prototype: HTMLHoneyNewsElement;
+        new (): HTMLHoneyNewsElement;
     };
     interface HTMLElementTagNameMap {
-        "honey-speaker": HTMLHoneySpeakerElement;
+        "honey-news": HTMLHoneyNewsElement;
     }
 }
 declare namespace LocalJSX {
-    interface HoneySpeaker {
+    interface HoneyNews {
         /**
           * i18n language ident for Web Speech API: de-DE or en or de ...
          */
@@ -158,14 +158,14 @@ declare namespace LocalJSX {
         "voicename"?: string;
     }
     interface IntrinsicElements {
-        "honey-speaker": HoneySpeaker;
+        "honey-news": HoneyNews;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "honey-speaker": LocalJSX.HoneySpeaker & JSXBase.HTMLAttributes<HTMLHoneySpeakerElement>;
+            "honey-news": LocalJSX.HoneyNews & JSXBase.HTMLAttributes<HTMLHoneyNewsElement>;
         }
     }
 }

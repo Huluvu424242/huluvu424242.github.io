@@ -1,29 +1,29 @@
-[![Build Status](https://travis-ci.com/Huluvu424242/honey-speaker.svg?branch=master)](https://travis-ci.com/Huluvu424242/honey-speaker)
-![Github CI](https://github.com/Huluvu424242/honey-speaker/workflows/Github%20CI/badge.svg)
-[![npm](https://img.shields.io/npm/v/@huluvu424242/honey-speaker.svg)](https://www.npmjs.com/package/@huluvu424242/honey-speaker)
-[![npm](https://img.shields.io/npm/dm/@huluvu424242/honey-speaker.svg)](https://www.npmjs.com/package/@huluvu424242/honey-speaker)
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@huluvu424242/honey-speaker)
+[![Build Status](https://travis-ci.com/Huluvu424242/honey-news.svg?branch=master)](https://travis-ci.com/Huluvu424242/honey-news)
+![Github CI](https://github.com/Huluvu424242/honey-news/workflows/Github%20CI/badge.svg)
+[![npm](https://img.shields.io/npm/v/@huluvu424242/honey-news.svg)](https://www.npmjs.com/package/@huluvu424242/honey-news)
+[![npm](https://img.shields.io/npm/dm/@huluvu424242/honey-news.svg)](https://www.npmjs.com/package/@huluvu424242/honey-news)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@huluvu424242/honey-news)
 [![Donate with paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/huluvu424242)
 ![Keybase BTC](https://img.shields.io/keybase/btc/huluvu424242)
-# honey-speaker 
+# honey-news 
 This component realize an speaker symbol button. Its can read a text of
 DOM elements referenced by an list of ids via voice.
 
 ## installation
 
-npm install --save honey-speaker
+npm install --save honey-news
 
 ## usage
 
 ```html
 <script 
     type="module" 
-    src='https://unpkg.com/@huluvu424242/honey-speaker@0.0.18/dist/honey-speaker/honey-speaker.js'>
+    src='https://unpkg.com/@huluvu424242/honey-news@0.0.18/dist/honey-news/honey-news.js'>
 </script>
 ```
-To the [demo site](https://huluvu424242.github.io/honey-speaker/index.html)
+To the [demo site](https://huluvu424242.github.io/honey-news/index.html)
 
-[Vision of API (under construction)](src/components/honey-speaker/readme.md)
+[Vision of API (under construction)](src/components/honey-news/readme.md)
 
 ## demo
 
@@ -38,11 +38,11 @@ To the [demo site](https://huluvu424242.github.io/honey-speaker/index.html)
 ```
 -->
 ```html
-<honey-speaker textids="text1,text2"></honey-speaker>
+<honey-news textids="text1,text2"></honey-news>
 <p id="text1">fizz fizz fizz fizz</p>
 <p id="text2">buzz buzz buzz buzz</p>
 ```
-To the [live demo](https://huluvu424242.github.io/honey-speaker/index.html)
+To the [live demo](https://huluvu424242.github.io/honey-news/index.html)
 
 ## become an supporter
 
@@ -60,38 +60,38 @@ To the [live demo](https://huluvu424242.github.io/honey-speaker/index.html)
 
 ### v0.0.18 published at 2020-11-22
 
-* [issue 43](https://github.com/Huluvu424242/honey-speaker/issues/42) minor bugfixing and refactoring
+* [issue 43](https://github.com/Huluvu424242/honey-news/issues/42) minor bugfixing and refactoring
 
 
 ### v0.0.17 published at 2020-11-16
 
-* [issue 39](https://github.com/Huluvu424242/honey-speaker/issues/39) text splitting removed
+* [issue 39](https://github.com/Huluvu424242/honey-news/issues/39) text splitting removed
 
 
 ### v0.0.16 published at 2020-11-15
 
-* [issue 35](https://github.com/Huluvu424242/honey-speaker/issues/35) change host classes depends of disabled or enabled
-* [issue 33](https://github.com/Huluvu424242/honey-speaker/issues/33) A11y config properties added
-* [issue 32](https://github.com/Huluvu424242/honey-speaker/issues/32) sync method call and symbol fixed
+* [issue 35](https://github.com/Huluvu424242/honey-news/issues/35) change host classes depends of disabled or enabled
+* [issue 33](https://github.com/Huluvu424242/honey-news/issues/33) A11y config properties added
+* [issue 32](https://github.com/Huluvu424242/honey-news/issues/32) sync method call and symbol fixed
 
 
 ### v0.0.15 published at 2020-11-08 
 
-* [issue 26](https://github.com/Huluvu424242/honey-speaker/issues/26) method pause and resume added
-* [issue 25](https://github.com/Huluvu424242/honey-speaker/issues/25) remove dependency of rxjs -> use fetch of es6
-* [issue 24](https://github.com/Huluvu424242/honey-speaker/issues/24) remove subscription and use async/await pairs
-* [issue 23](https://github.com/Huluvu424242/honey-speaker/issues/23) mutable attributes textids and texturl
+* [issue 26](https://github.com/Huluvu424242/honey-news/issues/26) method pause and resume added
+* [issue 25](https://github.com/Huluvu424242/honey-news/issues/25) remove dependency of rxjs -> use fetch of es6
+* [issue 24](https://github.com/Huluvu424242/honey-news/issues/24) remove subscription and use async/await pairs
+* [issue 23](https://github.com/Huluvu424242/honey-news/issues/23) mutable attributes textids and texturl
 
 
 ### v0.0.14 published at 2020-11-06
 
-* [issue 17](https://github.com/Huluvu424242/honey-speaker/issues/17) reading text from url added
+* [issue 17](https://github.com/Huluvu424242/honey-news/issues/17) reading text from url added
 
 
 ### v0.0.13 published at 2020-11-06
 
 * initializing of voices fixed
-* [issue 2](https://github.com/Huluvu424242/honey-speaker/issues/2) e2e tests fixed
+* [issue 2](https://github.com/Huluvu424242/honey-news/issues/2) e2e tests fixed
 * css support of ::part removed (to complex for end user)
 * a11y: tabindex=0, keydown: space and enter, role="button", alt text, svg role="img"
 * speaker realized as toggle button

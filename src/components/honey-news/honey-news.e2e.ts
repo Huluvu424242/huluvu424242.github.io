@@ -11,8 +11,8 @@ describe('E2E Wrapper: voice tests of speaker', () => {
 
   const skippen = async () => {
     // Property Wert lesen
-    const page = await newE2EPage({html: `<honey-speaker verbose audiolang="en" textids="3"></honey-speaker><p id="3">test</p>`});
-    const stimmenAnzahl = await page.$eval('honey-speaker', () => {
+    const page = await newE2EPage({html: `<honey-news verbose audiolang="en" textids="3"></honey-news><p id="3">test</p>`});
+    const stimmenAnzahl = await page.$eval('honey-news', () => {
       return speechSynthesis.getVoices().length;
     });
     // return true || stimmenAnzahl < 1;
@@ -33,8 +33,8 @@ describe('E2E Wrapper: voice tests of speaker', () => {
 
     beforeEach(async () => {
       TestLogger.enableLogging();
-      page = await newE2EPage({html: `<honey-speaker verbose audiolang="en" textids="3"></honey-speaker><p id="3">test</p>`});
-      element = await page.find('honey-speaker');
+      page = await newE2EPage({html: `<honey-news verbose audiolang="en" textids="3"></honey-news><p id="3">test</p>`});
+      element = await page.find('honey-news');
     });
 
     it('fire event honeySpeakerStarted', async () => {
@@ -43,7 +43,7 @@ describe('E2E Wrapper: voice tests of speaker', () => {
       const startedEvent = await page.spyOnEvent('honeySpeakerStarted');
       await element.setProperty('audiolang', 'us');
       await page.waitForChanges();
-      await page.click('honey-speaker');
+      await page.click('honey-news');
       await page.waitForEvent('honeySpeakerStarted');
       expect(startedEvent).toHaveReceivedEvent();
     });
@@ -56,7 +56,7 @@ describe('E2E Wrapper: voice tests of speaker', () => {
       expect(element).toEqualAttribute('alt', "Symbol eines angehaltenen, tönenden Lautsprechers");
 
       // set to press, rich version
-      await page.click('honey-speaker');
+      await page.click('honey-news');
       await page.waitForChanges();
 
       // check pressed, rich version
@@ -66,7 +66,7 @@ describe('E2E Wrapper: voice tests of speaker', () => {
       // set to pure version
       element.setAttribute("pure",true);
       // set to unpressed
-      await page.click('honey-speaker');
+      await page.click('honey-news');
       await page.waitForChanges();
 
       // check unpressed, pure version
@@ -74,7 +74,7 @@ describe('E2E Wrapper: voice tests of speaker', () => {
       expect(element).toEqualAttribute('alt', "Symbol eines ausgeschaltenen Lautsprechers");
 
       // set to pressed, pure version
-      await page.click('honey-speaker');
+      await page.click('honey-news');
       await page.waitForChanges();
 
       // check pressed, pure version

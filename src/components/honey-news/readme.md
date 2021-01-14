@@ -1,4 +1,4 @@
-# honey-speaker
+# honey-news
 
 <!-- Auto Generated Below -->
 
@@ -83,7 +83,7 @@ Type: `Promise<void>`
 
 
 
-### `updateOptions(options: SpeakerOptions) => Promise<void>`
+### `updateOptions(options: NewsOptions) => Promise<void>`
 
 Update speaker options
 

@@ -2,16 +2,16 @@ import {Component, Element, Event, EventEmitter, h, Host, Listen, Method, Prop, 
 import {Sprachausgabe} from "../../libs/sprachausgabe"
 import {Logger} from "../../libs/logger";
 import {Fileloader} from "../../libs/fileloader";
-import {SpeakerOptions} from "./speaker-options";
+import {NewsOptions} from "./news-options";
 
 
 @Component({
-  tag: "honey-speaker",
-  styleUrl: "honey-speaker.css",
+  tag: "honey-news",
+  styleUrl: "honey-news.css",
   assetsDirs: ['assets'],
   shadow: true
 })
-export class HoneySpeaker {
+export class HoneyNews {
 
   /**
    * Modul zur Sprachausgabe
@@ -23,7 +23,7 @@ export class HoneySpeaker {
    */
   initialHostClass: string;
 
-  @State() options: SpeakerOptions = {
+  @State() options: NewsOptions = {
     disabledHostClass: "speaker-disabled",
     enabledHostClass: "speaker-enabled",
     disabledTitleText: "Vorlesen deaktiviert, da keine Texte verfügbar",
@@ -205,10 +205,10 @@ export class HoneySpeaker {
 
   /**
    * Update speaker options
-   * @param options : SpeakerOptions plain object to set the options
+   * @param options : NewsOptions plain object to set the options
    */
   @Method()
-  public async updateOptions(options: SpeakerOptions) {
+  public async updateOptions(options: NewsOptions) {
     for (let prop in options) {
       if (options.hasOwnProperty(prop)) {
         this.options[prop] = options[prop];
