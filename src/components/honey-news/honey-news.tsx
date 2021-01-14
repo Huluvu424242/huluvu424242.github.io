@@ -1,4 +1,4 @@
-import {Component, Element, h, Host, Method, Prop, State, Watch} from "@stencil/core";
+import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {Fileloader} from "../../libs/fileloader";
 import {NewsOptions} from "./news-options";
