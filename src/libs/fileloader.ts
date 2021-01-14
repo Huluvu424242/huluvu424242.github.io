@@ -55,10 +55,83 @@ export class Fileloader {
 
   public static async loadCCCFeed(): Promise<string> {
     try {
-      const response = await fetch("https://media.ccc.de/news.atom");
+      const headers = new Headers();
+      headers.append('Origin', 'media.ccc.de');
+      headers.append('origin', 'media.ccc.de');
+      headers.set('Origin', 'media.ccc.de');
+      headers.set('origin', 'media.ccc.de');
+      const response = await fetch("https://media.ccc.de/news.atom", {
+        referrer: 'media.ccc.de',
+        headers: headers,
+        // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      });
       return response.text();
     } catch (fehler) {
       console.error("ccc fetch error:" + fehler)
+      return new Promise<string>((resolve) => {
+        resolve(null);
+      });
+    }
+  }
+
+
+  public static loadCCCFeedProxy(): any {
+    const url:string = "https://media.ccc.de/news.atom";
+    var cors_api_host = 'cors-anywhere.herokuapp.com';
+    var cors_api_url = 'https://' + cors_api_host + '/';
+
+
+    // var slice = [].slice;
+    // var origin = window.location.protocol + '//' + window.location.host;
+    var open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function () {
+      // var args = slice.call(arguments);
+      // var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
+      // if (targetOrigin && targetOrigin[0].toLowerCase() !== origin &&
+      //   targetOrigin[1] !== cors_api_host) {
+      //   args[1] = cors_api_url + args[1];
+      // }
+      const urlCall = cors_api_url+url;
+      console.log("###"+urlCall);
+      return open.apply(this, urlCall);
+    };
+  }
+
+
+  public static async loadCCCFeedXML(): Promise<string> {
+    function reqListener() {
+      console.log('#####' + this.responseText);
+    }
+
+    try {
+      var oReq = new XMLHttpRequest();
+      oReq.addEventListener("load", reqListener);
+      oReq.open("GET", "https://cors-anywhere.herokuapp.com/https://media.ccc.de/news.atom");
+      oReq.send();
+
+      return "ccc test";
+    } catch (fehler) {
+      console.error("ccc fetch error:" + fehler)
+      return new Promise<string>((resolve) => {
+        resolve(null);
+      });
+    }
+  }
+
+  public static async load4ChanFeed(): Promise<string> {
+    function reqListener() {
+      console.log('#####' + this.responseText);
+    }
+
+    try {
+      var oReq = new XMLHttpRequest();
+      oReq.addEventListener("load", reqListener);
+      oReq.open("GET", "https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
+      oReq.send();
+
+      return "4chan test";
+    } catch (fehler) {
+      console.error("4chan fetch error:" + fehler)
       return new Promise<string>((resolve) => {
         resolve(null);
       });

@@ -132,11 +132,14 @@ export class HoneyNews {
 
 
   protected async loadFeedContent() {
-    const cccContent:string = await Fileloader.loadCCCFeed();
+    const cccContent:string = await Fileloader.loadCCCFeedXML();
     Logger.debugMessage("cccFeed: " + cccContent);
 
     const sparkContent:string = await Fileloader.loadSparkFeed();
     Logger.debugMessage("sparkFeed: " + sparkContent);
+
+    const b4chanContent:string = await Fileloader.load4ChanFeed();
+    Logger.debugMessage("4chanFeed: " + b4chanContent);
   }
 
   protected async loadFeeds() {
