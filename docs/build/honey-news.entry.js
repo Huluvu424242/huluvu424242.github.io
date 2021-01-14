@@ -204,8 +204,8 @@ const HoneyNews = class {
     }
   }
   async loadFeedContent() {
-    // const cccContent:string = await Fileloader.loadCCCFeed();
-    // Logger.debugMessage("cccFeed: " + cccContent);
+    const cccContent = await Fileloader.loadCCCFeed();
+    Logger.debugMessage("cccFeed: " + cccContent);
     const sparkContent = await Fileloader.loadSparkFeed();
     Logger.debugMessage("sparkFeed: " + sparkContent);
   }
@@ -232,7 +232,7 @@ const HoneyNews = class {
   }
   render() {
     Logger.debugMessage('##RENDER##');
-    return (h(Host, { title: this.getTitleText(), alt: this.getAltText(), role: "button", tabindex: this.hasNoFeeds() ? -1 : this.taborder, class: this.getHostClass(), disabled: this.hasNoFeeds() }, h("honey-news", null)));
+    return (h(Host, { title: this.getTitleText(), alt: this.getAltText(), role: "button", tabindex: this.hasNoFeeds() ? -1 : this.taborder, class: this.getHostClass(), disabled: this.hasNoFeeds() }));
   }
   static get assetsDirs() { return ["assets"]; }
   get hostElement() { return getElement(this); }

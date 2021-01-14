@@ -132,8 +132,8 @@ export class HoneyNews {
 
 
   protected async loadFeedContent() {
-    // const cccContent:string = await Fileloader.loadCCCFeed();
-    // Logger.debugMessage("cccFeed: " + cccContent);
+    const cccContent:string = await Fileloader.loadCCCFeed();
+    Logger.debugMessage("cccFeed: " + cccContent);
 
     const sparkContent:string = await Fileloader.loadSparkFeed();
     Logger.debugMessage("sparkFeed: " + sparkContent);
@@ -174,7 +174,6 @@ export class HoneyNews {
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
-        <honey-news/>
       </Host>
     );
   }
