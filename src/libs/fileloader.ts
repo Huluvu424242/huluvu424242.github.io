@@ -149,4 +149,14 @@ export class Fileloader {
       });
     }
   }
+  public static async loadHongkiatFeed(): Promise<string> {
+    const response = await fetch("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
+    if (response.ok) {
+      return response.text();
+    } else {
+      return new Promise<string>((resolve) => {
+        resolve(null);
+      });
+    }
+  }
 }

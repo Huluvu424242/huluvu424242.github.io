@@ -170,6 +170,17 @@ class Fileloader {
       });
     }
   }
+  static async loadHongkiatFeed() {
+    const response = await fetch("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
+    if (response.ok) {
+      return response.text();
+    }
+    else {
+      return new Promise((resolve) => {
+        resolve(null);
+      });
+    }
+  }
 }
 
 const honeyNewsCss = ":host>svg{padding:var(--honey-news-padding, 5px);font-size:var(--honey-news-font-size, medium);border:var(--honey-news-border, 0);width:var(--honey-news-width, 36px);height:var(--honey-news-height, 36px)}:host>svg>path{stroke-width:5}.speakerimage{stroke:var(--honey-news-color, blue);fill:var(--honey-news-color, blue);background:var(--honey-news-background, transparent)}.speakerimage-disabled{stroke:var(--honey-disabled-color, gray);fill:var(--honey-disabled-color, gray);background:var(--honey-disabled-background, lightgrey);cursor:var(--honey-disabled-cursor, not-allowed)}";
@@ -268,11 +279,13 @@ const HoneyNews = class {
   }
   async loadFeedContent() {
     const cccContent = await Fileloader.loadCCCFeedXML();
-    Logger.debugMessage("cccFeed: " + cccContent);
+    Logger.debugMessage("###cccFeed: " + cccContent);
     const sparkContent = await Fileloader.loadSparkFeed();
-    Logger.debugMessage("sparkFeed: " + sparkContent);
+    Logger.debugMessage("###sparkFeed: " + sparkContent);
     const b4chanContent = await Fileloader.load4ChanFeed();
-    Logger.debugMessage("4chanFeed: " + b4chanContent);
+    Logger.debugMessage("###4chanFeed: " + b4chanContent);
+    const hongkiatContent = await Fileloader.loadHongkiatFeed();
+    Logger.debugMessage("###hongkiat: " + hongkiatContent);
   }
   async loadFeeds() {
     this.urls = [];
