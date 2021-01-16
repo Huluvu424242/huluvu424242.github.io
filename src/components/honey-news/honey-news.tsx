@@ -1,7 +1,7 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
-import {ResponseData, loadFeedData} from "../../fetch-es6.worker";
+import {FeedData, loadFeedData, ResponseData} from "../../fetch-es6.worker";
 
 
 @Component({
@@ -142,8 +142,8 @@ export class HoneyNews {
   }
 
 
-  protected async loadFeedContent(url: string): Promise<ResponseData> {
-    let feedResponse: ResponseData;
+  protected async loadFeedContent(url: string): Promise<FeedData> {
+    let feedResponse: FeedData;
     try {
       feedResponse = await loadFeedData(url);
       console.log("response", feedResponse);
@@ -153,14 +153,10 @@ export class HoneyNews {
     return feedResponse;
   }
 
-  protected getPayload(data: ResponseData) {
-    return data.json ? data.json : data.text;
-  }
-
   protected async loadFeeds(): Promise<void> {
     return this.feedURLs.forEach(async (url) => {
-      const feedResponse: ResponseData = await this.loadFeedContent(url);
-      console.log("###\n" + this.getPayload(feedResponse));
+      const feedResponse: FeedData = await this.loadFeedContent(url);
+      console.log("###\n" + JSON.stringify(feedResponse.feed.items));
     });
   }
 
