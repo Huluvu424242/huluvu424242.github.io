@@ -1,4 +1,6 @@
 import {Config} from '@stencil/core';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
+// import resolvePlugin from 'rollup-plugin-commonjs';
 
 export const config: Config = {
   namespace: 'honey-news',
@@ -31,7 +33,17 @@ export const config: Config = {
       dir: 'docs',
       serviceWorker: null // disable service workers
     }
-  ]
+  ],
+  rollupPlugins: {
+    before: [
+      // Plugins injected before rollupNodeResolve()
+      // resolvePlugin()
+    ],
+    after: [
+      // Plugins injected after commonjs()
+      nodePolyfills()
+    ]
+  }
 };
 
 

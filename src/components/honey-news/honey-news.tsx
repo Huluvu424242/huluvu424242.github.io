@@ -1,7 +1,7 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
-import {Fileloader} from "../../libs/fileloader";
 import {NewsOptions} from "./news-options";
+import {ResponseData, loadData} from "../../proxy.worker";
 
 
 @Component({
@@ -11,6 +11,8 @@ import {NewsOptions} from "./news-options";
   shadow: true
 })
 export class HoneyNews {
+
+  proxyServer: any;
 
   /**
    * initiale class from host tag
@@ -80,6 +82,7 @@ export class HoneyNews {
     await this.loadFeeds();
   }
 
+
   /**
    * Update speaker options
    * @param options : NewsOptions plain object to set the options
@@ -131,24 +134,31 @@ export class HoneyNews {
   }
 
 
-  protected async loadFeedContent() {
-    const cccContent:string = await Fileloader.loadCCCFeedXML();
-    Logger.debugMessage("###cccFeed: " + cccContent);
+  protected async loadFeedContent(url: string): Promise<ResponseData> {
+    let feedResponse: ResponseData;
+    try {
+      feedResponse = await loadData(url);
+      console.log("response", feedResponse);
+    } catch (error) {
+      console.log("Error", error);
+    }
+    return feedResponse;
+  }
 
-    const sparkContent:string = await Fileloader.loadSparkFeed();
-    Logger.debugMessage("###sparkFeed: " + sparkContent);
-
-    const b4chanContent:string = await Fileloader.load4ChanFeed();
-    Logger.debugMessage("###4chanFeed: " + b4chanContent);
-
-    const hongkiatContent:string = await Fileloader.loadHongkiatFeed();
-    Logger.debugMessage("###hongkiat: " + hongkiatContent);
-
+  protected getPayload(data: ResponseData) {
+    return data.json ? data.json : data.text;
   }
 
   protected async loadFeeds() {
     this.urls = [];
-    await this.loadFeedContent()
+    const cccFeedResponse: ResponseData = await this.loadFeedContent("https://cors-anywhere.herokuapp.com/https://media.ccc.de/news.atom");
+    console.log("###\n" + this.getPayload(cccFeedResponse));
+    const chanFeedResponse: ResponseData = await this.loadFeedContent("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
+    console.log("###\n" + this.getPayload(chanFeedResponse));
+    const sparkFeedResponse: ResponseData = await this.loadFeedContent("https://codepen.io/spark/feed");
+    console.log("###\n" + this.getPayload(sparkFeedResponse));
+    const hingkiatFeedResponse: ResponseData = await this.loadFeedContent("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
+    console.log("###\n" + this.getPayload(hingkiatFeedResponse));
   }
 
 
