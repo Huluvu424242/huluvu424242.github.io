@@ -1,7 +1,7 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
-import {ResponseData, loadData} from "../../fetch-es6.worker";
+import {ResponseData, loadFeedData} from "../../fetch-es6.worker";
 
 
 @Component({
@@ -57,7 +57,9 @@ export class HoneyNews {
   /**
    * texte to speech out
    */
-  @State() urls: string[] = [];
+  feedURLs: string[] = [];
+
+  feeds: FeedEntry[] = [];
 
   /**
    * enable console logging
@@ -95,21 +97,19 @@ export class HoneyNews {
     this.options = {...this.options};
   }
 
-  protected initialisiereUrls(){
-    this.urls.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/news.atom");
-    this.urls.push("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
-    this.urls.push("https://codepen.io/spark/feed");
-    this.urls.push("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
-    // neue Referenz erzeugen um Rendering zu triggern
-    this.urls = [...this.urls];
+  protected initialisiereUrls() {
+    this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
+    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/news.atom");
+    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
+    this.feedURLs.push("https://codepen.io/spark/feed");
+    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
   }
 
 
-
   protected hasNoFeeds(): boolean {
-    return (!this.urls
-      || this.urls.length < 1
-      || this.urls.filter(item => item.trim().length > 0).length < 1
+    return (!this.feedURLs
+      || this.feedURLs.length < 1
+      || this.feedURLs.filter(item => item.trim().length > 0).length < 1
     );
   }
 
@@ -145,7 +145,7 @@ export class HoneyNews {
   protected async loadFeedContent(url: string): Promise<ResponseData> {
     let feedResponse: ResponseData;
     try {
-      feedResponse = await loadData(url);
+      feedResponse = await loadFeedData(url);
       console.log("response", feedResponse);
     } catch (error) {
       console.log("Error", error);
@@ -157,9 +157,8 @@ export class HoneyNews {
     return data.json ? data.json : data.text;
   }
 
-  protected async loadFeeds():Promise<void> {
-     return this.urls.forEach( async (url) =>
-    {
+  protected async loadFeeds(): Promise<void> {
+    return this.feedURLs.forEach(async (url) => {
       const feedResponse: ResponseData = await this.loadFeedContent(url);
       console.log("###\n" + this.getPayload(feedResponse));
     });
@@ -167,8 +166,8 @@ export class HoneyNews {
 
 
   protected getFeedUrls(): string[] {
-    if (this.urls) {
-      return this.urls;
+    if (this.feedURLs) {
+      return this.feedURLs;
     } else {
       return [];
     }

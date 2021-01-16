@@ -45,7 +45,8 @@
     "node": "14.15.0"
   },
   "dependencies": {
-    "rxjs": "6.6.3"
+    "rxjs": "6.6.3",
+    "feedme": "2.0.2"
   },
   "devDependencies": {
     "@stencil/core": "2.4.0-3",
