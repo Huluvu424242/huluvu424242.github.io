@@ -12,8 +12,6 @@ import {ResponseData, loadData} from "../../proxy.worker";
 })
 export class HoneyNews {
 
-  proxyServer: any;
-
   /**
    * initiale class from host tag
    */
@@ -73,6 +71,7 @@ export class HoneyNews {
     this.createTitleText = !this.hostElement.title;
     this.createAltText = !this.hostElement["alt"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
+    this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
   }
@@ -81,7 +80,6 @@ export class HoneyNews {
   public async componentWillLoad() {
     await this.loadFeeds();
   }
-
 
   /**
    * Update speaker options
@@ -96,6 +94,16 @@ export class HoneyNews {
     }
     this.options = {...this.options};
   }
+
+  protected initialisiereUrls(){
+    this.urls.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/news.atom");
+    this.urls.push("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
+    this.urls.push("https://codepen.io/spark/feed");
+    this.urls.push("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
+    // neue Referenz erzeugen um Rendering zu triggern
+    this.urls = [...this.urls];
+  }
+
 
 
   protected hasNoFeeds(): boolean {
@@ -149,16 +157,12 @@ export class HoneyNews {
     return data.json ? data.json : data.text;
   }
 
-  protected async loadFeeds() {
-    this.urls = [];
-    const cccFeedResponse: ResponseData = await this.loadFeedContent("https://cors-anywhere.herokuapp.com/https://media.ccc.de/news.atom");
-    console.log("###\n" + this.getPayload(cccFeedResponse));
-    const chanFeedResponse: ResponseData = await this.loadFeedContent("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
-    console.log("###\n" + this.getPayload(chanFeedResponse));
-    const sparkFeedResponse: ResponseData = await this.loadFeedContent("https://codepen.io/spark/feed");
-    console.log("###\n" + this.getPayload(sparkFeedResponse));
-    const hingkiatFeedResponse: ResponseData = await this.loadFeedContent("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
-    console.log("###\n" + this.getPayload(hingkiatFeedResponse));
+  protected async loadFeeds():Promise<void> {
+     return this.urls.forEach( async (url) =>
+    {
+      const feedResponse: ResponseData = await this.loadFeedContent(url);
+      console.log("###\n" + this.getPayload(feedResponse));
+    });
   }
 
 
