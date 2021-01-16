@@ -1,7 +1,7 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
-import {ResponseData, loadData} from "../../proxy.worker";
+import {ResponseData, loadData} from "../../fetch-es6.worker";
 
 
 @Component({
