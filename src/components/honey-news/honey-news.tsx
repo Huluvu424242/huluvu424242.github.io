@@ -3,7 +3,7 @@ import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedData, loadFeedData} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
-import {switchMap} from "rxjs/operators";
+import {concatMap, tap} from "rxjs/operators";
 
 
 @Component({
@@ -100,9 +100,10 @@ export class HoneyNews {
   }
 
   protected initialisiereUrls() {
-    this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
-    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/news.atom");
-    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
+    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://www.zdf.de/rss/zdf/nachrichten");
+    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
+    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/updates.rdf");
+    // this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
     this.feedURLs.push("https://codepen.io/spark/feed");
     this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
   }
@@ -147,8 +148,17 @@ export class HoneyNews {
   protected loadFeedContent(): Observable<FeedData> {
     const urlObservable: Observable<string> = from(this.feedURLs);
     return urlObservable.pipe(
-      switchMap(
-        (url) => from(loadFeedData(url))
+      tap(
+        (url) => console.log("### tap url " + url)
+      ),
+      concatMap(
+        (url) => {
+          console.log("### switchMap url " + url)
+          return from(loadFeedData(url))
+        }
+      ),
+      tap(
+        (feedData) => console.log("### tap feed data " + feedData.feed.title)
       )
     );
   }
@@ -158,13 +168,16 @@ export class HoneyNews {
     return new Promise(
       (resolve) => {
         this.loadFeedContent().subscribe(
-          (feedData: FeedData) => this.feeds.push(feedData),
-          (error) => error,
-          () => {
-            // rendering trigger
-            this.feeds = [...this.feeds];
-            // resolve the promise to continue after data load
-            resolve();
+          {
+            next: (feedData: FeedData) => this.feeds.push(feedData),
+            error: (error) => error,
+            complete: () => {
+              // rendering trigger
+              this.feeds = [...this.feeds];
+              console.log("###complete with:\n" + JSON.stringify(this.feeds));
+              // resolve the promise to continue after data load
+              resolve();
+            }
           }
         )
       }
@@ -190,6 +203,16 @@ export class HoneyNews {
     }
   }
 
+  getPostLink(item):string {
+    if( typeof item.link === "string") {
+      return item.link;
+    }
+    if( typeof(item.link.href == "string")) {
+      return item.link.href;
+    }
+    return null
+  }
+
   public render() {
     Logger.debugMessage('##RENDER##');
     return (
@@ -204,7 +227,7 @@ export class HoneyNews {
         <ol>
           {this.feeds.map((feed) =>
             feed.feed.items.map((item) =>
-              <li>[{feed.feed.title}]<a href={""+item.link} target="_blank">{item.title}</a></li>
+              <li>[{feed.feed.title}]<a href={ this.getPostLink(item)} target="_blank">{item.title}</a></li>
             )
           )}
         </ol>
