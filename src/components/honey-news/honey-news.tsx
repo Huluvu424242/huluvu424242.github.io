@@ -180,7 +180,7 @@ export class HoneyNews {
             complete: () => {
               // rendering trigger
               this.feeds = [...this.feeds];
-              console.log("###complete with:\n" + JSON.stringify(this.feeds));
+              console.debug("###complete with:\n" + JSON.stringify(this.feeds));
               // resolve the promise to continue after data load
               resolve();
             }
@@ -189,16 +189,6 @@ export class HoneyNews {
       }
     );
   }
-
-  //
-  // protected getFeedUrls(): string[] {
-  //   if (this.feedURLs) {
-  //     return this.feedURLs;
-  //   } else {
-  //     return [];
-  //   }
-  // }
-
 
   protected getHostClass(): string {
     let hostClass = this.initialHostClass;
