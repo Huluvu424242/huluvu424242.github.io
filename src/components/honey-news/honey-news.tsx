@@ -3,7 +3,7 @@ import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
-import {concatMap, map, switchMap, tap} from "rxjs/operators";
+import {concatAll, concatMap, groupBy, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 
 
@@ -168,7 +168,10 @@ export class HoneyNews {
       ),
       switchMap(
         (metaData: FeedData) => this.mapItemsToPost(metaData)
-      )
+      ),
+      groupBy(post => post.item.pubdate),
+      mergeMap(group => group.pipe(toArray())),
+      concatAll()
     );
   }
 
@@ -247,7 +250,7 @@ export class HoneyNews {
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
         <ol>
           {this.feeds.map((post) =>
-            <li>[{post.feedtitle}]<a href={this.getPostLink(post.item)} target="_blank">{post.item.title}</a></li>
+            <li>[{post.feedtitle}]({post.item.pubdate})<a href={this.getPostLink(post.item)} target="_blank">{post.item.title}</a></li>
           )}
         </ol>
       </Host>
