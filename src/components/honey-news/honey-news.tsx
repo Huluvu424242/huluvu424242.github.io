@@ -37,6 +37,11 @@ export class HoneyNews {
   @Element() hostElement: HTMLElement;
 
   /**
+   * Input Element
+   */
+  inputNewUrl: HTMLInputElement;
+
+  /**
    * Id des Host Elements, falls nicht verfügbar wird diese generiert
    */
   ident: string;
@@ -100,6 +105,7 @@ export class HoneyNews {
   }
 
   protected initialisiereUrls() {
+    // this.feedURLs.push("https://www.tagesschau.de/xml/atom/");
     this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
     this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
     this.feedURLs.push("https://media.ccc.de/updates.rdf");
@@ -213,6 +219,13 @@ export class HoneyNews {
     return null
   }
 
+  addUrl( event: UIEvent){
+    event=event;
+    const url = this.inputNewUrl.value;
+    this.feedURLs.push(url);
+    this.loadFeeds();
+  }
+
   public render() {
     Logger.debugMessage('##RENDER##');
     return (
@@ -224,6 +237,8 @@ export class HoneyNews {
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
+        <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
+        <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
         <ol>
           {this.feeds.map((feed) =>
             feed.feed.items.map((item) =>
