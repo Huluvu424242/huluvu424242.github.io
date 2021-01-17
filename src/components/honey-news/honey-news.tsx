@@ -2,6 +2,8 @@ import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedData, loadFeedData} from "../../fetch-es6.worker";
+import {from, Observable} from "rxjs";
+import {switchMap} from "rxjs/operators";
 
 
 @Component({
@@ -59,7 +61,7 @@ export class HoneyNews {
    */
   feedURLs: string[] = [];
 
-  feeds: FeedEntry[] = [];
+  feeds: FeedData[] = [];
 
   /**
    * enable console logging
@@ -142,22 +144,31 @@ export class HoneyNews {
   }
 
 
-  protected async loadFeedContent(url: string): Promise<FeedData> {
-    let feedResponse: FeedData;
-    try {
-      feedResponse = await loadFeedData(url);
-      console.log("response", feedResponse);
-    } catch (error) {
-      console.log("Error", error);
-    }
-    return feedResponse;
+  protected loadFeedContent(): Observable<FeedData> {
+    const urlObservable: Observable<string> = from(this.feedURLs);
+    return urlObservable.pipe(
+      switchMap(
+        (url) => from(loadFeedData(url))
+      )
+    );
   }
 
+
   protected async loadFeeds(): Promise<void> {
-    return this.feedURLs.forEach(async (url) => {
-      const feedResponse: FeedData = await this.loadFeedContent(url);
-      console.log("###\n" + JSON.stringify(feedResponse.feed.items));
-    });
+    return new Promise(
+      (resolve) => {
+        this.loadFeedContent().subscribe(
+          (feedData: FeedData) => this.feeds.push(feedData),
+          (error) => error,
+          () => {
+            // rendering trigger
+            this.feeds = [...this.feeds];
+            // resolve the promise to continue after data load
+            resolve();
+          }
+        )
+      }
+    );
   }
 
 
@@ -190,6 +201,13 @@ export class HoneyNews {
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
+        <ol>
+          {this.feeds.map((feed) =>
+            feed.feed.items.map((item) =>
+              <li>[{feed.feed.title}]<a href={""+item.link} target="_blank">{item.title}</a></li>
+            )
+          )}
+        </ol>
       </Host>
     );
   }
