@@ -5,6 +5,7 @@ import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
 import {concatAll, concatMap, groupBy, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
+import DateTimeFormat = Intl.DateTimeFormat;
 
 
 @Component({
@@ -106,13 +107,13 @@ export class HoneyNews {
   }
 
   protected initialisiereUrls() {
-    // this.feedURLs.push("https://www.tagesschau.de/xml/atom/");
+    this.feedURLs.push("https://www.tagesschau.de/xml/atom/");
     this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
-    this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
-    this.feedURLs.push("https://media.ccc.de/updates.rdf");
+    // this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
+    // this.feedURLs.push("https://media.ccc.de/updates.rdf");
     // this.feedURLs.push("https://a.4cdn.org/a/threads.json");
-    this.feedURLs.push("https://codepen.io/spark/feed");
-    this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
+    // this.feedURLs.push("https://codepen.io/spark/feed");
+    // this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
   }
 
 
@@ -190,11 +191,27 @@ export class HoneyNews {
     );
   }
 
-  getDateFromFeedItem(feedItem):string{
-    if(feedItem.pubdate) {
-      return feedItem.pubdate;
+  getDateFromFeedItem(feedItem): string {
+
+    let datum: string;
+    if (feedItem.pubdate) {
+      datum = feedItem.pubdate;
+    } else if (feedItem.updated) {
+      datum = feedItem.updated;
+    } else {
+      datum = feedItem["dc:date"];
     }
-    return feedItem["dc:date"];
+    let date: Date =null;
+    try {
+      if( datum ) {
+        date = new Date(Date.parse(datum));
+      }
+    } catch (fehler) {
+      console.error(fehler);
+    }
+    const format: DateTimeFormat = new DateTimeFormat("de-DE",
+      {year:'numeric', month: 'numeric', day: 'numeric',hour:'numeric'});
+    return date?format.format(date):null;
   }
 
   protected async loadFeeds(): Promise<void> {
@@ -258,7 +275,8 @@ export class HoneyNews {
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
         <ol>
           {this.feeds.map((post) =>
-            <li>[{post.feedtitle}]({post.pubdate})<a href={this.getPostLink(post.item)} target="_blank">{post.item.title}</a></li>
+            <li>[{post.feedtitle}]({post.pubdate})<a href={this.getPostLink(post.item)}
+                                                     target="_blank">{post.item.title}</a></li>
           )}
         </ol>
       </Host>
