@@ -37,7 +37,10 @@ export async function loadData(request: RequestInfo): Promise<ResponseData> {
 // async für stencil worker
 export async function loadFeedData(url: string): Promise<FeedData> {
   return new Promise<FeedData>((resolve) => {
-    http.get(url, (response) => {
+    const proxyUrl: string = "https://cors-anywhere.herokuapp.com/";
+    const queryUrl: string = proxyUrl + url;
+    console.debug("###query url "+queryUrl);
+    http.get(queryUrl, (response) => {
       if (response.statusCode != 200) {
         console.error(new Error(`status code ${response.statusCode}`));
         return;

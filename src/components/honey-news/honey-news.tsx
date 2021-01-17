@@ -100,12 +100,12 @@ export class HoneyNews {
   }
 
   protected initialisiereUrls() {
-    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://www.zdf.de/rss/zdf/nachrichten");
-    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
-    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://media.ccc.de/updates.rdf");
-    // this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://a.4cdn.org/a/threads.json");
+    this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
+    this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
+    this.feedURLs.push("https://media.ccc.de/updates.rdf");
+    // this.feedURLs.push("https://a.4cdn.org/a/threads.json");
     this.feedURLs.push("https://codepen.io/spark/feed");
-    this.feedURLs.push("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
+    this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
   }
 
 
