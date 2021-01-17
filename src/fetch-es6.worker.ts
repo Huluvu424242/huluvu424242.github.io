@@ -5,6 +5,7 @@ import {FeedItem} from "feedme/dist/parser";
 
 export interface Post {
   feedtitle: string;
+  sortdate:string
   pubdate: string,
   item:FeedItem;
 }

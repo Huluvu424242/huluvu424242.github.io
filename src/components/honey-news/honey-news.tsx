@@ -170,7 +170,7 @@ export class HoneyNews {
       switchMap(
         (metaData: FeedData) => this.mapItemsToPost(metaData)
       ),
-      groupBy(post => post.item.pubdate),
+      groupBy(post => post.sortdate),
       mergeMap(group => group.pipe(toArray())),
       concatAll()
     );
@@ -180,9 +180,13 @@ export class HoneyNews {
     return from(feedData.items).pipe(
       map(
         (feeditem: FeedItem) => {
+          const date:Date =this.getDateFromFeedItem(feeditem);
+          const formatedDate = this.getFormattedDate(date);
+          const sortDate = this.getSortDateFromFeedItem(date);
           const post: Post = {
             feedtitle: feedData.feedtitle,
-            pubdate: this.getDateFromFeedItem(feeditem),
+            sortdate: sortDate,
+            pubdate: formatedDate,
             item: feeditem
           };
           return post;
@@ -191,8 +195,12 @@ export class HoneyNews {
     );
   }
 
-  getDateFromFeedItem(feedItem): string {
-
+  getFormattedDate(date:Date): string {
+    const minuteFormat: DateTimeFormat = new DateTimeFormat("de-DE",
+      {year:'numeric', month: 'numeric', day: 'numeric',hour:'numeric',minute:'numeric'});
+    return date?minuteFormat.format(date):null;
+  }
+  getDateFromFeedItem(feedItem): Date {
     let datum: string;
     if (feedItem.pubdate) {
       datum = feedItem.pubdate;
@@ -209,9 +217,20 @@ export class HoneyNews {
     } catch (fehler) {
       console.error(fehler);
     }
-    const format: DateTimeFormat = new DateTimeFormat("de-DE",
-      {year:'numeric', month: 'numeric', day: 'numeric',hour:'numeric'});
-    return date?format.format(date):null;
+    return date?date:null;
+  }
+
+  getSortDateFromFeedItem(date:Date): string {
+    if( date ) {
+      const hourFormat: DateTimeFormat = new DateTimeFormat("de-DE",
+        {year:'numeric', month: 'numeric', day: 'numeric',hour:'numeric'});
+      const formatedDate:string =  hourFormat.format(date);
+      const minute:number = date.getMinutes();
+      const quadrant: number = Math.floor(minute/15);
+      return formatedDate + ':'+quadrant;
+    }else{
+      return null;
+    }
   }
 
   protected async loadFeeds(): Promise<void> {
