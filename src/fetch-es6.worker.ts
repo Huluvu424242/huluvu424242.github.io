@@ -1,5 +1,12 @@
 import FeedMe, {Feed} from "feedme/dist/feedme";
 import * as http from "http";
+import {FeedItem} from "feedme/dist/parser";
+
+
+export interface Post {
+  feedtitle: string;
+  item:FeedItem;
+}
 
 export interface ResponseData {
   status: number;
@@ -11,7 +18,9 @@ export interface ResponseData {
 export interface FeedData {
   status: number;
   statusText: string;
-  feed: Feed;
+  // feed: Feed;
+  feedtitle: string;
+  items:FeedItem[];
 }
 
 export async function loadData(request: RequestInfo): Promise<ResponseData> {
@@ -46,7 +55,7 @@ export async function loadFeedData(url: string): Promise<FeedData> {
         return;
       }
       const data: FeedData = {
-        status: null, statusText: null, feed: null
+        status: null, statusText: null, feedtitle: null, items: null
       };
       let parser = new FeedMe(true);
       // parser.on('title', (title) => {
@@ -61,7 +70,9 @@ export async function loadFeedData(url: string): Promise<FeedData> {
         try {
           data.status = response.statusCode;
           data.statusText = response.statusMessage;
-          data.feed = parser.done();
+          const feed:Feed = parser.done();
+          data.feedtitle = JSON.stringify(feed.title);
+          data.items = feed.items;
         } catch (ex) {
           // expect to failed if no body
           console.warn("Error during read data of response " + ex);

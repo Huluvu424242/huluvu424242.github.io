@@ -1,9 +1,10 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
-import {FeedData, loadFeedData} from "../../fetch-es6.worker";
+import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
-import {concatMap, tap} from "rxjs/operators";
+import {concatMap, map, switchMap, tap} from "rxjs/operators";
+import {FeedItem} from "feedme/dist/parser";
 
 
 @Component({
@@ -66,7 +67,7 @@ export class HoneyNews {
    */
   feedURLs: string[] = [];
 
-  @State() feeds: FeedData[] = [];
+  @State() feeds: Post[] = [];
 
   /**
    * enable console logging
@@ -86,8 +87,8 @@ export class HoneyNews {
   }
 
 
-  public  componentWillLoad() {
-     this.loadFeeds();
+  public componentWillLoad() {
+    this.loadFeeds();
   }
 
   /**
@@ -150,37 +151,52 @@ export class HoneyNews {
     }
   }
 
-
-  protected loadFeedContent(): Observable<FeedData> {
+  protected loadFeedContent(): Observable<Post> {
     const urlObservable: Observable<string> = from(this.feedURLs);
     return urlObservable.pipe(
       tap(
         (url) => console.log("### tap url " + url)
       ),
       concatMap(
-        (url) => {
-          console.log("### switchMap url " + url)
-          return from(loadFeedData(url))
+        (url: string) => {
+          console.log("### switchMap url " + url);
+          return from(loadFeedData(url));
         }
       ),
       tap(
-        (feedData) => console.log("### tap feed data " + feedData.feed.title)
+        (feedData: FeedData) => console.log("### tap feed data " + feedData.feedtitle)
+      ),
+      switchMap(
+        (metaData: FeedData) => this.mapItemsToPost(metaData)
       )
     );
   }
 
+  mapItemsToPost(feedData: FeedData): Observable<Post> {
+    return from(feedData.items).pipe(
+      map(
+        (feeditem: FeedItem) => {
+          const post: Post = {
+            feedtitle: feedData.feedtitle,
+            item: feeditem
+          };
+          return post;
+        }
+      )
+    );
+  }
 
   protected async loadFeeds(): Promise<void> {
     return new Promise(
       (resolve) => {
         this.loadFeedContent().subscribe(
           {
-            next: (feedData: FeedData) => this.feeds.push(feedData),
+            next: (post: Post) => this.feeds.push(post),
             error: (error) => error,
             complete: () => {
               // rendering trigger
               this.feeds = [...this.feeds];
-              console.debug("###complete with:\n" + JSON.stringify(this.feeds));
+              console.log("###complete with:\n" + JSON.stringify(this.feeds));
               // resolve the promise to continue after data load
               resolve();
             }
@@ -199,18 +215,18 @@ export class HoneyNews {
     }
   }
 
-  getPostLink(item):string {
-    if( typeof item.link === "string") {
+  getPostLink(item): string {
+    if (typeof item.link === "string") {
       return item.link;
     }
-    if( typeof(item.link.href == "string")) {
+    if (typeof (item.link.href == "string")) {
       return item.link.href;
     }
     return null
   }
 
-  addUrl( event: UIEvent){
-    event=event;
+  addUrl(event: UIEvent) {
+    event = event;
     const url = this.inputNewUrl.value;
     this.feedURLs.push(url);
     this.loadFeeds();
@@ -230,10 +246,8 @@ export class HoneyNews {
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
         <ol>
-          {this.feeds.map((feed) =>
-            feed.feed.items.map((item) =>
-              <li>[{feed.feed.title}]<a href={ this.getPostLink(item)} target="_blank">{item.title}</a></li>
-            )
+          {this.feeds.map((post) =>
+            <li>[{post.feedtitle}]<a href={this.getPostLink(post.item)} target="_blank">{post.item.title}</a></li>
           )}
         </ol>
       </Host>
