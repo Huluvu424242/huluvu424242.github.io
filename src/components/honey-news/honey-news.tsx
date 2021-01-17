@@ -61,7 +61,7 @@ export class HoneyNews {
    */
   feedURLs: string[] = [];
 
-  feeds: FeedData[] = [];
+  @State() feeds: FeedData[] = [];
 
   /**
    * enable console logging
@@ -81,8 +81,8 @@ export class HoneyNews {
   }
 
 
-  public async componentWillLoad() {
-    await this.loadFeeds();
+  public  componentWillLoad() {
+     this.loadFeeds();
   }
 
   /**
@@ -184,14 +184,14 @@ export class HoneyNews {
     );
   }
 
-
-  protected getFeedUrls(): string[] {
-    if (this.feedURLs) {
-      return this.feedURLs;
-    } else {
-      return [];
-    }
-  }
+  //
+  // protected getFeedUrls(): string[] {
+  //   if (this.feedURLs) {
+  //     return this.feedURLs;
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
 
   protected getHostClass(): string {

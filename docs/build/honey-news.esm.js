@@ -118,5 +118,5 @@ const patchCloneNodeFix = (HTMLElementPrototype) => {
 
 patchBrowser().then(options => {
   globalScripts();
-  return bootstrapLazy([["honey-news",[[1,"honey-news",{"verbose":[4],"options":[32],"updateOptions":[64]}]]]], options);
+  return bootstrapLazy([["honey-news",[[1,"honey-news",{"verbose":[4],"options":[32],"feeds":[32],"updateOptions":[64]}]]]], options);
 });
