@@ -1,5 +1,5 @@
 import './index-7ebc6c63.js';
-import { c as createWorker } from './honey-news-bcb20768.js';
+import { c as createWorker } from './honey-news-d4cfbfbc.js';
 
 const workerName = 'fetch-es6.worker';
 const workerMsgId = 'stencil.fetch-es6.worker';

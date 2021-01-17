@@ -173,16 +173,16 @@ export class HoneyNews {
       groupBy(post => post.sortdate),
       mergeMap(group => group.pipe(toArray())),
       tap(
-        (postings: Post[]) => postings.forEach((post) => console.log("### grouped post: " + post.pubdate))
+        (postings: Post[]) => postings.forEach((post) => console.log("### grouped post: " + post.sortdate))
       ),
       concatMap(
-        (posts: Post[]) => from(this.sortMap(posts))
+        (posts: Post[]) => from(this.sortArray(posts))
       ),
       // concatAll(),
     );
   }
 
-  sortMap(post: Post[]): Post[] {
+  sortArray(post: Post[]): Post[] {
     const aIstGroesser: number = 1;
     const aIstKleiner: number = -1;
     return post.sort((lp, rp) => {
@@ -210,7 +210,7 @@ export class HoneyNews {
         (feeditem: FeedItem) => {
           const date: Date = this.getDateFromFeedItem(feeditem);
           const formatedDate = this.getFormattedDate(date);
-          const sortDate = this.getSortDateFromFeedItem(date);
+          const sortDate = this.getSortedDate(date);
           const post: Post = {
             feedtitle: feedData.feedtitle,
             exaktdate: date,
@@ -250,14 +250,19 @@ export class HoneyNews {
     return date ? date : null;
   }
 
-  getSortDateFromFeedItem(date: Date): string {
+  padTo2(zahl: number): string {
+    return zahl <= 9 ? "0" + zahl : "" + zahl;
+  }
+
+  getSortedDate(date: Date): string {
     if (date) {
-      const hourFormat: DateTimeFormat = new DateTimeFormat("de-DE",
-        {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric'});
-      const formatedDate: string = hourFormat.format(date);
+      const year: number = date.getUTCFullYear();
+      const month: number = date.getUTCMonth() + 1;
+      const day: number = date.getUTCDate();
+      const hour: number = date.getHours();
       const minute: number = date.getMinutes();
       const quadrant: number = Math.floor(minute / 15);
-      return formatedDate + ':' + quadrant;
+      return "" + year + '#' + this.padTo2(month) + '#' + this.padTo2(day) + '#' + this.padTo2(hour) + '#' + this.padTo2(minute) + '#' + quadrant
     } else {
       return null;
     }

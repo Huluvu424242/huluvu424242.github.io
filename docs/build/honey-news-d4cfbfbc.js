@@ -116,7 +116,7 @@ const createWorkerProxy = (worker, workerMsgId, exportedMethod) => (
   })
 );
 
-const workerPromise = import('./fetch-es6.worker-5d49c174.js').then(m => m.worker);
+const workerPromise = import('./fetch-es6.worker-da07fa0d.js').then(m => m.worker);
 const loadData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadData');
 const loadFeedData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedData');
 
@@ -7278,9 +7278,9 @@ const HoneyNews = class {
     return urlObservable.pipe(tap((url) => console.log("### tap url " + url)), mergeMap((url) => {
       console.log("### switchMap url " + url);
       return from(loadFeedData(url));
-    }), tap((feedData) => console.log("### tap feed data " + feedData.feedtitle)), mergeMap((metaData) => this.mapItemsToPost(metaData)), groupBy(post => post.sortdate), mergeMap(group => group.pipe(toArray())), tap((postings) => postings.forEach((post) => console.log("### grouped post: " + post.pubdate))), concatMap((posts) => from(this.sortMap(posts))));
+    }), tap((feedData) => console.log("### tap feed data " + feedData.feedtitle)), mergeMap((metaData) => this.mapItemsToPost(metaData)), groupBy(post => post.sortdate), mergeMap(group => group.pipe(toArray())), tap((postings) => postings.forEach((post) => console.log("### grouped post: " + post.sortdate))), concatMap((posts) => from(this.sortArray(posts))));
   }
-  sortMap(post) {
+  sortArray(post) {
     const aIstGroesser = 1;
     const aIstKleiner = -1;
     return post.sort((lp, rp) => {
@@ -7307,7 +7307,7 @@ const HoneyNews = class {
     return from(feedData.items).pipe(map((feeditem) => {
       const date = this.getDateFromFeedItem(feeditem);
       const formatedDate = this.getFormattedDate(date);
-      const sortDate = this.getSortDateFromFeedItem(date);
+      const sortDate = this.getSortedDate(date);
       const post = {
         feedtitle: feedData.feedtitle,
         exaktdate: date,
@@ -7344,13 +7344,18 @@ const HoneyNews = class {
     }
     return date ? date : null;
   }
-  getSortDateFromFeedItem(date) {
+  padTo2(zahl) {
+    return zahl <= 9 ? "0" + zahl : "" + zahl;
+  }
+  getSortedDate(date) {
     if (date) {
-      const hourFormat = new DateTimeFormat("de-DE", { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric' });
-      const formatedDate = hourFormat.format(date);
+      const year = date.getUTCFullYear();
+      const month = date.getUTCMonth() + 1;
+      const day = date.getUTCDate();
+      const hour = date.getHours();
       const minute = date.getMinutes();
       const quadrant = Math.floor(minute / 15);
-      return formatedDate + ':' + quadrant;
+      return "" + year + '#' + this.padTo2(month) + '#' + this.padTo2(day) + '#' + this.padTo2(hour) + '#' + this.padTo2(minute) + '#' + quadrant;
     }
     else {
       return null;
