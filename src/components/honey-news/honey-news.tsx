@@ -3,7 +3,7 @@ import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
-import {concatAll, concatMap, groupBy, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
+import {concatAll, groupBy, map, mergeMap, tap, toArray} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import DateTimeFormat = Intl.DateTimeFormat;
 
@@ -109,7 +109,7 @@ export class HoneyNews {
   protected initialisiereUrls() {
     this.feedURLs.push("https://www.tagesschau.de/xml/atom/");
     this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
-    // this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
+    this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
     // this.feedURLs.push("https://media.ccc.de/updates.rdf");
     // this.feedURLs.push("https://a.4cdn.org/a/threads.json");
     // this.feedURLs.push("https://codepen.io/spark/feed");
@@ -158,7 +158,7 @@ export class HoneyNews {
       tap(
         (url) => console.log("### tap url " + url)
       ),
-      concatMap(
+      mergeMap(
         (url: string) => {
           console.log("### switchMap url " + url);
           return from(loadFeedData(url));
@@ -167,7 +167,7 @@ export class HoneyNews {
       tap(
         (feedData: FeedData) => console.log("### tap feed data " + feedData.feedtitle)
       ),
-      switchMap(
+      mergeMap(
         (metaData: FeedData) => this.mapItemsToPost(metaData)
       ),
       groupBy(post => post.sortdate),
@@ -180,13 +180,13 @@ export class HoneyNews {
     return from(feedData.items).pipe(
       map(
         (feeditem: FeedItem) => {
-          const date:Date =this.getDateFromFeedItem(feeditem);
+          const date: Date = this.getDateFromFeedItem(feeditem);
           const formatedDate = this.getFormattedDate(date);
           const sortDate = this.getSortDateFromFeedItem(date);
           const post: Post = {
             feedtitle: feedData.feedtitle,
             sortdate: sortDate,
-            pubdate: formatedDate,
+            pubdate: formatedDate + " \t{" + sortDate + "}\t",
             item: feeditem
           };
           return post;
@@ -195,11 +195,12 @@ export class HoneyNews {
     );
   }
 
-  getFormattedDate(date:Date): string {
+  getFormattedDate(date: Date): string {
     const minuteFormat: DateTimeFormat = new DateTimeFormat("de-DE",
-      {year:'numeric', month: 'numeric', day: 'numeric',hour:'numeric',minute:'numeric'});
-    return date?minuteFormat.format(date):null;
+      {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'});
+    return date ? minuteFormat.format(date) : null;
   }
+
   getDateFromFeedItem(feedItem): Date {
     let datum: string;
     if (feedItem.pubdate) {
@@ -209,26 +210,26 @@ export class HoneyNews {
     } else {
       datum = feedItem["dc:date"];
     }
-    let date: Date =null;
+    let date: Date = null;
     try {
-      if( datum ) {
+      if (datum) {
         date = new Date(Date.parse(datum));
       }
     } catch (fehler) {
       console.error(fehler);
     }
-    return date?date:null;
+    return date ? date : null;
   }
 
-  getSortDateFromFeedItem(date:Date): string {
-    if( date ) {
+  getSortDateFromFeedItem(date: Date): string {
+    if (date) {
       const hourFormat: DateTimeFormat = new DateTimeFormat("de-DE",
-        {year:'numeric', month: 'numeric', day: 'numeric',hour:'numeric'});
-      const formatedDate:string =  hourFormat.format(date);
-      const minute:number = date.getMinutes();
-      const quadrant: number = Math.floor(minute/15);
-      return formatedDate + ':'+quadrant;
-    }else{
+        {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric'});
+      const formatedDate: string = hourFormat.format(date);
+      const minute: number = date.getMinutes();
+      const quadrant: number = Math.floor(minute / 15);
+      return formatedDate + ':' + quadrant;
+    } else {
       return null;
     }
   }
@@ -292,6 +293,15 @@ export class HoneyNews {
       >
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
+        <dl>Legende
+          <dt>[xxx]</dt>
+          <dd>Titel der News Feed Quelle</dd>
+          <dt>(xx.xx.xxxx xx:xx)</dt>
+          <dd>Originale Zeit der Veröffentlichung</dd>
+          <dt>{"{xx.xx.xxxx xx.xx}"}</dt>
+          <dd>Berechnetes Sortierdatum</dd>
+        </dl>
+
         <ol>
           {this.feeds.map((post) =>
             <li>[{post.feedtitle}]({post.pubdate})<a href={this.getPostLink(post.item)}
