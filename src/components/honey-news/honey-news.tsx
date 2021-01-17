@@ -181,12 +181,20 @@ export class HoneyNews {
         (feeditem: FeedItem) => {
           const post: Post = {
             feedtitle: feedData.feedtitle,
+            pubdate: this.getDateFromFeedItem(feeditem),
             item: feeditem
           };
           return post;
         }
       )
     );
+  }
+
+  getDateFromFeedItem(feedItem):string{
+    if(feedItem.pubdate) {
+      return feedItem.pubdate;
+    }
+    return feedItem["dc:date"];
   }
 
   protected async loadFeeds(): Promise<void> {
@@ -250,7 +258,7 @@ export class HoneyNews {
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
         <ol>
           {this.feeds.map((post) =>
-            <li>[{post.feedtitle}]({post.item.pubdate})<a href={this.getPostLink(post.item)} target="_blank">{post.item.title}</a></li>
+            <li>[{post.feedtitle}]({post.pubdate})<a href={this.getPostLink(post.item)} target="_blank">{post.item.title}</a></li>
           )}
         </ol>
       </Host>
