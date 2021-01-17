@@ -1,4 +1,4 @@
-import { e as consoleError, r as registerInstance, h, f as Host, g as getElement } from './index-887d27ea.js';
+import { e as consoleError, r as registerInstance, h, f as Host, g as getElement } from './index-7ebc6c63.js';
 
 class Logger {
   constructor(enableLogging) {
@@ -116,7 +116,7 @@ const createWorkerProxy = (worker, workerMsgId, exportedMethod) => (
   })
 );
 
-const workerPromise = import('./fetch-es6.worker-6d95e799.js').then(m => m.worker);
+const workerPromise = import('./fetch-es6.worker-5d49c174.js').then(m => m.worker);
 const loadData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadData');
 const loadFeedData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedData');
 
@@ -7169,6 +7169,7 @@ function zipAll(project) {
 
 const honeyNewsCss = ":host>svg{padding:var(--honey-news-padding, 5px);font-size:var(--honey-news-font-size, medium);border:var(--honey-news-border, 0);width:var(--honey-news-width, 36px);height:var(--honey-news-height, 36px)}:host>svg>path{stroke-width:5}.speakerimage{stroke:var(--honey-news-color, blue);fill:var(--honey-news-color, blue);background:var(--honey-news-background, transparent)}.speakerimage-disabled{stroke:var(--honey-disabled-color, gray);fill:var(--honey-disabled-color, gray);background:var(--honey-disabled-background, lightgrey);cursor:var(--honey-disabled-cursor, not-allowed)}";
 
+var DateTimeFormat = Intl.DateTimeFormat;
 const HoneyNews = class {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -7232,11 +7233,12 @@ const HoneyNews = class {
     this.options = Object.assign({}, this.options);
   }
   initialisiereUrls() {
+    this.feedURLs.push("https://www.tagesschau.de/xml/atom/");
     this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
     this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
     this.feedURLs.push("https://media.ccc.de/updates.rdf");
     // this.feedURLs.push("https://a.4cdn.org/a/threads.json");
-    this.feedURLs.push("https://codepen.io/spark/feed");
+    // this.feedURLs.push("https://codepen.io/spark/feed");
     this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
   }
   hasNoFeeds() {
@@ -7273,15 +7275,91 @@ const HoneyNews = class {
   }
   loadFeedContent() {
     const urlObservable = from(this.feedURLs);
-    return urlObservable.pipe(tap((url) => console.log("### tap url " + url)), concatMap((url) => {
+    return urlObservable.pipe(tap((url) => console.log("### tap url " + url)), mergeMap((url) => {
       console.log("### switchMap url " + url);
       return from(loadFeedData(url));
-    }), tap((feedData) => console.log("### tap feed data " + feedData.feed.title)));
+    }), tap((feedData) => console.log("### tap feed data " + feedData.feedtitle)), mergeMap((metaData) => this.mapItemsToPost(metaData)), groupBy(post => post.sortdate), mergeMap(group => group.pipe(toArray())), tap((postings) => postings.forEach((post) => console.log("### grouped post: " + post.pubdate))), concatMap((posts) => from(this.sortMap(posts))));
+  }
+  sortMap(post) {
+    const aIstGroesser = 1;
+    const aIstKleiner = -1;
+    return post.sort((lp, rp) => {
+      const a = lp.sortdate;
+      const b = rp.sortdate;
+      if (!a) {
+        return aIstKleiner;
+      }
+      if (!b) {
+        return aIstGroesser;
+      }
+      if (a > b) {
+        return aIstGroesser;
+      }
+      else if (b > a) {
+        return aIstKleiner;
+      }
+      else {
+        return 0;
+      }
+    });
+  }
+  mapItemsToPost(feedData) {
+    return from(feedData.items).pipe(map((feeditem) => {
+      const date = this.getDateFromFeedItem(feeditem);
+      const formatedDate = this.getFormattedDate(date);
+      const sortDate = this.getSortDateFromFeedItem(date);
+      const post = {
+        feedtitle: feedData.feedtitle,
+        exaktdate: date,
+        sortdate: sortDate,
+        pubdate: formatedDate + " \t{" + sortDate + "}\t",
+        item: feeditem
+      };
+      return post;
+    }));
+  }
+  getFormattedDate(date) {
+    const minuteFormat = new DateTimeFormat("de-DE", { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    return date ? minuteFormat.format(date) : null;
+  }
+  getDateFromFeedItem(feedItem) {
+    let datum;
+    if (feedItem.pubdate) {
+      datum = feedItem.pubdate;
+    }
+    else if (feedItem.updated) {
+      datum = feedItem.updated;
+    }
+    else {
+      datum = feedItem["dc:date"];
+    }
+    let date = null;
+    try {
+      if (datum) {
+        date = new Date(Date.parse(datum));
+      }
+    }
+    catch (fehler) {
+      console.error(fehler);
+    }
+    return date ? date : null;
+  }
+  getSortDateFromFeedItem(date) {
+    if (date) {
+      const hourFormat = new DateTimeFormat("de-DE", { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric' });
+      const formatedDate = hourFormat.format(date);
+      const minute = date.getMinutes();
+      const quadrant = Math.floor(minute / 15);
+      return formatedDate + ':' + quadrant;
+    }
+    else {
+      return null;
+    }
   }
   async loadFeeds() {
     return new Promise((resolve) => {
       this.loadFeedContent().subscribe({
-        next: (feedData) => this.feeds.push(feedData),
+        next: (post) => this.feeds.push(post),
         error: (error) => error,
         complete: () => {
           // rendering trigger
@@ -7293,14 +7371,6 @@ const HoneyNews = class {
       });
     });
   }
-  //
-  // protected getFeedUrls(): string[] {
-  //   if (this.feedURLs) {
-  //     return this.feedURLs;
-  //   } else {
-  //     return [];
-  //   }
-  // }
   getHostClass() {
     let hostClass = this.initialHostClass;
     if (this.hasNoFeeds()) {
@@ -7319,9 +7389,15 @@ const HoneyNews = class {
     }
     return null;
   }
+  addUrl(event) {
+    event = event;
+    const url = this.inputNewUrl.value;
+    this.feedURLs.push(url);
+    this.loadFeeds();
+  }
   render() {
     Logger.debugMessage('##RENDER##');
-    return (h(Host, { title: this.getTitleText(), alt: this.getAltText(), role: "button", tabindex: this.hasNoFeeds() ? -1 : this.taborder, class: this.getHostClass(), disabled: this.hasNoFeeds() }, h("ol", null, this.feeds.map((feed) => feed.feed.items.map((item) => h("li", null, "[", feed.feed.title, "]", h("a", { href: this.getPostLink(item), target: "_blank" }, item.title)))))));
+    return (h(Host, { title: this.getTitleText(), alt: this.getAltText(), role: "button", tabindex: this.hasNoFeeds() ? -1 : this.taborder, class: this.getHostClass(), disabled: this.hasNoFeeds() }, h("h2", null, "Legende"), h("dl", null, h("dt", null, "[xxx]"), h("dd", null, "Titel der News Feed Quelle"), h("dt", null, "(xx.xx.xxxx xx:xx)"), h("dd", null, "Originale Zeit der Ver\u00F6ffentlichung"), h("dt", null, "{xx.xx.xxxx xx.xx}"), h("dd", null, "Berechnetes Sortierdatum")), h("input", { id: "newurl", ref: (el) => this.inputNewUrl = el }), h("button", { id: "addurl", onClick: (event) => this.addUrl(event) }, "Add Feed URL"), h("h2", null, "News Feed"), h("ol", null, this.feeds.map((post) => h("li", null, "[", post.feedtitle, "](", post.pubdate, ")", h("a", { href: this.getPostLink(post.item), target: "_blank" }, post.item.title))))));
   }
   static get assetsDirs() { return ["assets"]; }
   get hostElement() { return getElement(this); }

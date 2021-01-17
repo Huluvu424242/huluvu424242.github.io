@@ -3,7 +3,7 @@ import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
-import {concatAll, groupBy, map, mergeMap, tap, toArray} from "rxjs/operators";
+import {concatMap, groupBy, map, mergeMap, tap, toArray} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import DateTimeFormat = Intl.DateTimeFormat;
 
@@ -113,7 +113,7 @@ export class HoneyNews {
     this.feedURLs.push("https://media.ccc.de/updates.rdf");
     // this.feedURLs.push("https://a.4cdn.org/a/threads.json");
     // this.feedURLs.push("https://codepen.io/spark/feed");
-    // this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
+    this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
   }
 
 
@@ -172,8 +172,36 @@ export class HoneyNews {
       ),
       groupBy(post => post.sortdate),
       mergeMap(group => group.pipe(toArray())),
-      concatAll()
+      tap(
+        (postings: Post[]) => postings.forEach((post) => console.log("### grouped post: " + post.pubdate))
+      ),
+      concatMap(
+        (posts: Post[]) => from(this.sortMap(posts))
+      ),
+      // concatAll(),
     );
+  }
+
+  sortMap(post: Post[]): Post[] {
+    const aIstGroesser: number = 1;
+    const aIstKleiner: number = -1;
+    return post.sort((lp, rp) => {
+      const a: string = lp.sortdate;
+      const b: string = rp.sortdate;
+      if (!a) {
+        return aIstKleiner;
+      }
+      if (!b) {
+        return aIstGroesser;
+      }
+      if (a > b) {
+        return aIstGroesser;
+      } else if (b > a) {
+        return aIstKleiner;
+      } else {
+        return 0
+      }
+    });
   }
 
   mapItemsToPost(feedData: FeedData): Observable<Post> {
@@ -185,6 +213,7 @@ export class HoneyNews {
           const sortDate = this.getSortDateFromFeedItem(date);
           const post: Post = {
             feedtitle: feedData.feedtitle,
+            exaktdate: date,
             sortdate: sortDate,
             pubdate: formatedDate + " \t{" + sortDate + "}\t",
             item: feeditem

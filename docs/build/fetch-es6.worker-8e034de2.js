@@ -10490,7 +10490,7 @@ async function loadFeedData(url) {
         return;
       }
       const data = {
-        status: null, statusText: null, feed: null
+        status: null, statusText: null, feedtitle: null, items: null
       };
       let parser = new FeedMe(true);
       // parser.on('title', (title) => {
@@ -10505,7 +10505,9 @@ async function loadFeedData(url) {
         try {
           data.status = response.statusCode;
           data.statusText = response.statusMessage;
-          data.feed = parser.done();
+          const feed = parser.done();
+          data.feedtitle = JSON.stringify(feed.title);
+          data.items = feed.items;
         }
         catch (ex) {
           // expect to failed if no body
