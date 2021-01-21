@@ -111,6 +111,12 @@ export class HoneyNews {
     this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
     this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
     this.feedURLs.push("https://media.ccc.de/updates.rdf");
+    this.feedURLs.push("https://www.deutschlandfunk.de/die-nachrichten.353.de.rss");
+    this.feedURLs.push("https://rss.dw.com/xml/rss-de-all");
+    this.feedURLs.push("http://newsfeed.zeit.de");
+    this.feedURLs.push("http://www.stern.de/feed/standard/all");
+    this.feedURLs.push("https://www.spiegel.de/international/index.rss");
+    this.feedURLs.push("rt.com/rss");
     // this.feedURLs.push("https://a.4cdn.org/a/threads.json");
     // this.feedURLs.push("https://codepen.io/spark/feed");
     this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
