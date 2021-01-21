@@ -3,7 +3,7 @@ import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
-import {concatMap, groupBy, map, mergeMap, reduce, switchMap, tap, toArray} from "rxjs/operators";
+import {map, mergeMap, reduce, tap} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import DateTimeFormat = Intl.DateTimeFormat;
 
