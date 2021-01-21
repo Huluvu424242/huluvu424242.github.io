@@ -207,12 +207,13 @@ export class HoneyNews {
         (feeditem: FeedItem) => {
           const date: Date = this.getDateFromFeedItem(feeditem);
           const formatedDate = this.getFormattedDate(date);
-          const sortDate = this.getSortedDate(date);
+          const title:string = feeditem.title as string;
+          const sortDate = this.getSortedDate(date, title);
           const post: Post = {
             feedtitle: feedData.feedtitle,
             exaktdate: date,
             sortdate: sortDate,
-            pubdate: formatedDate + " \t{" + sortDate + "}\t",
+            pubdate: formatedDate, // + " \t{" + sortDate + "}\t",
             item: feeditem
           };
           return post;
@@ -251,15 +252,22 @@ export class HoneyNews {
     return zahl <= 9 ? "0" + zahl : "" + zahl;
   }
 
-  getSortedDate(date: Date): string {
+  getSortedDate(date: Date, title:string): string {
     if (date) {
       const year: number = date.getUTCFullYear();
       const month: number = date.getUTCMonth() + 1;
       const day: number = date.getUTCDate();
       const hour: number = date.getHours();
       const minute: number = date.getMinutes();
-      const quadrant: number = Math.floor(minute / 15);
-      return "" + year + '#' + this.padTo2(month) + '#' + this.padTo2(day) + '#' + this.padTo2(hour) + '#' + this.padTo2(minute) + '#' + quadrant
+      const gruppe: number = Math.floor(minute / 60);
+      return ""
+        + year + '#'
+        + this.padTo2(month) + '#'
+        + this.padTo2(day) + '#'
+        + this.padTo2(hour) + '#'
+        // + this.padTo2(minute) + '#'
+        + gruppe + '#'
+        + title
     } else {
       return null;
     }
