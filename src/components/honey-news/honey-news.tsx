@@ -3,7 +3,7 @@ import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
-import {concatMap, groupBy, map, mergeMap, tap, toArray} from "rxjs/operators";
+import {concatMap, groupBy, map, mergeMap, reduce, switchMap, tap, toArray} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import DateTimeFormat = Intl.DateTimeFormat;
 
@@ -170,21 +170,19 @@ export class HoneyNews {
       mergeMap(
         (metaData: FeedData) => this.mapItemsToPost(metaData)
       ),
-      groupBy(post => post.sortdate),
-      mergeMap(group => group.pipe(toArray())),
+      reduce((posts:Post[], item:Post) => posts.concat(item), []),
       tap(
         (postings: Post[]) => postings.forEach((post) => console.log("### grouped post: " + post.sortdate))
       ),
       concatMap(
         (posts: Post[]) => from(this.sortArray(posts))
       ),
-      // concatAll(),
     );
   }
 
   sortArray(post: Post[]): Post[] {
-    const aIstGroesser: number = 1;
-    const aIstKleiner: number = -1;
+    const aIstGroesser: number = -1;
+    const aIstKleiner: number = 1;
     return post.sort((lp, rp) => {
       const a: string = lp.sortdate;
       const b: string = rp.sortdate;
