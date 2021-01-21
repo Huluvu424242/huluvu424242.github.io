@@ -170,13 +170,12 @@ export class HoneyNews {
       mergeMap(
         (metaData: FeedData) => this.mapItemsToPost(metaData)
       ),
-      reduce((posts:Post[], item:Post) => posts.concat(item), []),
+      reduce((posts: Post[], item: Post) => posts.concat(item), []),
       tap(
         (postings: Post[]) => postings.forEach((post) => console.log("### grouped post: " + post.sortdate))
       ),
-      concatMap(
-        (posts: Post[]) => from(this.sortArray(posts))
-      ),
+      map((list: Post[]) => this.sortArray(list)),
+      mergeMap(list => list),
     );
   }
 
