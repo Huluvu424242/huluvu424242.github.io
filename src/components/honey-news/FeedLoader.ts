@@ -18,7 +18,7 @@ export class FeedLoader {
     this.feedURLs.push(feedURL);
   }
 
-  protected loadFeedContent(): Observable<Post> {
+  public  loadFeedContent(): Observable<Post> {
     const urlObservable: Observable<string> = from(this.feedURLs);
     return urlObservable.pipe(
       mergeMap(
@@ -47,25 +47,5 @@ export class FeedLoader {
       mergeMap(list => list),
     );
   }
-
-  public async loadFeeds(): Promise<Post[]> {
-    const posts: Post[] = [];
-    return new Promise(
-      (resolve, reject) => {
-        this.loadFeedContent().subscribe(
-          {
-            next: (post: Post) => posts.push(post),
-            error: (error) => reject(error),
-            complete: () => {
-              console.log("###complete with:\n" + JSON.stringify(posts));
-              // resolve the promise to continue after data load
-              resolve(posts);
-            }
-          }
-        )
-      }
-    );
-  }
-
 
 }

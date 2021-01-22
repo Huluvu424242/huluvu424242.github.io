@@ -84,12 +84,25 @@ export class HoneyNews {
     Logger.toggleLogging(this.verbose);
   }
 
-  public async componentWillLoad() {
-    const posts: Post[] = await this.feedLoader.loadFeeds();
-    // trigger rendering
-    this.feeds = [...posts];
+  public componentWillLoad() {
+    this.loadFeeds();
   }
 
+  public loadFeeds(): void {
+    let posts: Post[] = [];
+    this.feedLoader.loadFeedContent().subscribe(
+      {
+        next: (post: Post) => posts.push(post),
+        // error: (error) => reject(error),
+        complete: () => {
+          console.log("###complete with:\n" + JSON.stringify(posts));
+          // resolve the promise to continue after data load
+          this.feeds = [...posts];
+          posts = [];
+        }
+      }
+    );
+  }
 
   protected initialisiereUrls() {
     const predefinedURLs: string[] = [
@@ -186,12 +199,12 @@ export class HoneyNews {
   lastHour: number = 0;
 
   getUeberschrift(post: Post) {
-    const hour:number  = post.exaktdate.getHours();
-    if ( hour != this.lastHour) {
+    const hour: number = post.exaktdate.getHours();
+    if (hour != this.lastHour) {
       this.lastHour = hour;
-      return <h2>{post.exaktdate.toLocaleDateString() +" "+  this.lastHour} Uhr</h2>;
+      return <h2>{post.exaktdate.toLocaleDateString() + " " + this.lastHour} Uhr</h2>;
     } else {
-      return ;
+      return;
     }
   }
 
