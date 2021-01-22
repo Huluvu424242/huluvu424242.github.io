@@ -6,9 +6,9 @@ import {FeedItem} from "feedme/dist/parser";
 export interface Post {
   feedtitle: string;
   exaktdate: Date;
-  sortdate:string
+  sortdate: string
   pubdate: string,
-  item:FeedItem;
+  item: FeedItem;
 }
 
 export interface ResponseData {
@@ -19,10 +19,11 @@ export interface ResponseData {
 }
 
 export interface FeedData {
+  url: string;
   status: number;
   statusText: string;
   feedtitle: string;
-  items:FeedItem[];
+  items: FeedItem[];
 }
 
 export async function loadData(request: RequestInfo): Promise<ResponseData> {
@@ -50,14 +51,14 @@ export async function loadFeedData(url: string): Promise<FeedData> {
   return new Promise<FeedData>((resolve) => {
     const proxyUrl: string = "https://cors-anywhere.herokuapp.com/";
     const queryUrl: string = proxyUrl + url;
-    console.debug("###query url "+queryUrl);
+    console.debug("###query url " + queryUrl);
     http.get(queryUrl, (response) => {
       if (response.statusCode != 200) {
         console.error(new Error(`status code ${response.statusCode}`));
         return;
       }
       const data: FeedData = {
-        status: null, statusText: null, feedtitle: null, items: null
+        status: null, url: null, statusText: null, feedtitle: null, items: null
       };
       let parser = new FeedMe(true);
       // parser.on('title', (title) => {
@@ -72,7 +73,8 @@ export async function loadFeedData(url: string): Promise<FeedData> {
         try {
           data.status = response.statusCode;
           data.statusText = response.statusMessage;
-          const feed:Feed = parser.done();
+          data.url = queryUrl;
+          const feed: Feed = parser.done();
           data.feedtitle = JSON.stringify(feed.title);
           data.items = feed.items;
         } catch (ex) {

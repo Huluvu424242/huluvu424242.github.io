@@ -1,12 +1,9 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
-import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
-import {from, Observable} from "rxjs";
-import {map, mergeMap, reduce, tap} from "rxjs/operators";
-import {FeedItem} from "feedme/dist/parser";
-import DateTimeFormat = Intl.DateTimeFormat;
-
+import {FeedLoader} from "./FeedLoader";
+import {Post} from "../../fetch-es6.worker";
+import {from} from "rxjs";
 
 @Component({
   tag: "honey-news",
@@ -15,23 +12,6 @@ import DateTimeFormat = Intl.DateTimeFormat;
   shadow: true
 })
 export class HoneyNews {
-
-  /**
-   * initiale class from host tag
-   */
-  initialHostClass: string;
-
-  @State() options: NewsOptions = {
-    disabledHostClass: "speaker-disabled",
-    enabledHostClass: "speaker-enabled",
-    disabledTitleText: "Vorlesen deaktiviert, da keine Texte verfügbar",
-    pressedTitleText: "Liest gerade vor",
-    titleText: "Vorlesen",
-    altText: "Symbol eines tönenden Lautsprechers",
-    unpressedAltText: "Symbol eines angehaltenen, tönenden Lautsprechers",
-    pressedPureAltText: "Symbol eines tönenden Lautsprechers",
-    unpressedPureAltText: "Symbol eines ausgeschaltenen Lautsprechers"
-  };
 
   /**
    * Host Element
@@ -49,6 +29,11 @@ export class HoneyNews {
   ident: string;
 
   /**
+   * initiale class from host tag
+   */
+  initialHostClass: string;
+
+  /**
    * true wenn das Tag ohne alt Attribute deklariert wurde
    */
   createAltText: boolean = false;
@@ -64,11 +49,23 @@ export class HoneyNews {
   taborder: string = "0";
 
   /**
-   * texte to speech out
+   * Hilfsklasse zum Laden der Daten
    */
-  feedURLs: string[] = [];
+  feedLoader: FeedLoader = new FeedLoader([]);
 
   @State() feeds: Post[] = [];
+
+  @State() options: NewsOptions = {
+    disabledHostClass: "speaker-disabled",
+    enabledHostClass: "speaker-enabled",
+    disabledTitleText: "Vorlesen deaktiviert, da keine Texte verfügbar",
+    pressedTitleText: "Liest gerade vor",
+    titleText: "Vorlesen",
+    altText: "Symbol eines tönenden Lautsprechers",
+    unpressedAltText: "Symbol eines angehaltenen, tönenden Lautsprechers",
+    pressedPureAltText: "Symbol eines tönenden Lautsprechers",
+    unpressedPureAltText: "Symbol eines ausgeschaltenen Lautsprechers"
+  };
 
   /**
    * enable console logging
@@ -87,10 +84,32 @@ export class HoneyNews {
     Logger.toggleLogging(this.verbose);
   }
 
-
-  public componentWillLoad() {
-    this.loadFeeds();
+  public async componentWillLoad() {
+    const posts: Post[] = await this.feedLoader.loadFeeds();
+    // trigger rendering
+    this.feeds = [...posts];
   }
+
+
+  protected initialisiereUrls() {
+    const predefinedURLs: string[] = [
+      "https://www.tagesschau.de/xml/atom/",
+      "https://www.zdf.de/rss/zdf/nachrichten",
+      "https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml",
+      "https://media.ccc.de/updates.rdf",
+      "https://www.deutschlandfunk.de/die-nachrichten.353.de.rss",
+      "https://rss.dw.com/xml/rss-de-all",
+      "http://newsfeed.zeit.de",
+      "http://www.stern.de/feed/standard/all",
+      "https://www.spiegel.de/international/index.rss",
+      "rt.com/rss",
+      // "https://a.4cdn.org/a/threads.json");
+      // "https://codepen.io/spark/feed");
+      "https://www.hongkiat.com/blog/feed/"
+    ]
+    from(predefinedURLs).subscribe((url) => this.feedLoader.addFeedUrl(url));
+  }
+
 
   /**
    * Update speaker options
@@ -106,28 +125,9 @@ export class HoneyNews {
     this.options = {...this.options};
   }
 
-  protected initialisiereUrls() {
-    this.feedURLs.push("https://www.tagesschau.de/xml/atom/");
-    this.feedURLs.push("https://www.zdf.de/rss/zdf/nachrichten");
-    this.feedURLs.push("https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml");
-    this.feedURLs.push("https://media.ccc.de/updates.rdf");
-    this.feedURLs.push("https://www.deutschlandfunk.de/die-nachrichten.353.de.rss");
-    this.feedURLs.push("https://rss.dw.com/xml/rss-de-all");
-    this.feedURLs.push("http://newsfeed.zeit.de");
-    this.feedURLs.push("http://www.stern.de/feed/standard/all");
-    this.feedURLs.push("https://www.spiegel.de/international/index.rss");
-    this.feedURLs.push("rt.com/rss");
-    // this.feedURLs.push("https://a.4cdn.org/a/threads.json");
-    // this.feedURLs.push("https://codepen.io/spark/feed");
-    this.feedURLs.push("https://www.hongkiat.com/blog/feed/");
-  }
-
 
   protected hasNoFeeds(): boolean {
-    return (!this.feedURLs
-      || this.feedURLs.length < 1
-      || this.feedURLs.filter(item => item.trim().length > 0).length < 1
-    );
+    return (!this.feeds || this.feeds.length < 1);
   }
 
   protected createNewTitleText(): string {
@@ -158,147 +158,6 @@ export class HoneyNews {
     }
   }
 
-  protected loadFeedContent(): Observable<Post> {
-    const urlObservable: Observable<string> = from(this.feedURLs);
-    return urlObservable.pipe(
-      tap(
-        (url) => console.log("### tap url " + url)
-      ),
-      mergeMap(
-        (url: string) => {
-          console.log("### switchMap url " + url);
-          return from(loadFeedData(url));
-        }
-      ),
-      tap(
-        (feedData: FeedData) => console.log("### tap feed data " + feedData.feedtitle)
-      ),
-      mergeMap(
-        (metaData: FeedData) => this.mapItemsToPost(metaData)
-      ),
-      reduce((posts: Post[], item: Post) => posts.concat(item), []),
-      tap(
-        (postings: Post[]) => postings.forEach((post) => console.log("### grouped post: " + post.sortdate))
-      ),
-      map((list: Post[]) => this.sortArray(list)),
-      mergeMap(list => list),
-    );
-  }
-
-  sortArray(post: Post[]): Post[] {
-    const aIstGroesser: number = -1;
-    const aIstKleiner: number = 1;
-    return post.sort((lp, rp) => {
-      const a: string = lp.sortdate;
-      const b: string = rp.sortdate;
-      if (!a) {
-        return aIstKleiner;
-      }
-      if (!b) {
-        return aIstGroesser;
-      }
-      if (a > b) {
-        return aIstGroesser;
-      } else if (b > a) {
-        return aIstKleiner;
-      } else {
-        return 0
-      }
-    });
-  }
-
-  mapItemsToPost(feedData: FeedData): Observable<Post> {
-    return from(feedData.items).pipe(
-      map(
-        (feeditem: FeedItem) => {
-          const date: Date = this.getDateFromFeedItem(feeditem);
-          const formatedDate = this.getFormattedDate(date);
-          const title:string = feeditem.title as string;
-          const sortDate = this.getSortedDate(date, title);
-          const post: Post = {
-            feedtitle: feedData.feedtitle,
-            exaktdate: date,
-            sortdate: sortDate,
-            pubdate: formatedDate, // + " \t{" + sortDate + "}\t",
-            item: feeditem
-          };
-          return post;
-        }
-      )
-    );
-  }
-
-  getFormattedDate(date: Date): string {
-    const minuteFormat: DateTimeFormat = new DateTimeFormat("de-DE",
-      {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'});
-    return date ? minuteFormat.format(date) : null;
-  }
-
-  getDateFromFeedItem(feedItem): Date {
-    let datum: string;
-    if (feedItem.pubdate) {
-      datum = feedItem.pubdate;
-    } else if (feedItem.updated) {
-      datum = feedItem.updated;
-    } else {
-      datum = feedItem["dc:date"];
-    }
-    let date: Date = null;
-    try {
-      if (datum) {
-        date = new Date(Date.parse(datum));
-      }
-    } catch (fehler) {
-      console.error(fehler);
-    }
-    return date ? date : null;
-  }
-
-  padTo2(zahl: number): string {
-    return zahl <= 9 ? "0" + zahl : "" + zahl;
-  }
-
-  getSortedDate(date: Date, title:string): string {
-    if (date) {
-      const year: number = date.getUTCFullYear();
-      const month: number = date.getUTCMonth() + 1;
-      const day: number = date.getUTCDate();
-      const hour: number = date.getHours();
-      const minute: number = date.getMinutes();
-      const gruppe: number = Math.floor(minute / 60);
-      return ""
-        + year + '#'
-        + this.padTo2(month) + '#'
-        + this.padTo2(day) + '#'
-        + this.padTo2(hour) + '#'
-        // + this.padTo2(minute) + '#'
-        + gruppe + '#'
-        + title
-    } else {
-      return null;
-    }
-  }
-
-  protected async loadFeeds(): Promise<void> {
-    return new Promise(
-      (resolve) => {
-        this.loadFeedContent().subscribe(
-          {
-            next: (post: Post) => this.feeds.push(post),
-            error: (error) => error,
-            complete: () => {
-              // rendering trigger
-              this.feeds = [...this.feeds];
-              console.log("###complete with:\n" + JSON.stringify(this.feeds));
-              // resolve the promise to continue after data load
-              resolve();
-            }
-          }
-        )
-      }
-    );
-  }
-
   protected getHostClass(): string {
     let hostClass = this.initialHostClass;
     if (this.hasNoFeeds()) {
@@ -321,8 +180,7 @@ export class HoneyNews {
   addUrl(event: UIEvent) {
     event = event;
     const url = this.inputNewUrl.value;
-    this.feedURLs.push(url);
-    this.loadFeeds();
+    this.feedLoader.addFeedUrl(url);
   }
 
   public render() {
