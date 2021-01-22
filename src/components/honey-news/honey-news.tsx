@@ -212,16 +212,7 @@ export class HoneyNews {
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
-        <h2>Legende</h2>
-        <dl>
-          <dt>[xxx]</dt>
-          <dd>Titel der News Feed Quelle</dd>
-          <dt>(xx.xx.xxxx xx:xx)</dt>
-          <dd>Originale Zeit der Veröffentlichung</dd>
-          <dt>{"{xx.xx.xxxx xx.xx}"}</dt>
-          <dd>Berechnetes Sortierdatum</dd>
-        </dl>
-
+        <h2>Verwaltung</h2>
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
 
