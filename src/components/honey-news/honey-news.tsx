@@ -183,7 +183,25 @@ export class HoneyNews {
     this.feedLoader.addFeedUrl(url);
   }
 
+  lastHour: number = 0;
+
+  getUeberschrift(post: Post) {
+    const hour:number  = post.exaktdate.getHours();
+    if ( hour != this.lastHour) {
+      this.lastHour = hour;
+      return <h2>{post.exaktdate.toLocaleDateString() +" "+  this.lastHour} Uhr</h2>;
+    } else {
+      return ;
+    }
+  }
+
+  getPostEntry(post: Post) {
+    return <li>[{post.feedtitle}]({post.pubdate})<a href={this.getPostLink(post.item)}
+                                                    target="_blank">{post.item.title}</a></li>;
+  }
+
   public render() {
+
     Logger.debugMessage('##RENDER##');
     return (
       <Host
@@ -210,8 +228,10 @@ export class HoneyNews {
         <h2>News Feed</h2>
         <ol>
           {this.feeds.map((post) =>
-            <li>[{post.feedtitle}]({post.pubdate})<a href={this.getPostLink(post.item)}
-                                                     target="_blank">{post.item.title}</a></li>
+            [
+              this.getUeberschrift(post),
+              this.getPostEntry(post)
+            ]
           )}
         </ol>
       </Host>
