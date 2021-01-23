@@ -3462,7 +3462,7 @@ const createWorkerProxy = (worker, workerMsgId, exportedMethod) => (
   })
 );
 
-const workerPromise = import('./fetch-es6.worker-98f436a6.js').then(m => m.worker);
+const workerPromise = import('./fetch-es6.worker-19852487.js').then(m => m.worker);
 const loadData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadData');
 const loadFeedData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedData');
 
@@ -7357,7 +7357,7 @@ class FeedLoader {
     this.feedURLs.push(feedURL);
   }
   loadFeedContent() {
-    timer(0, 120000).pipe(mergeMap(() => from(this.feedURLs)), mergeMap((url) => {
+    timer(0, 300000).pipe(mergeMap(() => from(this.feedURLs)), mergeMap((url) => {
       console.log("### frage url " + url);
       return from(loadFeedData(url)).pipe(catchError(() => EMPTY));
     }), mergeMap((feedData) => {
