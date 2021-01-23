@@ -201,7 +201,7 @@ export class HoneyNews {
     if (PipeOperators.compareDates(this.lastUpdate, post.exaktdate) < 0) {
       this.lastUpdate = post.exaktdate;
     }
-    if (hour.getHours()!=this.lastHour.getHours()) {
+    if (hour.getUTCHours()!=this.lastHour.getUTCHours()) {
       this.lastHour = hour;
       return <h2>{post.exaktdate.toLocaleDateString() + " " + this.lastHour.getHours()} Uhr</h2>;
     } else {

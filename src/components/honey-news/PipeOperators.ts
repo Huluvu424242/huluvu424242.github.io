@@ -91,8 +91,8 @@ export class PipeOperators {
       const year: number = date.getUTCFullYear();
       const month: number = date.getUTCMonth() + 1;
       const day: number = date.getUTCDate();
-      const hour: number = date.getHours();
-      const minute: number = date.getMinutes();
+      const hour: number = date.getUTCHours();
+      const minute: number = date.getUTCMinutes();
       const gruppe: number = Math.floor(minute / 60);
       return ""
         + year + '#'
