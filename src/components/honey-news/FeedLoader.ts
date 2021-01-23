@@ -1,4 +1,4 @@
-import {EMPTY, from, Observable, Subject, timer} from "rxjs";
+import {EMPTY, from, Subject, timer} from "rxjs";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {catchError, filter, mergeMap, tap} from "rxjs/operators";
 import {PipeOperators} from "./PipeOperators";
@@ -11,7 +11,7 @@ export class FeedLoader {
   feedURLs: string[] = [];
 
 
-  entryKeys: Set<string> = new Set<string>();
+  hashcodes: Set<string> = new Set<string>();
   feedEntries: Post[] = [];
   posts$: Subject<Post[]> = new Subject();
 
@@ -36,37 +36,27 @@ export class FeedLoader {
       ),
       mergeMap(
         (feedData: FeedData) => {
-          console.log("### aktualisiere url " + feedData.url)
+          console.log("### aktualisiere url " + feedData.url);
           return PipeOperators.mapItemsToPost(feedData);
-        }
-      ),
-      // tap(
-      //   (post: Post) => console.log("### Date: " + PipeOperators.compareDates(post.exaktdate, new Date())
-      //     + "#"
-      //     + post.item.title)
-      // ),
-      filter((post: Post) => {
-          return PipeOperators.compareDates(post.exaktdate, new Date()) < 1
         }
       ),
       tap(
         (post: Post) => console.log("### filter: " + post.item.title)
+      ),
+      filter((post: Post) => {
+          return PipeOperators.compareDates(post.exaktdate, new Date()) < 1
+        }
       )
-      // reduce((posts: Post[], item: Post) => posts.concat(item), []),
-      // tap(
-      //   (postings: Post[]) => postings.forEach((post) => console.log("### unsortiert post: " + post.sortdate))
-      // ),
-      // map((list: Post[]) => PipeOperators.sortArray(list)),
-      // mergeMap(list => list),
     ).subscribe(
       {
         next: (post: Post) => {
-          console.log("### add feeds: ");
-          if (!this.feedEntries.includes(post)) {
+          console.log("### add feeds with hash: "+post.hashcode +'#'+post.item.title);
+          if (!this.hashcodes.has(post.hashcode)) {
             this.feedEntries.push(post);
+            this.hashcodes.add(post.hashcode);
             const sortedPosts: Post[] = PipeOperators.sortArray(this.feedEntries);
             this.posts$.next(sortedPosts);
-              }
+          }
         }
       }
     );

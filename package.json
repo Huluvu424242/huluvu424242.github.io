@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "rxjs": "6.6.3",
-    "feedme": "2.0.2"
+    "feedme": "2.0.2",
+    "object-hash": "2.1.1"
   },
   "devDependencies": {
     "@stencil/core": "2.4.0-3",

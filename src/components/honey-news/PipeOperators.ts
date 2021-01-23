@@ -2,6 +2,7 @@ import {FeedData, Post} from "../../fetch-es6.worker";
 import {from, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
+import * as objectHash from "object-hash";
 import DateTimeFormat = Intl.DateTimeFormat;
 
 export class PipeOperators {
@@ -42,12 +43,16 @@ export class PipeOperators {
           const title: string = feeditem.title as string;
           const sortDate = PipeOperators.getSortedDate(date, title);
           const post: Post = {
+            hashcode: null,
+            queryurl: feedData.url,
             feedtitle: feedData.feedtitle,
             exaktdate: date,
             sortdate: sortDate,
             pubdate: formatedDate, // + " \t{" + sortDate + "}\t",
             item: feeditem
           };
+          const partToHash:string = post.feedtitle+post.item.title+post.queryurl;
+          post.hashcode = objectHash.sha1(partToHash);
           return post;
         }
       )
@@ -117,7 +122,7 @@ export class PipeOperators {
   }
 
   public static compareDates(date1: Date, date2: Date) {
-    if (!date1) return -1
+    if (!date1) return -1;
     if (!date2) return 1;
     const timeString1: string = this.getTimeString(date1);
     const timeString2: string = this.getTimeString(date2);
