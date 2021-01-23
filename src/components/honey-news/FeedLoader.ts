@@ -1,6 +1,6 @@
-import {from, Observable} from "rxjs";
+import {EMPTY, from, Observable, timer} from "rxjs";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
-import {filter, map, mergeMap, reduce, tap} from "rxjs/operators";
+import {catchError, filter, mergeMap, tap} from "rxjs/operators";
 import {PipeOperators} from "./PipeOperators";
 
 export class FeedLoader {
@@ -18,13 +18,15 @@ export class FeedLoader {
     this.feedURLs.push(feedURL);
   }
 
-  public  loadFeedContent(): Observable<Post> {
-    const urlObservable: Observable<string> = from(this.feedURLs);
-    return urlObservable.pipe(
+  public loadFeedContent(): Observable<Post> {
+    return timer(0, 120000).pipe(
+      mergeMap(
+        () => from(this.feedURLs)
+      ),
       mergeMap(
         (url: string) => {
           console.log("### frage url " + url);
-          return from(loadFeedData(url));
+          return from(loadFeedData(url)).pipe(catchError(()=>EMPTY));
         }
       ),
       mergeMap(
@@ -33,19 +35,24 @@ export class FeedLoader {
           return PipeOperators.mapItemsToPost(feedData);
         }
       ),
-      tap(
-        (post: Post) => console.log("### Date: " + PipeOperators.compareDates(post.exaktdate, new Date())
-          + "#"
-          + post.item.title)
+      // tap(
+      //   (post: Post) => console.log("### Date: " + PipeOperators.compareDates(post.exaktdate, new Date())
+      //     + "#"
+      //     + post.item.title)
+      // ),
+      filter((post: Post) => {
+          return PipeOperators.compareDates(post.exaktdate, new Date()) < 1
+        }
       ),
-      filter((post: Post) => PipeOperators.compareDates(post.exaktdate, new Date())<1),
-      reduce((posts: Post[], item: Post) => posts.concat(item), []),
       tap(
-        (postings: Post[]) => postings.forEach((post) => console.log("### unsortiert post: " + post.sortdate))
-      ),
-      map((list: Post[]) => PipeOperators.sortArray(list)),
-      mergeMap(list => list),
+        (post: Post) => console.log("### filter: " + post.item.title)
+      )
+      // reduce((posts: Post[], item: Post) => posts.concat(item), []),
+      // tap(
+      //   (postings: Post[]) => postings.forEach((post) => console.log("### unsortiert post: " + post.sortdate))
+      // ),
+      // map((list: Post[]) => PipeOperators.sortArray(list)),
+      // mergeMap(list => list),
     );
   }
-
 }

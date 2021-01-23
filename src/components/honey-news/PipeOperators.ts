@@ -10,10 +10,11 @@ export class PipeOperators {
     return zahl <= 9 ? "0" + zahl : "" + zahl;
   }
 
-  public static sortArray(post: Post[]): Post[] {
+  public static sortArray(posts: Post[]): Post[] {
+    const sortedPosts: Post[] = [...posts];
     const aIstGroesser: number = -1;
     const aIstKleiner: number = 1;
-    return post.sort((lp, rp) => {
+    return sortedPosts.sort((lp, rp) => {
       const a: string = lp.sortdate;
       const b: string = rp.sortdate;
       if (!a) {
