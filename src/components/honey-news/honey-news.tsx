@@ -226,7 +226,7 @@ export class HoneyNews {
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
 
-        <h2>News Feed (Stand: {this.lastUpdate.toLocaleDateString() + "  " + this.lastUpdate.toLocaleTimeString()} )</h2>
+        <h2>News Feed (neueste Meldung: {this.lastUpdate.toLocaleDateString() + "  " + this.lastUpdate.toLocaleTimeString()} )</h2>
         <ol>
           {this.feeds.map((post) =>
             [
