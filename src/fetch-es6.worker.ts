@@ -4,6 +4,8 @@ import {FeedItem} from "feedme/dist/parser";
 
 
 export interface Post {
+  hashcode: string;
+  queryurl: string;
   feedtitle: string;
   exaktdate: Date;
   sortdate: string

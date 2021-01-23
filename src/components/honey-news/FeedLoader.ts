@@ -1,6 +1,6 @@
-import {from, Observable} from "rxjs";
+import {EMPTY, from, Subject, timer} from "rxjs";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
-import {filter, map, mergeMap, reduce, tap} from "rxjs/operators";
+import {catchError, filter, mergeMap, tap} from "rxjs/operators";
 import {PipeOperators} from "./PipeOperators";
 
 export class FeedLoader {
@@ -10,6 +10,11 @@ export class FeedLoader {
    */
   feedURLs: string[] = [];
 
+
+  hashcodes: Set<string> = new Set<string>();
+  feedEntries: Post[] = [];
+  posts$: Subject<Post[]> = new Subject();
+
   constructor(feedURLs: string[]) {
     this.feedURLs = feedURLs || [];
   }
@@ -18,34 +23,47 @@ export class FeedLoader {
     this.feedURLs.push(feedURL);
   }
 
-  public  loadFeedContent(): Observable<Post> {
-    const urlObservable: Observable<string> = from(this.feedURLs);
-    return urlObservable.pipe(
+  public loadFeedContent(): Subject<Post[]> {
+    timer(0, 120000).pipe(
+      mergeMap(
+        () => from(this.feedURLs)
+      ),
       mergeMap(
         (url: string) => {
           console.log("### frage url " + url);
-          return from(loadFeedData(url));
+          return from(loadFeedData(url)).pipe(catchError(() => EMPTY));
         }
       ),
       mergeMap(
         (feedData: FeedData) => {
-          console.log("### aktualisiere url " + feedData.url)
+          console.log("### aktualisiere url " + feedData.url);
           return PipeOperators.mapItemsToPost(feedData);
         }
       ),
       tap(
-        (post: Post) => console.log("### Date: " + PipeOperators.compareDates(post.exaktdate, new Date())
-          + "#"
-          + post.item.title)
+        (post: Post) => console.log("### filter: " + post.item.title)
       ),
-      filter((post: Post) => PipeOperators.compareDates(post.exaktdate, new Date())<1),
-      reduce((posts: Post[], item: Post) => posts.concat(item), []),
-      tap(
-        (postings: Post[]) => postings.forEach((post) => console.log("### unsortiert post: " + post.sortdate))
-      ),
-      map((list: Post[]) => PipeOperators.sortArray(list)),
-      mergeMap(list => list),
+      filter((post: Post) => {
+          return PipeOperators.compareDates(post.exaktdate, new Date()) < 1
+        }
+      )
+    ).subscribe(
+      {
+        next: (post: Post) => {
+          console.log("### add feeds with hash: "+post.hashcode +'#'+post.item.title);
+          if (!this.hashcodes.has(post.hashcode)) {
+            this.feedEntries.push(post);
+            this.hashcodes.add(post.hashcode);
+            const sortedPosts: Post[] = PipeOperators.sortArray(this.feedEntries);
+            this.posts$.next(sortedPosts);
+          }
+        }
+      }
     );
+    return this.posts$;
   }
-
 }
+
+
+
+

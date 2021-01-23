@@ -89,20 +89,12 @@ export class HoneyNews {
   }
 
   public loadFeeds(): void {
-    let posts: Post[] = [];
-    this.feedLoader.loadFeedContent().subscribe(
-      {
-        next: (post: Post) => posts.push(post),
-        // error: (error) => reject(error),
-        complete: () => {
-          console.log("###complete with:\n" + JSON.stringify(posts));
-          // resolve the promise to continue after data load
-          this.feeds = [...posts];
-          posts = [];
-        }
-      }
-    );
+    const posts$ = this.feedLoader.loadFeedContent();
+    posts$.subscribe({
+      next: (posts: Post[]) => this.feeds = [...posts]
+    });
   }
+
 
   protected initialisiereUrls() {
     const predefinedURLs: string[] = [
