@@ -3462,7 +3462,7 @@ const createWorkerProxy = (worker, workerMsgId, exportedMethod) => (
   })
 );
 
-const workerPromise = import('./fetch-es6.worker-91a90701.js').then(m => m.worker);
+const workerPromise = import('./fetch-es6.worker-279d881e.js').then(m => m.worker);
 const loadData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadData');
 const loadFeedData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedData');
 
@@ -7402,6 +7402,7 @@ const HoneyNews = class {
      */
     this.feedLoader = new FeedLoader([]);
     this.feeds = [];
+    this.lastUpdate = new Date();
     this.options = {
       disabledHostClass: "speaker-disabled",
       enabledHostClass: "speaker-enabled",
@@ -7436,7 +7437,10 @@ const HoneyNews = class {
   loadFeeds() {
     const posts$ = this.feedLoader.loadFeedContent();
     posts$.subscribe({
-      next: (posts) => this.feeds = [...posts]
+      next: (posts) => {
+        this.feeds = [...posts];
+        this.lastUpdate = new Date();
+      }
     });
   }
   initialisiereUrls() {
@@ -7537,7 +7541,7 @@ const HoneyNews = class {
   }
   render() {
     Logger.debugMessage('##RENDER##');
-    return (h(Host, { title: this.getTitleText(), alt: this.getAltText(), role: "button", tabindex: this.hasNoFeeds() ? -1 : this.taborder, class: this.getHostClass(), disabled: this.hasNoFeeds() }, h("h2", null, "Verwaltung"), h("input", { id: "newurl", ref: (el) => this.inputNewUrl = el }), h("button", { id: "addurl", onClick: (event) => this.addUrl(event) }, "Add Feed URL"), h("h2", null, "News Feed"), h("ol", null, this.feeds.map((post) => [
+    return (h(Host, { title: this.getTitleText(), alt: this.getAltText(), role: "button", tabindex: this.hasNoFeeds() ? -1 : this.taborder, class: this.getHostClass(), disabled: this.hasNoFeeds() }, h("h2", null, "Verwaltung"), h("input", { id: "newurl", ref: (el) => this.inputNewUrl = el }), h("button", { id: "addurl", onClick: (event) => this.addUrl(event) }, "Add Feed URL"), h("h2", null, "News Feed (Stand: ", this.lastUpdate.toLocaleDateString() + "  " + this.lastUpdate.toLocaleTimeString(), " )"), h("ol", null, this.feeds.map((post) => [
       this.getUeberschrift(post),
       this.getPostEntry(post)
     ]))));

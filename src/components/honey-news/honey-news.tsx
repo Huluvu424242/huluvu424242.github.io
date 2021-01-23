@@ -55,6 +55,8 @@ export class HoneyNews {
 
   @State() feeds: Post[] = [];
 
+  lastUpdate:Date = new Date();
+
   @State() options: NewsOptions = {
     disabledHostClass: "speaker-disabled",
     enabledHostClass: "speaker-enabled",
@@ -91,7 +93,10 @@ export class HoneyNews {
   public loadFeeds(): void {
     const posts$ = this.feedLoader.loadFeedContent();
     posts$.subscribe({
-      next: (posts: Post[]) => this.feeds = [...posts]
+      next: (posts: Post[]) => {
+        this.feeds = [...posts]
+        this.lastUpdate = new Date();
+      }
     });
   }
 
@@ -221,7 +226,7 @@ export class HoneyNews {
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
 
-        <h2>News Feed</h2>
+        <h2>News Feed (Stand: {this.lastUpdate.toLocaleDateString() + "  " + this.lastUpdate.toLocaleTimeString()} )</h2>
         <ol>
           {this.feeds.map((post) =>
             [
