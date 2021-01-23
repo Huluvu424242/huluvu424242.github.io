@@ -4,6 +4,7 @@ import {NewsOptions} from "./news-options";
 import {FeedLoader} from "./FeedLoader";
 import {Post} from "../../fetch-es6.worker";
 import {from} from "rxjs";
+import {PipeOperators} from "./PipeOperators";
 
 @Component({
   tag: "honey-news",
@@ -55,7 +56,7 @@ export class HoneyNews {
 
   @State() feeds: Post[] = [];
 
-  lastUpdate:Date = new Date();
+  lastUpdate: Date = new Date(Date.now() - 1000);
 
   @State() options: NewsOptions = {
     disabledHostClass: "speaker-disabled",
@@ -95,7 +96,6 @@ export class HoneyNews {
     posts$.subscribe({
       next: (posts: Post[]) => {
         this.feeds = [...posts]
-        this.lastUpdate = new Date();
       }
     });
   }
@@ -197,6 +197,9 @@ export class HoneyNews {
 
   getUeberschrift(post: Post) {
     const hour: number = post.exaktdate.getHours();
+    if (PipeOperators.compareDates(this.lastUpdate, post.exaktdate) < 0) {
+      this.lastUpdate = post.exaktdate;
+    }
     if (hour != this.lastHour) {
       this.lastHour = hour;
       return <h2>{post.exaktdate.toLocaleDateString() + " " + this.lastHour} Uhr</h2>;
@@ -226,7 +229,8 @@ export class HoneyNews {
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
 
-        <h2>News Feed (neueste Meldung: {this.lastUpdate.toLocaleDateString() + "  " + this.lastUpdate.toLocaleTimeString()} )</h2>
+        <h2>News Feed (neueste
+          Meldung: {this.lastUpdate.toLocaleDateString() + "  " + this.lastUpdate.toLocaleTimeString()} )</h2>
         <ol>
           {this.feeds.map((post) =>
             [
