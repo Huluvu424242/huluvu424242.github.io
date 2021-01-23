@@ -1,4 +1,4 @@
-import {EMPTY, from, Observable, timer} from "rxjs";
+import {EMPTY, from, Observable, Subject, timer} from "rxjs";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {catchError, filter, mergeMap, tap} from "rxjs/operators";
 import {PipeOperators} from "./PipeOperators";
@@ -10,6 +10,11 @@ export class FeedLoader {
    */
   feedURLs: string[] = [];
 
+
+  entryKeys: Set<string> = new Set<string>();
+  feedEntries: Post[] = [];
+  posts$: Subject<Post[]> = new Subject();
+
   constructor(feedURLs: string[]) {
     this.feedURLs = feedURLs || [];
   }
@@ -18,15 +23,15 @@ export class FeedLoader {
     this.feedURLs.push(feedURL);
   }
 
-  public loadFeedContent(): Observable<Post> {
-    return timer(0, 120000).pipe(
+  public loadFeedContent(): Subject<Post[]> {
+    timer(0, 120000).pipe(
       mergeMap(
         () => from(this.feedURLs)
       ),
       mergeMap(
         (url: string) => {
           console.log("### frage url " + url);
-          return from(loadFeedData(url)).pipe(catchError(()=>EMPTY));
+          return from(loadFeedData(url)).pipe(catchError(() => EMPTY));
         }
       ),
       mergeMap(
@@ -53,6 +58,22 @@ export class FeedLoader {
       // ),
       // map((list: Post[]) => PipeOperators.sortArray(list)),
       // mergeMap(list => list),
+    ).subscribe(
+      {
+        next: (post: Post) => {
+          console.log("### add feeds: ");
+          if (!this.feedEntries.includes(post)) {
+            this.feedEntries.push(post);
+            const sortedPosts: Post[] = PipeOperators.sortArray(this.feedEntries);
+            this.posts$.next(sortedPosts);
+              }
+        }
+      }
     );
+    return this.posts$;
   }
 }
+
+
+
+

@@ -4,8 +4,6 @@ import {NewsOptions} from "./news-options";
 import {FeedLoader} from "./FeedLoader";
 import {Post} from "../../fetch-es6.worker";
 import {from} from "rxjs";
-import {tap} from "rxjs/operators";
-import {PipeOperators} from "./PipeOperators";
 
 @Component({
   tag: "honey-news",
@@ -91,50 +89,12 @@ export class HoneyNews {
   }
 
   public loadFeeds(): void {
-    let counter: number = 0;
-
-    let posts: Post[] = [];
-    this.feedLoader.loadFeedContent()
-      .pipe(
-        tap(
-          (post: Post) => {
-            posts.push(post)
-            console.log("### receiver: " + post.item.title);
-          }
-        ),
-        tap(
-          () => {
-            console.log("### add feeds: ");
-            if (counter < 400) {
-              counter++;
-              console.log("### counter: " + counter);
-            } else {
-              console.log("### all posts lenth: " + posts.length);
-              const tmp: Post[] = [...posts];
-              posts = [];
-              counter = 0;
-              const allPosts: Post[] = PipeOperators.sortArray(tmp)
-              this.feeds = [...allPosts];
-            }
-          }
-        )
-      ).subscribe(
-      {
-        next: (post: Post) => {
-          console.log("next post: " + post.feedtitle);
-          // this.feeds.push(post);
-
-        },
-        // error: (error) => reject(error),
-        complete: () => {
-          console.log("###complete with:\n" + JSON.stringify(posts));
-          // resolve the promise to continue after data load
-          // this.feeds = [...posts];
-          // posts = [];
-        }
-      }
-    );
+    const posts$ = this.feedLoader.loadFeedContent();
+    posts$.subscribe({
+      next: (posts: Post[]) => this.feeds = [...posts]
+    });
   }
+
 
   protected initialisiereUrls() {
     const predefinedURLs: string[] = [
