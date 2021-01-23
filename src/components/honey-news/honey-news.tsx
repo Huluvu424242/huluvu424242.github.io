@@ -193,16 +193,17 @@ export class HoneyNews {
     this.feedLoader.addFeedUrl(url);
   }
 
-  lastHour: number = 0;
+  lastHour: Date;
 
   getUeberschrift(post: Post) {
-    const hour: number = post.exaktdate.getHours();
+    this.lastHour=this.lastHour||post.exaktdate;
+    const hour: Date = post.exaktdate;
     if (PipeOperators.compareDates(this.lastUpdate, post.exaktdate) < 0) {
       this.lastUpdate = post.exaktdate;
     }
-    if (hour != this.lastHour) {
+    if (hour.getHours()!=this.lastHour.getHours()) {
       this.lastHour = hour;
-      return <h2>{post.exaktdate.toLocaleDateString() + " " + this.lastHour} Uhr</h2>;
+      return <h2>{post.exaktdate.toLocaleDateString() + " " + this.lastHour.getHours()} Uhr</h2>;
     } else {
       return;
     }
