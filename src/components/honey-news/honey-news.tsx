@@ -56,7 +56,7 @@ export class HoneyNews {
 
   @State() feeds: Post[] = [];
 
-  lastUpdate: Date = new Date(Date.now() - 1000);
+  lastUpdate: Date = null;
 
   @State() options: NewsOptions = {
     disabledHostClass: "speaker-disabled",
@@ -95,6 +95,7 @@ export class HoneyNews {
     const posts$ = this.feedLoader.loadFeedContent();
     posts$.subscribe({
       next: (posts: Post[]) => {
+        this.lastUpdate = this.lastUpdate || posts[0].exaktdate;
         this.feeds = [...posts]
       }
     });
@@ -193,15 +194,15 @@ export class HoneyNews {
     this.feedLoader.addFeedUrl(url);
   }
 
-  lastHour: Date;
+  lastHour: Date = null;
 
   getUeberschrift(post: Post) {
-    this.lastHour=this.lastHour||post.exaktdate;
+    this.lastHour = this.lastHour || post.exaktdate;
     const hour: Date = post.exaktdate;
     if (PipeOperators.compareDates(this.lastUpdate, post.exaktdate) < 0) {
       this.lastUpdate = post.exaktdate;
     }
-    if (hour.getUTCHours()!=this.lastHour.getUTCHours()) {
+    if (hour.getUTCHours() != this.lastHour.getUTCHours()) {
       this.lastHour = hour;
       return <h2>{post.exaktdate.toLocaleDateString() + " " + this.lastHour.getHours()} Uhr</h2>;
     } else {
@@ -214,8 +215,13 @@ export class HoneyNews {
                                                     target="_blank">{post.item.title}</a></li>;
   }
 
-  public render() {
+  getNeuesteMeldung() {
+    if (this.lastUpdate) {
+      return <span>(neueste Meldung: {this.lastUpdate?.toLocaleDateString() + "  " + this.lastUpdate?.toLocaleTimeString()} )</span>
+    }
+  }
 
+  public render() {
     Logger.debugMessage('##RENDER##');
     return (
       <Host
@@ -230,8 +236,11 @@ export class HoneyNews {
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
 
-        <h2>News Feed (neueste
-          Meldung: {this.lastUpdate.toLocaleDateString() + "  " + this.lastUpdate.toLocaleTimeString()} )</h2>
+        <h2>News Feed
+          {
+            this.getNeuesteMeldung()
+          }
+        </h2>
         <ol>
           {this.feeds.map((post) =>
             [
