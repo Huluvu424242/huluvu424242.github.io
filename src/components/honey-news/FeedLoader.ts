@@ -24,7 +24,7 @@ export class FeedLoader {
   }
 
   public loadFeedContent(): Subject<Post[]> {
-    timer(0, 300000).pipe(
+    timer(0, 120000).pipe(
       mergeMap(
         () => from(this.feedURLs)
       ),
