@@ -1,13 +1,16 @@
 // change to the version you get from `npm ls workbox-build`
 importScripts('workbox-v6.0.2/workbox-sw.js');
 
+console.log("$$$=======SERVICE WORKER ======================================================§§§§§");
+
+
 // custom service worker code
 self.addEventListener('fetch', function (event) {
-  console.log('Handling fetch event for', event.request.url);
+  console.log('§§§Handling fetch event for', event.request.url);
 
   responsePromise = fetch(event.request)
     .then(function (response) {
-      console.log('Response from network is:', response);
+      console.log('§§§Response from network is:', response);
       console.log(new Map(response.headers));
 
       const newHeaders = new Headers(response.headers);
@@ -23,7 +26,7 @@ self.addEventListener('fetch', function (event) {
       return anotherResponse;
     })
     .catch(function (error) {
-      console.error('Fetching failed:', error);
+      console.error('§§§=================$$$$Fetching failed:', error);
       throw error;
     });
 

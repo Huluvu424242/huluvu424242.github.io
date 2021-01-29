@@ -1,5 +1,4 @@
 import FeedMe, {Feed} from "feedme/dist/feedme";
-import * as http from "http";
 import {FeedItem} from "feedme/dist/parser";
 
 
@@ -53,10 +52,11 @@ export async function loadFeedData(url: string): Promise<FeedData> {
   return new Promise<FeedData>((resolve) => {
     const proxyUrl: string = "https://cors-anywhere.herokuapp.com/";
     const queryUrl: string = proxyUrl + url;
+    // const queryUrl: string =  url;
     console.debug("###query url " + queryUrl);
-    http.get(queryUrl, (response) => {
-      if (response.statusCode != 200) {
-        console.error(new Error(`status code ${response.statusCode}`));
+    fetch(queryUrl).then( (response:Response) => {
+      if (response.status != 200) {
+        console.error(new Error(`status code ${response.status}`));
         return;
       }
       const data: FeedData = {
@@ -73,8 +73,8 @@ export async function loadFeedData(url: string): Promise<FeedData> {
       // });
       parser.on('finish', () => {
         try {
-          data.status = response.statusCode;
-          data.statusText = response.statusMessage;
+          data.status = response.status;
+          data.statusText = response.statusText;
           data.url = queryUrl;
           const feed: Feed = parser.done();
           data.feedtitle = JSON.stringify(feed.title);
@@ -85,7 +85,8 @@ export async function loadFeedData(url: string): Promise<FeedData> {
         }
         resolve(data);
       });
-      response.pipe(parser);
+      response.text().then((txt)=>parser.end(txt));
+      // response.pipe(parser);
     });
   });
 }
