@@ -1,5 +1,5 @@
 import {FeedData, Post} from "../../fetch-es6.worker";
-import {from, Observable} from "rxjs";
+import {EMPTY, from, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import * as objectHash from "object-hash";
@@ -35,6 +35,7 @@ export class PipeOperators {
   }
 
   public static mapItemsToPost(feedData: FeedData): Observable<Post> {
+    if(!feedData||!feedData.items|| feedData.items.length <1) return EMPTY;
     return from(feedData.items).pipe(
       map(
         (feeditem: FeedItem) => {

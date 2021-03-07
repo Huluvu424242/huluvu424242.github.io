@@ -1,1 +1,1 @@
-import{p as e,b as o}from"./p-968d4f0f.js";(()=>{const o=import.meta.url,s={};return""!==o&&(s.resourcesUrl=new URL(".",o).href),e(s)})().then((e=>o([["p-2bb92a8a",[[1,"honey-news",{verbose:[4],feeds:[32],options:[32],updateOptions:[64]}]]]],e)));
+import{p as e,b as o}from"./p-968d4f0f.js";(()=>{const o=import.meta.url,s={};return""!==o&&(s.resourcesUrl=new URL(".",o).href),e(s)})().then((e=>o([["p-017093a4",[[1,"honey-news",{verbose:[4],feeds:[32],options:[32],updateOptions:[64]}]]]],e)));
