@@ -1,4 +1,4 @@
-import FeedMe, {Feed} from "feedme/dist/feedme";
+import {Feed} from "feedme/dist/feedme";
 import {FeedItem} from "feedme/dist/parser";
 
 
