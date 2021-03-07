@@ -1,6 +1,7 @@
-import FeedMe, {Feed} from "feedme/dist/feedme";
-import * as http from "http";
+import {Feed} from "feedme/dist/feedme";
 import {FeedItem} from "feedme/dist/parser";
+import {EMPTY, from} from "rxjs";
+import {catchError, switchMap, tap} from "rxjs/operators";
 
 
 export interface Post {
@@ -28,65 +29,38 @@ export interface FeedData {
   items: FeedItem[];
 }
 
-export async function loadData(request: RequestInfo): Promise<ResponseData> {
-  const response: Response = await fetch(request);
-  const data: ResponseData = {
-    status: null, statusText: null, json: null, text: null
-  };
-  try {
-    data.status = response.status;
-    data.statusText = response.statusText;
-    data.text = await response.text();
-    data.json = JSON.parse(data.text);
-  } catch (ex) {
-    // expect to failed if no body
-    console.warn("Error during read data of response " + ex);
-  }
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
-  return data;
-}
-
 // async für stencil worker
 export async function loadFeedData(url: string): Promise<FeedData> {
   return new Promise<FeedData>((resolve) => {
-    const proxyUrl: string = "https://cors-anywhere.herokuapp.com/";
-    const queryUrl: string = proxyUrl + url;
+    const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
+    const queryUrl: string = backendUrl + "?url=" + url;
     console.debug("###query url " + queryUrl);
-    http.get(queryUrl, (response) => {
-      if (response.statusCode != 200) {
-        console.error(new Error(`status code ${response.statusCode}`));
-        return;
-      }
-      const data: FeedData = {
-        status: null, url: null, statusText: null, feedtitle: null, items: null
-      };
-      let parser = new FeedMe(true);
-      // parser.on('title', (title) => {
-      //   console.log('title of feed is', title);
-      // });
-      // parser.on('item', (item) => {
-      //   console.log();
-      //   console.log('news:', item.title);
-      //   console.log(item.description);
-      // });
-      parser.on('finish', () => {
-        try {
-          data.status = response.statusCode;
-          data.statusText = response.statusMessage;
+    const getFeed = fetch(queryUrl, {
+      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    });
+    const feedData$ = from(getFeed);
+    const data: FeedData = {
+      status: null, url: null, statusText: null, feedtitle: null, items: null
+    };
+    feedData$.pipe(
+      tap(
+        (response: Response) => {
+          data.status = response.status;
+          data.statusText = response.statusText;
           data.url = queryUrl;
-          const feed: Feed = parser.done();
-          data.feedtitle = JSON.stringify(feed.title);
-          data.items = feed.items;
-        } catch (ex) {
-          // expect to failed if no body
-          console.warn("Error during read data of response " + ex);
         }
+      ),
+      switchMap(
+        (response: Response) => from(response.json()).pipe(catchError(() => EMPTY))
+      ),
+    ).subscribe(
+      (feed: Feed) => {
+        data.feedtitle = JSON.stringify(feed.title);
+        data.items = feed.items;
         resolve(data);
       });
-      response.pipe(parser);
-    });
   });
 }
 

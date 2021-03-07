@@ -37,7 +37,7 @@ export class FeedLoader {
       mergeMap(
         (feedData: FeedData) => {
           console.log("### aktualisiere url " + feedData.url);
-          return PipeOperators.mapItemsToPost(feedData);
+          return PipeOperators.mapItemsToPost(feedData).pipe(catchError(() => EMPTY));
         }
       ),
       tap(
