@@ -73,21 +73,23 @@ export async function loadFeedData(url: string): Promise<FeedData> {
       const data: FeedData = {
         status: null, url: null, statusText: null, feedtitle: null, items: null
       };
-      let parser = new FeedMe(true);
-      parser.end(response.text());
+      // let parser = new FeedMe(true);
+      // parser.end(response.text());
       // const feed = parser.done() as Feed;
-      try {
-        data.status = response.status;
-        data.statusText = response.statusText;
-        data.url = queryUrl;
-        const feed: Feed = parser.done();
-        data.feedtitle = JSON.stringify(feed.title);
-        data.items = feed.items;
-      } catch (ex) {
-        // expect to failed if no body
-        console.warn("Error during read data of response " + ex);
-      }
-      resolve(data);
+      data.status = response.status;
+      data.statusText = response.statusText;
+      data.url = queryUrl;
+      response.json().then((feedData) => {
+        try {
+          const feed: Feed = feedData;
+          data.feedtitle = JSON.stringify(feed.title);
+          data.items = feed.items;
+        } catch (ex) {
+          // expect to failed if no body
+          console.warn("Error during read data of response " + ex);
+        }
+        resolve(data);
+      });
       // parser.on('finish', () => {
       //   try {
       //     data.status = response.status;
