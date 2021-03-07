@@ -51,8 +51,8 @@ export async function loadData(request: RequestInfo): Promise<ResponseData> {
 // async für stencil worker
 export async function loadFeedData(url: string): Promise<FeedData> {
   return new Promise<FeedData>((resolve) => {
-    const proxyUrl: string = "https://cors-anywhere.herokuapp.com/";
-    const queryUrl: string = proxyUrl + url;
+    const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
+    const queryUrl: string = backendUrl +"?url="+ url;
     console.debug("###query url " + queryUrl);
     http.get(queryUrl, (response) => {
       if (response.statusCode != 200) {
@@ -63,14 +63,6 @@ export async function loadFeedData(url: string): Promise<FeedData> {
         status: null, url: null, statusText: null, feedtitle: null, items: null
       };
       let parser = new FeedMe(true);
-      // parser.on('title', (title) => {
-      //   console.log('title of feed is', title);
-      // });
-      // parser.on('item', (item) => {
-      //   console.log();
-      //   console.log('news:', item.title);
-      //   console.log(item.description);
-      // });
       parser.on('finish', () => {
         try {
           data.status = response.statusCode;
