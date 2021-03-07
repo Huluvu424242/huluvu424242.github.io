@@ -48,10 +48,10 @@ export async function loadFeedData(url: string): Promise<FeedData> {
       data.status = response.status;
       data.statusText = response.statusText;
       data.url = queryUrl;
+      if(!response.bodyUsed) {
+        console.error("### Kein Body im Response");
+      }
       response.json().then((feedData) => {
-        if(!feedData) {
-          console.error("###JSON:" + feedData);
-        }
         try {
           const feed: Feed = feedData;
           data.feedtitle = JSON.stringify(feed.title);
