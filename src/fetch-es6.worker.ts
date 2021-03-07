@@ -1,5 +1,7 @@
 import {Feed} from "feedme/dist/feedme";
 import {FeedItem} from "feedme/dist/parser";
+import {EMPTY, from} from "rxjs";
+import {catchError, switchMap, tap} from "rxjs/operators";
 
 
 export interface Post {
@@ -33,51 +35,61 @@ export async function loadFeedData(url: string): Promise<FeedData> {
     const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
     const queryUrl: string = backendUrl + "?url=" + url;
     console.debug("###query url " + queryUrl);
-    fetch(queryUrl, {
+    const getFeed = fetch(queryUrl, {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    }).then((response: Response) => {
-      if (response.status != 200) {
-        console.error(new Error(`status code ${response.statusText}`));
-        return;
-      }
-      const data: FeedData = {
-        status: null, url: null, statusText: null, feedtitle: null, items: null
-      };
-      data.status = response.status;
-      data.statusText = response.statusText;
-      data.url = queryUrl;
-      if(!response.bodyUsed) {
-        console.error("### Kein Body im Response");
-      }
-      response.json().then((feedData) => {
-        try {
-          const feed: Feed = feedData;
+    });
+    const feedData$ = from(getFeed);
+    const data: FeedData = {
+      status: null, url: null, statusText: null, feedtitle: null, items: null
+    };
+    feedData$
+      .pipe(
+        tap(
+          (response: Response) => {
+            data.status = response.status;
+            data.statusText = response.statusText;
+            data.url = queryUrl;
+          }
+        ),
+        switchMap(
+          (response: Response) => from(response.json()).pipe(catchError(() => EMPTY))
+        ),
+      )
+      .subscribe(
+        (feed: Feed) => {
           data.feedtitle = JSON.stringify(feed.title);
           data.items = feed.items;
-        } catch (ex) {
-          // expect to failed if no body
-          console.warn("Error during read data of response " + ex);
+          resolve(data);
         }
-        resolve(data);
-      });
-      // parser.on('finish', () => {
-      //   try {
-      //     data.status = response.status;
-      //     data.statusText = response.statusText;
-      //     data.url = queryUrl;
-      //     const feed: Feed = parser.done();
-      //     data.feedtitle = JSON.stringify(feed.title);
-      //     data.items = feed.items;
-      //   } catch (ex) {
-      //     // expect to failed if no body
-      //     console.warn("Error during read data of response " + ex);
-      //   }
-      //   resolve(data);
-      // });
-      // response.pipe(parser);
-    });
+      );
+    // .then((response: Response) => {
+    // if (response.status != 200) {
+    //   console.error(new Error(`status code ${response.statusText}`));
+    //   return;
+    // }
+    // const data: FeedData = {
+    //   status: null, url: null, statusText: null, feedtitle: null, items: null
+    // };
+    // data.status = response.status;
+    // data.statusText = response.statusText;
+    // data.url = queryUrl;
+    // if(!response.bodyUsed) {
+    //   console.error("### Kein Body im Response");
+    // }
+    // response.json().then((feedData) => {
+    //   try {
+    //     const feed: Feed = feedData;
+    //     data.feedtitle = JSON.stringify(feed.title);
+    //     data.items = feed.items;
+    //   } catch (ex) {
+    //     // expect to failed if no body
+    //     console.warn("Error during read data of response " + ex);
+    //   }
+    //   resolve(data);
+    // });
+    // });
   });
 }
 
