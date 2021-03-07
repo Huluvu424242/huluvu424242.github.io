@@ -44,52 +44,23 @@ export async function loadFeedData(url: string): Promise<FeedData> {
     const data: FeedData = {
       status: null, url: null, statusText: null, feedtitle: null, items: null
     };
-    feedData$
-      .pipe(
-        tap(
-          (response: Response) => {
-            data.status = response.status;
-            data.statusText = response.statusText;
-            data.url = queryUrl;
-          }
-        ),
-        switchMap(
-          (response: Response) => from(response.json()).pipe(catchError(() => EMPTY))
-        ),
-      )
-      .subscribe(
-        (feed: Feed) => {
-          data.feedtitle = JSON.stringify(feed.title);
-          data.items = feed.items;
-          resolve(data);
+    feedData$.pipe(
+      tap(
+        (response: Response) => {
+          data.status = response.status;
+          data.statusText = response.statusText;
+          data.url = queryUrl;
         }
-      );
-    // .then((response: Response) => {
-    // if (response.status != 200) {
-    //   console.error(new Error(`status code ${response.statusText}`));
-    //   return;
-    // }
-    // const data: FeedData = {
-    //   status: null, url: null, statusText: null, feedtitle: null, items: null
-    // };
-    // data.status = response.status;
-    // data.statusText = response.statusText;
-    // data.url = queryUrl;
-    // if(!response.bodyUsed) {
-    //   console.error("### Kein Body im Response");
-    // }
-    // response.json().then((feedData) => {
-    //   try {
-    //     const feed: Feed = feedData;
-    //     data.feedtitle = JSON.stringify(feed.title);
-    //     data.items = feed.items;
-    //   } catch (ex) {
-    //     // expect to failed if no body
-    //     console.warn("Error during read data of response " + ex);
-    //   }
-    //   resolve(data);
-    // });
-    // });
+      ),
+      switchMap(
+        (response: Response) => from(response.json()).pipe(catchError(() => EMPTY))
+      ),
+    ).subscribe(
+      (feed: Feed) => {
+        data.feedtitle = JSON.stringify(feed.title);
+        data.items = feed.items;
+        resolve(data);
+      });
   });
 }
 
