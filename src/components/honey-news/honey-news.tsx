@@ -211,8 +211,8 @@ export class HoneyNews {
   }
 
   getPostEntry(post: Post) {
-    return <li>[{post.feedtitle}]({post.pubdate})<a href={this.getPostLink(post.item)}
-                                                    target="_blank">{post.item.title}</a></li>;
+    return <li><div>({post.pubdate})[{post.feedtitle}]</div><div><a href={this.getPostLink(post.item)}
+                                                                    target="_blank">{post.item.title}</a></div></li>;
   }
 
   getNeuesteMeldung() {
