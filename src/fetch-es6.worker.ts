@@ -33,7 +33,7 @@ export interface FeedData {
 export async function loadFeedData(url: string): Promise<FeedData> {
   return new Promise<FeedData>((resolve) => {
     const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
-    const queryUrl: string = backendUrl + "?url=" + url;
+    const queryUrl: string = backendUrl + "?url=" + url+"&statistic=true";
     console.debug("###query url " + queryUrl);
     const getFeed = fetch(queryUrl, {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
