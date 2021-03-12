@@ -89,7 +89,7 @@ export class HoneyNews {
     this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
-    this.statisticSubscription = timer(0, 60000)
+    this.statisticSubscription = timer(0, 60000*10)
       .pipe(
         switchMap(
           () => from(fetch("http://huluvu424242.herokuapp.com/feeds/")).pipe(catchError(() => EMPTY))
