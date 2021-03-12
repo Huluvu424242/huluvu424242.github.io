@@ -92,7 +92,7 @@ export class HoneyNews {
     this.statisticSubscription = timer(0, 60000*10)
       .pipe(
         switchMap(
-          () => from(fetch("http://huluvu424242.herokuapp.com/feeds/")).pipe(catchError(() => EMPTY))
+          () => from(fetch("https://huluvu424242.herokuapp.com/feeds/")).pipe(catchError(() => EMPTY))
         )
       )
       .subscribe(
