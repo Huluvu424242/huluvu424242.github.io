@@ -3,8 +3,9 @@ import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedLoader} from "./FeedLoader";
 import {Post} from "../../fetch-es6.worker";
-import {from} from "rxjs";
+import {EMPTY, from, Subscription, timer} from "rxjs";
 import {PipeOperators} from "./PipeOperators";
+import {catchError, switchMap} from "rxjs/operators";
 
 @Component({
   tag: "honey-news",
@@ -56,6 +57,9 @@ export class HoneyNews {
 
   @State() feeds: Post[] = [];
 
+  @State() statistic: any[];
+  statisticSubscription: Subscription;
+
   lastUpdate: Date = null;
 
   @State() options: NewsOptions = {
@@ -85,10 +89,27 @@ export class HoneyNews {
     this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
+    this.statisticSubscription = timer(0, 60000)
+      .pipe(
+        switchMap(
+          () => from(fetch("http://huluvu424242.herokuapp.com/feeds/")).pipe(catchError(() => EMPTY))
+        )
+      )
+      .subscribe(
+        (response) => {
+          response.json().then((value) =>
+            this.statistic = [...value]
+          );
+        }
+      );
   }
 
   public componentWillLoad() {
     this.loadFeeds();
+  }
+
+  public disconnectedCallback() {
+    this.statisticSubscription.unsubscribe();
   }
 
   public loadFeeds(): void {
@@ -211,8 +232,11 @@ export class HoneyNews {
   }
 
   getPostEntry(post: Post) {
-    return <li><div>({post.pubdate})[{post.feedtitle}]</div><div><a href={this.getPostLink(post.item)}
-                                                                    target="_blank">{post.item.title}</a></div></li>;
+    return <li>
+      <div>({post.pubdate})[{post.feedtitle}]</div>
+      <div><a href={this.getPostLink(post.item)}
+              target="_blank">{post.item.title}</a></div>
+    </li>;
   }
 
   getNeuesteMeldung() {
