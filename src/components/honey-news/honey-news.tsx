@@ -64,7 +64,7 @@ export class HoneyNews {
 
   @State() options: NewsOptions = {
     disabledHostClass: "speaker-disabled",
-    enabledHostClass: "speaker-enabled",
+    enabledHostClass: "flex-container",
     disabledTitleText: "Vorlesen deaktiviert, da keine Texte verfügbar",
     pressedTitleText: "Liest gerade vor",
     titleText: "Vorlesen",
@@ -127,6 +127,8 @@ export class HoneyNews {
     const predefinedURLs: string[] = [
       "https://www.tagesschau.de/xml/atom/",
       "https://www.zdf.de/rss/zdf/nachrichten",
+      "https://kenfm.de/feed/",
+      "https://dev.to/feed/",
       "https://media.ccc.de/c/wikidatacon2019/podcast/webm-hq.xml",
       "https://media.ccc.de/updates.rdf",
       "https://www.deutschlandfunk.de/die-nachrichten.353.de.rss",
@@ -134,9 +136,9 @@ export class HoneyNews {
       "http://newsfeed.zeit.de",
       "http://www.stern.de/feed/standard/all",
       "https://www.spiegel.de/international/index.rss",
-      "rt.com/rss",
-      // "https://a.4cdn.org/a/threads.json");
-      // "https://codepen.io/spark/feed");
+      "rt.com/rss/",
+      "https://a.4cdn.org/a/threads.json",
+      "https://codepen.io/spark/feed",
       "https://www.hongkiat.com/blog/feed/"
     ]
     from(predefinedURLs).subscribe((url) => this.feedLoader.addFeedUrl(url));
@@ -256,23 +258,42 @@ export class HoneyNews {
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
-        <h2>Verwaltung</h2>
-        <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
-        <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
+        <div class="flex-container">
+          <div class="flex-item">
+            <h2>Verwaltung</h2>
+            <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
+            <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
 
-        <h2>News Feed
-          {
-            this.getNeuesteMeldung()
-          }
-        </h2>
-        <ol>
-          {this.feeds.map((post) =>
-            [
-              this.getUeberschrift(post),
-              this.getPostEntry(post)
-            ]
-          )}
-        </ol>
+
+            <h2>News Feed
+              {
+                this.getNeuesteMeldung()
+              }
+            </h2>
+            <ol>
+              {this.feeds.map((post) =>
+                [
+                  this.getUeberschrift(post),
+                  this.getPostEntry(post)
+                ]
+              )}
+            </ol>
+          </div>
+          <div class="flex-item">
+            <table>
+              <tr>
+                <th>Score</th>
+                <th>Url</th>
+              </tr>
+              {this.statistic?.map((item) =>
+                <tr>
+                  <td>{item.score}</td>
+                  <td>{item.url}</td>
+                </tr>
+              )}
+            </table>
+          </div>
+        </div>
       </Host>
     );
   }
