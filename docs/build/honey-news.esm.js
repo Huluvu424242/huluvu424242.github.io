@@ -1,1 +1,1 @@
-import{p as e,b as s}from"./p-923dedb2.js";(()=>{const s=import.meta.url,t={};return""!==s&&(t.resourcesUrl=new URL(".",s).href),e(t)})().then((e=>s([["p-5f7157e5",[[1,"honey-news",{verbose:[4],feeds:[32],statistic:[32],options:[32],updateOptions:[64]}]]]],e)));
+import{p as s,b as e}from"./p-923dedb2.js";(()=>{const e=import.meta.url,t={};return""!==e&&(t.resourcesUrl=new URL(".",e).href),s(t)})().then((s=>e([["p-806dc73c",[[1,"honey-news",{verbose:[4],feeds:[32],statistic:[32],options:[32],updateOptions:[64]}]]]],s)));
