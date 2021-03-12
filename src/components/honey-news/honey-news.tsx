@@ -288,7 +288,7 @@ export class HoneyNews {
               {this.statistic?.map((item) =>
                 <tr>
                   <td>{item.score}</td>
-                  <td>{item.url}</td>
+                  <td><a href={item.url}target="_blank">{item.url}</a></td>
                 </tr>
               )}
             </table>
