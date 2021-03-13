@@ -4,6 +4,7 @@ import {map} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import * as objectHash from "object-hash";
 import DateTimeFormat = Intl.DateTimeFormat;
+import {Logger} from "../../libs/logger";
 
 export class PipeOperators {
 
@@ -81,7 +82,7 @@ export class PipeOperators {
         date = new Date(Date.parse(datum));
       }
     } catch (fehler) {
-      console.error(fehler);
+      Logger.errorMessage(fehler);
     }
     return date ? date : null;
   }

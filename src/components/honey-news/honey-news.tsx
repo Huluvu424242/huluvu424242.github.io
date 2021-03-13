@@ -2,10 +2,11 @@ import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedLoader} from "./FeedLoader";
-import {Post} from "../../fetch-es6.worker";
+import {loadFeedRanking, Post} from "../../fetch-es6.worker";
 import {EMPTY, from, Subscription, timer} from "rxjs";
 import {PipeOperators} from "./PipeOperators";
 import {catchError, switchMap} from "rxjs/operators";
+import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
 
 @Component({
   tag: "honey-news",
@@ -57,7 +58,7 @@ export class HoneyNews {
 
   @State() feeds: Post[] = [];
 
-  @State() statistic: any[];
+  @State() statistic: StatisticData[];
   statisticSubscription: Subscription;
 
   lastUpdate: Date = null;
@@ -89,19 +90,7 @@ export class HoneyNews {
     this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
-    this.statisticSubscription = timer(0, 60000*10)
-      .pipe(
-        switchMap(
-          () => from(fetch("https://huluvu424242.herokuapp.com/feeds/")).pipe(catchError(() => EMPTY))
-        )
-      )
-      .subscribe(
-        (response) => {
-          response.json().then((value) =>
-            this.statistic = [...value]
-          );
-        }
-      );
+    this.statisticSubscription = this.subscribeStatistiken();
   }
 
   public componentWillLoad() {
@@ -110,6 +99,20 @@ export class HoneyNews {
 
   public disconnectedCallback() {
     this.statisticSubscription.unsubscribe();
+  }
+
+  protected subscribeStatistiken():Subscription{
+    return timer(0, 60000 * 10)
+      .pipe(
+        switchMap(
+          () => from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
+        )
+      )
+      .subscribe(
+        (statisticDatas: StatisticData[]) => {
+          this.statistic = [...statisticDatas];
+        }
+      );
   }
 
   public loadFeeds(): void {
@@ -137,7 +140,6 @@ export class HoneyNews {
       "http://www.stern.de/feed/standard/all",
       "https://www.spiegel.de/international/index.rss",
       "rt.com/rss/",
-      "https://a.4cdn.org/a/threads.json",
       "https://codepen.io/spark/feed",
       "https://www.hongkiat.com/blog/feed/"
     ]
@@ -284,11 +286,17 @@ export class HoneyNews {
               <tr>
                 <th>Score</th>
                 <th>Url</th>
+                <th>Angefragt</th>
+                <th>Kontaktiert</th>
+                <th>Geantwortet</th>
               </tr>
-              {this.statistic?.map((item) =>
+              {this.statistic?.map((item:StatisticData) =>
                 <tr>
                   <td>{item.score}</td>
-                  <td><a href={item.url}target="_blank">{item.url}</a></td>
+                  <td><a href={item.url} target="_blank">{item.url}</a></td>
+                  <td>{item.countRequested}</td>
+                  <td>{item.countContacted}</td>
+                  <td>{item.countResponseOK}</td>
                 </tr>
               )}
             </table>
