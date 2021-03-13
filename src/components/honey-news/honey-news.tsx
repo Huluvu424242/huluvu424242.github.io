@@ -2,10 +2,11 @@ import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedLoader} from "./FeedLoader";
-import {Post} from "../../fetch-es6.worker";
+import {loadFeedRanking, Post} from "../../fetch-es6.worker";
 import {EMPTY, from, Subscription, timer} from "rxjs";
 import {PipeOperators} from "./PipeOperators";
 import {catchError, switchMap} from "rxjs/operators";
+import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
 
 @Component({
   tag: "honey-news",
@@ -89,19 +90,7 @@ export class HoneyNews {
     this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
-    this.statisticSubscription = timer(0, 60000*10)
-      .pipe(
-        switchMap(
-          () => from(fetch("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
-        )
-      )
-      .subscribe(
-        (response) => {
-          response.json().then((value) =>
-            this.statistic = [...value]
-          );
-        }
-      );
+    this.statisticSubscription = this.subscribeStatistiken();
   }
 
   public componentWillLoad() {
@@ -110,6 +99,20 @@ export class HoneyNews {
 
   public disconnectedCallback() {
     this.statisticSubscription.unsubscribe();
+  }
+
+  protected subscribeStatistiken():Subscription{
+    return timer(0, 60000 * 10)
+      .pipe(
+        switchMap(
+          () => from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
+        )
+      )
+      .subscribe(
+        (statisticDatas: StatisticData[]) => {
+          this.statistic = [...statisticDatas];
+        }
+      );
   }
 
   public loadFeeds(): void {
@@ -287,7 +290,7 @@ export class HoneyNews {
               {this.statistic?.map((item) =>
                 <tr>
                   <td>{item.score}</td>
-                  <td><a href={item.url}target="_blank">{item.url}</a></td>
+                  <td><a href={item.url} target="_blank">{item.url}</a></td>
                 </tr>
               )}
             </table>

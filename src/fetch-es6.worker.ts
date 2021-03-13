@@ -1,8 +1,10 @@
 import {Feed} from "feedme/dist/feedme";
 import {FeedItem} from "feedme/dist/parser";
 import {EMPTY, from} from "rxjs";
-import {catchError, map, switchMap, tap} from "rxjs/operators";
+import {catchError, filter, map, switchMap, tap} from "rxjs/operators";
 import {Logger} from "./libs/logger";
+import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
+import {isArray} from "rxjs/internal-compatibility";
 
 
 export interface Post {
@@ -28,15 +30,14 @@ export async function loadFeedData(url: string): Promise<FeedData> {
   const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
   const queryUrl: string = backendUrl + "?url=" + url + "&statistic=true";
   Logger.debugMessage("###query url " + queryUrl);
-  const getFeed = fetch(queryUrl, {
-    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-  });
-  const fetch$ = from(getFeed);
   const data: FeedData = {
     status: null, url: null, statusText: null, feedtitle: null, items: null
   };
+  const fetch$ = from(fetch(queryUrl, {
+    method: 'GET', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+  }));
   return fetch$.pipe(
     tap(
       (response: Response) => {
@@ -58,4 +59,34 @@ export async function loadFeedData(url: string): Promise<FeedData> {
   ).toPromise();
 }
 
+// async für stencil worker
+export async function loadFeedRanking(url: string): Promise<StatisticData[]> {
+  return from(fetch(url))
+    .pipe(
+      catchError(() => EMPTY),
+      switchMap(
+        (response: Response) => from(response.json()).pipe(catchError(() => EMPTY))
+      ),
+      filter(
+        (rawData: any) => isArray(rawData)
+      ),
+      map(
+        (items: any[]) => {
+          const statistics: StatisticData[] = [];
+          items.forEach(
+            (item) => {
+              const statistic: StatisticData = {
+                score: item?.score,
+                url: item?.url,
+                countRequested: item?.countRequested,
+                countContacted: item?.countContacted,
+                countResponseOK: item?.countResponseOK
+              };
+              statistics.push(statistic);
+            }
+          );
+          return statistics;
+        }),
+    ).toPromise();
+}
 
