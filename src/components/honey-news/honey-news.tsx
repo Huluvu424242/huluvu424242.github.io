@@ -92,7 +92,7 @@ export class HoneyNews {
     this.statisticSubscription = timer(0, 60000*10)
       .pipe(
         switchMap(
-          () => from(fetch("https://huluvu424242.herokuapp.com/feeds/")).pipe(catchError(() => EMPTY))
+          () => from(fetch("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
         )
       )
       .subscribe(
@@ -137,7 +137,6 @@ export class HoneyNews {
       "http://www.stern.de/feed/standard/all",
       "https://www.spiegel.de/international/index.rss",
       "rt.com/rss/",
-      "https://a.4cdn.org/a/threads.json",
       "https://codepen.io/spark/feed",
       "https://www.hongkiat.com/blog/feed/"
     ]
