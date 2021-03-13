@@ -2,6 +2,7 @@ import {EMPTY, from, Subject, timer} from "rxjs";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
 import {catchError, filter, mergeMap, tap} from "rxjs/operators";
 import {PipeOperators} from "./PipeOperators";
+import {Logger} from "../../libs/logger";
 
 export class FeedLoader {
 
@@ -30,18 +31,18 @@ export class FeedLoader {
       ),
       mergeMap(
         (url: string) => {
-          console.log("### frage url " + url);
+          Logger.debugMessage("### frage url " + url);
           return from(loadFeedData(url)).pipe(catchError(() => EMPTY));
         }
       ),
       mergeMap(
         (feedData: FeedData) => {
-          console.log("### aktualisiere url " + feedData.url);
+          Logger.debugMessage("### aktualisiere url " + feedData.url);
           return PipeOperators.mapItemsToPost(feedData).pipe(catchError(() => EMPTY));
         }
       ),
       tap(
-        (post: Post) => console.log("### filter: " + post.item.title)
+        (post: Post) => Logger.debugMessage("### filter: " + post.item.title)
       ),
       filter((post: Post) => {
           return PipeOperators.compareDates(post.exaktdate, new Date()) < 1
@@ -50,7 +51,7 @@ export class FeedLoader {
     ).subscribe(
       {
         next: (post: Post) => {
-          console.log("### add feeds with hash: "+post.hashcode +'#'+post.item.title);
+          Logger.debugMessage("### add feeds with hash: "+post.hashcode +'#'+post.item.title);
           if (!this.hashcodes.has(post.hashcode)) {
             this.feedEntries.push(post);
             this.hashcodes.add(post.hashcode);

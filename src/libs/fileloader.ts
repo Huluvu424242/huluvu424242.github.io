@@ -67,7 +67,7 @@ export class Fileloader {
       });
       return response.text();
     } catch (fehler) {
-      console.error("ccc fetch error:" + fehler)
+      Logger.errorMessage("ccc fetch error:" + fehler)
       return new Promise<string>((resolve) => {
         resolve(null);
       });
@@ -76,7 +76,7 @@ export class Fileloader {
 
 
   public static loadCCCFeedProxy(): any {
-    const url:string = "https://media.ccc.de/news.atom";
+    const url: string = "https://media.ccc.de/news.atom";
     var cors_api_host = 'cors-anywhere.herokuapp.com';
     var cors_api_url = 'https://' + cors_api_host + '/';
 
@@ -91,8 +91,8 @@ export class Fileloader {
       //   targetOrigin[1] !== cors_api_host) {
       //   args[1] = cors_api_url + args[1];
       // }
-      const urlCall = cors_api_url+url;
-      console.log("###"+urlCall);
+      const urlCall = cors_api_url + url;
+      Logger.debugMessage("###" + urlCall);
       return open.apply(this, urlCall);
     };
   }
@@ -100,7 +100,7 @@ export class Fileloader {
 
   public static async loadCCCFeedXML(): Promise<string> {
     function reqListener() {
-      console.log('#####' + this.responseText);
+      Logger.debugMessage('#####' + this.responseText);
     }
 
     try {
@@ -111,7 +111,7 @@ export class Fileloader {
 
       return "ccc test";
     } catch (fehler) {
-      console.error("ccc fetch error:" + fehler)
+      Logger.errorMessage("ccc fetch error:" + fehler)
       return new Promise<string>((resolve) => {
         resolve(null);
       });
@@ -120,7 +120,7 @@ export class Fileloader {
 
   public static async load4ChanFeed(): Promise<string> {
     function reqListener() {
-      console.log('#####' + this.responseText);
+      Logger.debugMessage('#####' + this.responseText);
     }
 
     try {
@@ -131,7 +131,7 @@ export class Fileloader {
 
       return "4chan test";
     } catch (fehler) {
-      console.error("4chan fetch error:" + fehler)
+      Logger.errorMessage("4chan fetch error:" + fehler)
       return new Promise<string>((resolve) => {
         resolve(null);
       });
@@ -139,24 +139,25 @@ export class Fileloader {
   }
 
 
-  public static async loadSparkFeed(): Promise<string> {
-    const response = await fetch("https://codepen.io/spark/feed");
-    if (response.ok) {
-      return response.text();
-    } else {
-      return new Promise<string>((resolve) => {
-        resolve(null);
-      });
-    }
-  }
-  public static async loadHongkiatFeed(): Promise<string> {
-    const response = await fetch("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
-    if (response.ok) {
-      return response.text();
-    } else {
-      return new Promise<string>((resolve) => {
-        resolve(null);
-      });
-    }
-  }
+  // public static async loadSparkFeed(): Promise<string> {
+  //   const response = await fetch("https://codepen.io/spark/feed");
+  //   if (response.ok) {
+  //     return response.text();
+  //   } else {
+  //     return new Promise<string>((resolve) => {
+  //       resolve(null);
+  //     });
+  //   }
+  // }
+
+  // public static async loadHongkiatFeed(): Promise<string> {
+  //   const response = await fetch("https://cors-anywhere.herokuapp.com/https://www.hongkiat.com/blog/feed/");
+  //   if (response.ok) {
+  //     return response.text();
+  //   } else {
+  //     return new Promise<string>((resolve) => {
+  //       resolve(null);
+  //     });
+  //   }
+  // }
 }

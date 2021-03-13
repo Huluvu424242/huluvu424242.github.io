@@ -2,6 +2,7 @@ import {Feed} from "feedme/dist/feedme";
 import {FeedItem} from "feedme/dist/parser";
 import {EMPTY, from} from "rxjs";
 import {catchError, map, switchMap, tap} from "rxjs/operators";
+import {Logger} from "./libs/logger";
 
 
 export interface Post {
@@ -24,9 +25,9 @@ export interface FeedData {
 
 // async für stencil worker
 export async function loadFeedData(url: string): Promise<FeedData> {
-  const backendUrl: string = "https://localhost:5000/feed";
+  const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
   const queryUrl: string = backendUrl + "?url=" + url + "&statistic=true";
-  console.debug("###query url " + queryUrl);
+  Logger.debugMessage("###query url " + queryUrl);
   const getFeed = fetch(queryUrl, {
     method: 'GET', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
