@@ -1,6 +1,6 @@
 import {Feed} from "feedme/dist/feedme";
 import {FeedItem} from "feedme/dist/parser";
-import {EMPTY, from} from "rxjs";
+import {EMPTY, from, Observable} from "rxjs";
 import {catchError, filter, map, switchMap, tap} from "rxjs/operators";
 import {Logger} from "./libs/logger";
 import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
@@ -28,6 +28,10 @@ export interface FeedData {
 
 // async für stencil worker
 export async function loadFeedData(url: string): Promise<FeedData> {
+  return loadFeedDataInternal(url).toPromise();
+}
+
+function loadFeedDataInternal(url: string): Observable<FeedData> {
   const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
   const queryUrl: string = backendUrl + "?url=" + url + "&statistic=true";
   Logger.debugMessage("###query url " + queryUrl);
@@ -57,7 +61,7 @@ export async function loadFeedData(url: string): Promise<FeedData> {
         return data;
       }
     )
-  ).toPromise();
+  );
 }
 
 // async für stencil worker
