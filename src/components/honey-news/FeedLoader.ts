@@ -1,34 +1,30 @@
-import {EMPTY, from, Subject, timer} from "rxjs";
+import {EMPTY, from, Observable, timer} from "rxjs";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
-import {catchError, filter, mergeMap, tap} from "rxjs/operators";
-import {PipeOperators} from "./PipeOperators";
+import {catchError, filter, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
 import {Logger} from "../../libs/logger";
+import {PipeOperators} from "./PipeOperators";
 
 export class FeedLoader {
 
   /**
    * texte to speech out
    */
-  feedURLs: string[] = [];
-
-
-  hashcodes: Set<string> = new Set<string>();
-  feedEntries: Post[] = [];
-  posts$: Subject<Post[]> = new Subject();
+  protected feedURLs: string[] = [];
 
   constructor(feedURLs: string[]) {
     this.feedURLs = feedURLs || [];
+  }
+
+  public getFeedURLs(): string[] {
+    return [...this.feedURLs];
   }
 
   public addFeedUrl(feedURL: string) {
     this.feedURLs.push(feedURL);
   }
 
-  public loadFeedContent(): Subject<Post[]> {
-    timer(0, 60000*5).pipe(
-      mergeMap(
-        () => from(this.feedURLs)
-      ),
+  public getFeedsSingleObserver(feedURLs: string[]): Observable<Post[]> {
+    return from(feedURLs).pipe(
       mergeMap(
         (url: string) => {
           Logger.debugMessage("### frage url " + url);
@@ -44,24 +40,26 @@ export class FeedLoader {
       tap(
         (post: Post) => Logger.debugMessage("### filter: " + post.item.title)
       ),
-      filter((post: Post) => {
-          return PipeOperators.compareDates(post.exaktdate, new Date()) < 1
-        }
+      filter(
+        (post: Post) => PipeOperators.compareDates(post.exaktdate, new Date()) < 1
+      ),
+      toArray<Post>(),
+      switchMap(
+        // entferne doppelte Einträge mit gleichem hashkode
+        (posts: Post[]) => PipeOperators.removeDuplicates(posts)
+      ),
+      map(
+        (posts: Post[]) => PipeOperators.sortArray(posts)
       )
-    ).subscribe(
-      {
-        next: (post: Post) => {
-          Logger.debugMessage("### add feeds with hash: "+post.hashcode +'#'+post.item.title);
-          if (!this.hashcodes.has(post.hashcode)) {
-            this.feedEntries.push(post);
-            this.hashcodes.add(post.hashcode);
-            const sortedPosts: Post[] = PipeOperators.sortArray(this.feedEntries);
-            this.posts$.next(sortedPosts);
-          }
-        }
-      }
-    );
-    return this.posts$;
+    )
+  }
+
+  public getFeedsPeriodicObserver(): Observable<Post[]> {
+    return timer(0, 60000 * 5).pipe(
+      mergeMap(
+        () => from(this.getFeedsSingleObserver(this.feedURLs)).pipe(catchError(() => EMPTY))
+      )
+    )
   }
 }
 
