@@ -9,10 +9,14 @@ export class FeedLoader {
   /**
    * texte to speech out
    */
-  feedURLs: string[] = [];
+  protected feedURLs: string[] = [];
 
   constructor(feedURLs: string[]) {
     this.feedURLs = feedURLs || [];
+  }
+
+  public getFeedURLs(): string[] {
+    return [...this.feedURLs];
   }
 
   public addFeedUrl(feedURL: string) {

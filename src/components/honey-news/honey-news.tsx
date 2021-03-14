@@ -91,8 +91,12 @@ export class HoneyNews {
     this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
-    this.feedsSubscription=this.subscribeFeeds();
+    this.feedsSubscription = this.subscribeFeeds();
     this.statisticSubscription = this.subscribeStatistiken();
+  }
+
+  public async componentWillLoad() {
+    this.singleLoadFeeds();
   }
 
   public disconnectedCallback() {
@@ -100,7 +104,7 @@ export class HoneyNews {
     this.feedsSubscription.unsubscribe();
   }
 
-  protected subscribeStatistiken():Subscription{
+  protected subscribeStatistiken(): Subscription {
     return timer(0, 60000 * 10)
       .pipe(
         switchMap(
@@ -114,14 +118,24 @@ export class HoneyNews {
       );
   }
 
+  public singleLoadFeeds(): void {
+    this.feedLoader.getFeedsSingleObserver(this.feedLoader.getFeedURLs())
+      .subscribe({
+        next: (posts: Post[]) => {
+          this.lastUpdate = this.lastUpdate || posts[0].exaktdate;
+          this.feeds = [...posts]
+        }
+      });
+  }
+
   public subscribeFeeds(): Subscription {
-    return  this.feedLoader.getFeedsPeriodicObserver()
-    .subscribe({
-      next: (posts: Post[]) => {
-        this.lastUpdate = this.lastUpdate || posts[0].exaktdate;
-        this.feeds = [...posts]
-      }
-    });
+    return this.feedLoader.getFeedsPeriodicObserver()
+      .subscribe({
+        next: (posts: Post[]) => {
+          this.lastUpdate = this.lastUpdate || posts[0].exaktdate;
+          this.feeds = [...posts]
+        }
+      });
   }
 
 
@@ -289,7 +303,7 @@ export class HoneyNews {
                 <th>Kontaktiert</th>
                 <th>Geantwortet</th>
               </tr>
-              {this.statistic?.map((item:StatisticData) =>
+              {this.statistic?.map((item: StatisticData) =>
                 <tr>
                   <td>{item.score}</td>
                   <td><a href={item.url} target="_blank">{item.url}</a></td>
