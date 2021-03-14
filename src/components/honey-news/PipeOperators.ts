@@ -1,6 +1,6 @@
 import {FeedData, Post} from "../../fetch-es6.worker";
 import {EMPTY, from, Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import {map, toArray} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import * as objectHash from "object-hash";
 import DateTimeFormat = Intl.DateTimeFormat;
@@ -12,7 +12,18 @@ export class PipeOperators {
     return zahl <= 9 ? "0" + zahl : "" + zahl;
   }
 
-  public static sortiereAbsteigend(lp:Post, rp:Post) {
+  public static removeDuplicates(posts: Post[]) :Observable<Post[]>{
+    const postMap: Map<string, Post> = new Map();
+    posts.forEach(
+      (post: Post) => {
+        postMap.set(post.hashcode, post);
+      }
+    );
+    return from(postMap.values()).pipe(toArray());
+
+  }
+
+  public static sortiereAbsteigend(lp: Post, rp: Post) {
     const aIstGroesser: number = -1;
     const aIstKleiner: number = 1;
     const a: string = lp.sortdate;

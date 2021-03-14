@@ -1,6 +1,6 @@
 import {EMPTY, from, Observable, timer} from "rxjs";
 import {FeedData, loadFeedData, Post} from "../../fetch-es6.worker";
-import {catchError, filter, map, mergeMap, tap, toArray} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
 import {Logger} from "../../libs/logger";
 import {PipeOperators} from "./PipeOperators";
 
@@ -40,7 +40,10 @@ export class FeedLoader {
         (post: Post) => PipeOperators.compareDates(post.exaktdate, new Date()) < 1
       ),
       toArray<Post>(),
-      // entferne doppelte Einträge mit gleichem hashkode
+      switchMap(
+        // entferne doppelte Einträge mit gleichem hashkode
+        (posts: Post[]) => PipeOperators.removeDuplicates(posts)
+      ),
       map(
         (posts: Post[]) => PipeOperators.sortArray(posts)
       )
