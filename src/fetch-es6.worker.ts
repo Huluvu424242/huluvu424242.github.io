@@ -25,6 +25,7 @@ export interface FeedData {
   items: FeedItem[];
 }
 
+
 // async für stencil worker
 export async function loadFeedData(url: string): Promise<FeedData> {
   const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
