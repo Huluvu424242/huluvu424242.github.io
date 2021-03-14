@@ -12,31 +12,33 @@ export class PipeOperators {
     return zahl <= 9 ? "0" + zahl : "" + zahl;
   }
 
-  public static sortArray(posts: Post[]): Post[] {
-    const sortedPosts: Post[] = [...posts];
+  public static sortiereAbsteigend(lp:Post, rp:Post) {
     const aIstGroesser: number = -1;
     const aIstKleiner: number = 1;
-    return sortedPosts.sort((lp, rp) => {
-      const a: string = lp.sortdate;
-      const b: string = rp.sortdate;
-      if (!a) {
-        return aIstKleiner;
-      }
-      if (!b) {
-        return aIstGroesser;
-      }
-      if (a > b) {
-        return aIstGroesser;
-      } else if (b > a) {
-        return aIstKleiner;
-      } else {
-        return 0
-      }
-    });
+    const a: string = lp.sortdate;
+    const b: string = rp.sortdate;
+    if (!a) {
+      return aIstKleiner;
+    }
+    if (!b) {
+      return aIstGroesser;
+    }
+    if (a > b) {
+      return aIstGroesser;
+    } else if (b > a) {
+      return aIstKleiner;
+    } else {
+      return 0
+    }
+  }
+
+  public static sortArray(posts: Post[]): Post[] {
+    const sortedPosts: Post[] = [...posts];
+    return sortedPosts.sort(PipeOperators.sortiereAbsteigend);
   }
 
   public static mapItemsToPost(feedData: FeedData): Observable<Post> {
-    if(!feedData||!feedData.items|| feedData.items.length <1) return EMPTY;
+    if (!feedData || !feedData.items || feedData.items.length < 1) return EMPTY;
     return from(feedData.items).pipe(
       map(
         (feeditem: FeedItem) => {
@@ -53,7 +55,7 @@ export class PipeOperators {
             pubdate: formatedDate, // + " \t{" + sortDate + "}\t",
             item: feeditem
           };
-          const partToHash:string = post.feedtitle+post.item.title+post.queryurl;
+          const partToHash: string = post.feedtitle + post.item.title + post.queryurl;
           post.hashcode = objectHash.sha1(partToHash);
           return post;
         }
