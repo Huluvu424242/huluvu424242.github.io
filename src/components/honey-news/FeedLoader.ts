@@ -19,7 +19,7 @@ export class FeedLoader {
     this.feedURLs.push(feedURL);
   }
 
-  public getFeedsSingleObserver(): Subject<Post[]> {
+  public getFeedsSingleObserver(): Observable<Post[]> {
     const hashcodes: Set<string> = new Set<string>();
     const feedEntries: Post[] = [];
     const posts$: Subject<Post[]> = new Subject();
