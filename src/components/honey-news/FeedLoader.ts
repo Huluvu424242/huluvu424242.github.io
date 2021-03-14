@@ -11,11 +11,6 @@ export class FeedLoader {
    */
   feedURLs: string[] = [];
 
-
-  hashcodes: Set<string> = new Set<string>();
-  feedEntries: Post[] = [];
-
-
   constructor(feedURLs: string[]) {
     this.feedURLs = feedURLs || [];
   }
@@ -25,6 +20,8 @@ export class FeedLoader {
   }
 
   public getFeedsSingleObserver(): Subject<Post[]> {
+    const hashcodes: Set<string> = new Set<string>();
+    const feedEntries: Post[] = [];
     const posts$: Subject<Post[]> = new Subject();
     from(this.feedURLs).pipe(
       mergeMap(
@@ -49,11 +46,11 @@ export class FeedLoader {
     ).subscribe(
       {
         next: (post: Post) => {
-          Logger.debugMessage("### add feeds with hash: "+post.hashcode +'#'+post.item.title);
-          if (!this.hashcodes.has(post.hashcode)) {
-            this.feedEntries.push(post);
-            this.hashcodes.add(post.hashcode);
-            const sortedPosts: Post[] = PipeOperators.sortArray(this.feedEntries);
+          Logger.debugMessage("### add feeds with hash: " + post.hashcode + '#' + post.item.title);
+          if (!hashcodes.has(post.hashcode)) {
+            feedEntries.push(post);
+            hashcodes.add(post.hashcode);
+            const sortedPosts: Post[] = PipeOperators.sortArray(feedEntries);
             posts$.next(sortedPosts);
           }
         }
@@ -63,9 +60,9 @@ export class FeedLoader {
   }
 
   public getFeedsPeriodicObserver(): Observable<Post[]> {
-    return timer(0, 60000*5).pipe(
+    return timer(0, 60000 * 5).pipe(
       switchMap(
-        ()=> this.getFeedsSingleObserver()
+        () => this.getFeedsSingleObserver()
       )
     )
   }
