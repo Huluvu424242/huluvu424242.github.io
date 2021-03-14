@@ -230,6 +230,13 @@ export class HoneyNews {
     event = event;
     const url = this.inputNewUrl.value;
     this.feedLoader.addFeedUrl(url);
+    this.feedLoader.getFeedsSingleObserver([url]).subscribe();
+    from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
+      .subscribe(
+        (statisticDatas: StatisticData[]) => {
+          this.statistic = [...statisticDatas];
+        }
+      );
   }
 
   lastHour: Date = null;
