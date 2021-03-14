@@ -1,2 +1,2 @@
-import './index-c4e79617.js';
-export { H as honey_news } from './honey-news-85092f6f.js';
+import './index-44fd41d8.js';
+export { H as honey_news } from './honey-news-d20f21a2.js';

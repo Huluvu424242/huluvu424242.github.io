@@ -57,6 +57,7 @@ export class HoneyNews {
   feedLoader: FeedLoader = new FeedLoader([]);
 
   @State() feeds: Post[] = [];
+  feedsSubscription: Subscription;
 
   @State() statistic: StatisticData[];
   statisticSubscription: Subscription;
@@ -90,15 +91,13 @@ export class HoneyNews {
     this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
+    this.feedsSubscription=this.subscribeFeeds();
     this.statisticSubscription = this.subscribeStatistiken();
-  }
-
-  public componentWillLoad() {
-    this.loadFeeds();
   }
 
   public disconnectedCallback() {
     this.statisticSubscription.unsubscribe();
+    this.feedsSubscription.unsubscribe();
   }
 
   protected subscribeStatistiken():Subscription{
@@ -115,9 +114,9 @@ export class HoneyNews {
       );
   }
 
-  public loadFeeds(): void {
-    const posts$ = this.feedLoader.loadFeedContent();
-    posts$.subscribe({
+  public subscribeFeeds(): Subscription {
+    return  this.feedLoader.loadFeedContent()
+    .subscribe({
       next: (posts: Post[]) => {
         this.lastUpdate = this.lastUpdate || posts[0].exaktdate;
         this.feeds = [...posts]
