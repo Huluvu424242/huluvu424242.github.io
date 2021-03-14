@@ -229,14 +229,23 @@ export class HoneyNews {
   addUrl(event: UIEvent) {
     event = event;
     const url = this.inputNewUrl.value;
-    this.feedLoader.addFeedUrl(url);
-    this.feedLoader.getFeedsSingleObserver([url]).subscribe();
-    from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
-      .subscribe(
-        (statisticDatas: StatisticData[]) => {
-          this.statistic = [...statisticDatas];
+    if (!this.feedLoader.getFeedURLs().includes(url)) {
+
+      this.feedLoader.addFeedUrl(url);
+      this.feedLoader.getFeedsSingleObserver([url]).subscribe();
+      setTimeout(
+        () => {
+          this.feedLoader.getFeedsSingleObserver([url]).subscribe();
+          from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
+            .subscribe(
+              (statisticDatas: StatisticData[]) => {
+                this.statistic = [...statisticDatas];
+              }
+            );
         }
+        , 3000
       );
+    }
   }
 
   lastHour: Date = null;
