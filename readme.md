@@ -68,7 +68,7 @@ To the [live demo](https://huluvu424242.github.io/honey-news/index.html)
 
 ### v0.0.1 published at 2021-03-15
 
-* [issue 43](https://github.com/Huluvu424242/honey-news/issues/42) minor bugfixing and refactoring
+* [issue 2](https://github.com/Huluvu424242/honey-news/issues/2) use heroku backend container
 * setup project based at https://github.com/ionic-team/stencil-component-starter rating-stencil-component
 
 ## warranty
