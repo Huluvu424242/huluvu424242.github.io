@@ -23,12 +23,12 @@ export class FeedLoader {
     this.feedURLs.push(feedURL);
   }
 
-  public getFeedsSingleObserver(feedURLs: string[]): Observable<Post[]> {
+  public getFeedsSingleObserver(feedURLs: string[], withStatistic: boolean): Observable<Post[]> {
     return from(feedURLs).pipe(
       mergeMap(
         (url: string) => {
           Logger.debugMessage("### frage url " + url);
-          return from(loadFeedData(url)).pipe(catchError(() => EMPTY));
+          return from(loadFeedData(url, withStatistic)).pipe(catchError(() => EMPTY));
         }
       ),
       mergeMap(
@@ -57,7 +57,7 @@ export class FeedLoader {
   public getFeedsPeriodicObserver(): Observable<Post[]> {
     return timer(0, 60000 * 5).pipe(
       mergeMap(
-        () => from(this.getFeedsSingleObserver(this.feedURLs)).pipe(catchError(() => EMPTY))
+        () => from(this.getFeedsSingleObserver(this.feedURLs, true)).pipe(catchError(() => EMPTY))
       )
     )
   }

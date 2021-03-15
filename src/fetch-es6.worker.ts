@@ -27,13 +27,18 @@ export interface FeedData {
 
 
 // async für stencil worker
-export async function loadFeedData(url: string): Promise<FeedData> {
-  return loadFeedDataInternal(url).toPromise();
+export async function loadFeedData(url: string, withStatistic: boolean): Promise<FeedData> {
+  return loadFeedDataInternal(url, withStatistic).toPromise();
 }
 
-function loadFeedDataInternal(url: string): Observable<FeedData> {
+function loadFeedDataInternal(url: string, withStatistic: boolean): Observable<FeedData> {
   const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
-  const queryUrl: string = backendUrl + "?url=" + url + "&statistic=true";
+  let queryUrl: string;
+  if (withStatistic) {
+    queryUrl = backendUrl + "?url=" + url + "&statistic=true";
+  } else {
+    queryUrl = backendUrl + "?url=" + url;
+  }
   Logger.debugMessage("###query url " + queryUrl);
   const data: FeedData = {
     status: null, url: null, statusText: null, feedtitle: null, items: null
