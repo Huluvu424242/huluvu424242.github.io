@@ -6,19 +6,19 @@
 [![Donate with paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/huluvu424242)
 ![Keybase BTC](https://img.shields.io/keybase/btc/huluvu424242)
 # honey-news 
-This component realize an speaker symbol button. Its can read a text of
-DOM elements referenced by an list of ids via voice.
+This project contains web components to build an news feed reader at an web site.
+(currently under development - unready and unstable)
 
 ## installation
 
-npm install --save honey-news
+npm install --save @huluvu424242/honey-news
 
 ## usage
 
 ```html
 <script 
     type="module" 
-    src='https://unpkg.com/@huluvu424242/honey-news@0.0.18/dist/honey-news/honey-news.js'>
+    src='https://unpkg.com/@huluvu424242/honey-news@0.0.1/dist/honey-news/honey-news.js'>
 </script>
 ```
 To the [demo site](https://huluvu424242.github.io/honey-news/index.html)
