@@ -38,9 +38,17 @@ To the [demo site](https://huluvu424242.github.io/honey-news/index.html)
 ```
 -->
 ```html
-<honey-news textids="text1,text2"></honey-news>
-<p id="text1">fizz fizz fizz fizz</p>
-<p id="text2">buzz buzz buzz buzz</p>
+<body id="seite" style="display: block">
+
+<h1>Nutzung der honey-news Komponente</h1>
+<span class="wichtig">!!!</span> Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus diesem Grund ist auch die Statistik eingeschaltet <span class="wichtig">!!!</span><br>
+Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: url, anzahl der abfragen, anzahl valider responses<br>
+Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen Feed ein.<br>
+Vielen Dank für Ihr Verständnis. <br>
+<hr>
+<honey-news />
+
+</body>
 ```
 To the [live demo](https://huluvu424242.github.io/honey-news/index.html)
 
@@ -54,100 +62,14 @@ To the [live demo](https://huluvu424242.github.io/honey-news/index.html)
 
 ## releaselog
 
-### v0.0.19 unpublished
+### vX.X.X unpublished
 
 * bug and feature description
 
-### v0.0.18 published at 2020-11-22
+### v0.0.1 published at 2021-03-15
 
 * [issue 43](https://github.com/Huluvu424242/honey-news/issues/42) minor bugfixing and refactoring
-
-
-### v0.0.17 published at 2020-11-16
-
-* [issue 39](https://github.com/Huluvu424242/honey-news/issues/39) text splitting removed
-
-
-### v0.0.16 published at 2020-11-15
-
-* [issue 35](https://github.com/Huluvu424242/honey-news/issues/35) change host classes depends of disabled or enabled
-* [issue 33](https://github.com/Huluvu424242/honey-news/issues/33) A11y config properties added
-* [issue 32](https://github.com/Huluvu424242/honey-news/issues/32) sync method call and symbol fixed
-
-
-### v0.0.15 published at 2020-11-08 
-
-* [issue 26](https://github.com/Huluvu424242/honey-news/issues/26) method pause and resume added
-* [issue 25](https://github.com/Huluvu424242/honey-news/issues/25) remove dependency of rxjs -> use fetch of es6
-* [issue 24](https://github.com/Huluvu424242/honey-news/issues/24) remove subscription and use async/await pairs
-* [issue 23](https://github.com/Huluvu424242/honey-news/issues/23) mutable attributes textids and texturl
-
-
-### v0.0.14 published at 2020-11-06
-
-* [issue 17](https://github.com/Huluvu424242/honey-news/issues/17) reading text from url added
-
-
-### v0.0.13 published at 2020-11-06
-
-* initializing of voices fixed
-* [issue 2](https://github.com/Huluvu424242/honey-news/issues/2) e2e tests fixed
-* css support of ::part removed (to complex for end user)
-* a11y: tabindex=0, keydown: space and enter, role="button", alt text, svg role="img"
-* speaker realized as toggle button
-* custom css attribute names changed
-
-### v0.0.12 published at 2020-02-29
-
-* docu and demo urls fixed
-
-### v0.0.11 published at 2020-02-29
-
-* support of voice parameter
-
-### v0.0.10 published at 2020-02-28
-
-* support for large texts added
-* defined css variables supported
-* css ::part supported for speakerpane 
-* svg embed - no extra assets needed
-* sizeable via css
-* color of background, stroke and fill css styleable 
-* ident property computed from id attribute or random if absent 
-* example added
-* stencil/core removed from bundle again (no storybook support at now)
- 
-### v0.0.9 published at 2020-02-23
-
-* stencil/core added to bundle
-
-### v0.0.8
-
-* readme updated
-* icon color blue
-* background color attribute added
-
-### v0.0.7
-
-* first working version with icon.
-* support of id list of speaker texts.
-
-### v0.0.2 - v0.0.6 
-
-* try to publish assets with component to npmjs.com but failed.
-
-### v0.0.1
-
 * setup project based at https://github.com/ionic-team/stencil-component-starter rating-stencil-component
-
-## internet links
-
-* https://auth0.com/blog/creating-web-components-with-stencil/
-* https://www.twilio.com/blog/2018/02/creating-and-publishing-web-components-with-stencil.html
-* https://stenciljs.com/docs/introduction
-* https://css-tricks.com/styling-a-web-component/
-* https://meowni.ca/posts/part-theme-explainer/
-
 
 ## warranty
 
@@ -166,12 +88,6 @@ MIT License
 
 
 ## browser support
-
-### Web Speech API
-
-Firefox
-
-Maybe you must via about:config set media.webspeech.synth.enabled to true 
 
 Generell
 
