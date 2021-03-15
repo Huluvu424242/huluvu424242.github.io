@@ -1,50 +1,15 @@
-// import {newE2EPage} from '@stencil/core/testing';
-// import {E2EElement, E2EPage} from "@stencil/core/testing/puppeteer/puppeteer-declarations";
-// import {Logger} from "../../libs/logger";
-//
-// class TestLogger extends Logger {
-//
-// }
-//
-// describe('E2E: voiceless tests of speaker', () => {
-//
-//   let page: E2EPage;
-//   let element: E2EElement;
-//
-//   beforeEach(async () => {
-//     TestLogger.enableLogging();
-//     page = await newE2EPage({html: `<honey-news audiolang="en" textids="3"></honey-news><p id="3">audio text</p>`});
-//     element = await page.find('honey-news');
-//   });
-//
-//   it('should render a component', async () => {
-//     expect(element).not.toBeNull();
-//   });
-//
-//   it('renders correct styles', async () => {
-//     expect(element).toHaveClass('hydrated');
-//   });
-//
-//
-//
-//   it('has correct audio properties', async () => {
-//     // Property Wert setzen
-//     // await page.$eval('honey-news', (elm: any) => {
-//     //   elm.audiolang = 'us';
-//     // });
-//     const lang = await element.getProperty('audiolang');
-//     expect(lang).toEqual('en');
-//     await element.setProperty('audiolang', 'us');
-//     await page.waitForChanges();
-//     const value = await element.getProperty("audiolang")
-//     expect(value).toEqual( 'us');
-//   });
-//
-//
-//
-//
-//
-// });
-//
-//
-//
+import {HoneyNews} from "./honey-news";
+
+describe('Unit test: honey-news satisfy', () => {
+
+  it('should init the feedLoader variable', () => {
+    const component = new HoneyNews();
+
+    expect(component.feedLoader).not.toBeNull();
+  });
+
+
+});
+
+
+
