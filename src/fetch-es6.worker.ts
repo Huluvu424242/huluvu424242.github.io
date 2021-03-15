@@ -1,10 +1,11 @@
 import {Feed} from "feedme/dist/feedme";
 import {FeedItem} from "feedme/dist/parser";
 import {EMPTY, from, Observable} from "rxjs";
-import {catchError, filter, map, switchMap, tap} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
 import {Logger} from "./libs/logger";
 import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
 import {isArray} from "rxjs/internal-compatibility";
+import {PipeOperators} from "./components/honey-news/PipeOperators";
 
 
 export interface Post {
@@ -27,13 +28,18 @@ export interface FeedData {
 
 
 // async für stencil worker
-export async function loadFeedData(url: string): Promise<FeedData> {
-  return loadFeedDataInternal(url).toPromise();
+export async function loadFeedData(url: string, withStatistic: boolean): Promise<FeedData> {
+  return loadFeedDataInternal(url, withStatistic).toPromise();
 }
 
-function loadFeedDataInternal(url: string): Observable<FeedData> {
+function loadFeedDataInternal(url: string, withStatistic: boolean): Observable<FeedData> {
   const backendUrl: string = "https://huluvu424242.herokuapp.com/feed";
-  const queryUrl: string = backendUrl + "?url=" + url + "&statistic=true";
+  let queryUrl: string;
+  if (withStatistic) {
+    queryUrl = backendUrl + "?url=" + url + "&statistic=true";
+  } else {
+    queryUrl = backendUrl + "?url=" + url;
+  }
   Logger.debugMessage("###query url " + queryUrl);
   const data: FeedData = {
     status: null, url: null, statusText: null, feedtitle: null, items: null
@@ -93,5 +99,36 @@ export async function loadFeedRanking(url: string): Promise<StatisticData[]> {
           return statistics;
         }),
     ).toPromise();
+}
+
+export async function getFeedsSingleObserver(feedURLs: string[], withStatistic: boolean): Promise<Post[]> {
+  return from(feedURLs).pipe(
+    mergeMap(
+      (url: string) => {
+        Logger.debugMessage("### frage url " + url);
+        return from(loadFeedDataInternal(url, withStatistic)).pipe(catchError(() => EMPTY));
+      }
+    ),
+    mergeMap(
+      (feedData: FeedData) => {
+        Logger.debugMessage("### aktualisiere url " + feedData.url);
+        return PipeOperators.mapItemsToPost(feedData).pipe(catchError(() => EMPTY));
+      }
+    ),
+    tap(
+      (post: Post) => Logger.debugMessage("### filter: " + post.item.title)
+    ),
+    filter(
+      (post: Post) => PipeOperators.compareDates(post.exaktdate, new Date()) < 1
+    ),
+    toArray<Post>(),
+    switchMap(
+      // entferne doppelte Einträge mit gleichem hashkode
+      (posts: Post[]) => PipeOperators.removeDuplicates(posts)
+    ),
+    map(
+      (posts: Post[]) => PipeOperators.sortArray(posts)
+    )
+  ).toPromise();
 }
 

@@ -2,7 +2,7 @@ import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedLoader} from "./FeedLoader";
-import {loadFeedRanking, Post} from "../../fetch-es6.worker";
+import {getFeedsSingleObserver, loadFeedRanking, Post} from "../../fetch-es6.worker";
 import {EMPTY, from, Subscription, timer} from "rxjs";
 import {PipeOperators} from "./PipeOperators";
 import {catchError, switchMap} from "rxjs/operators";
@@ -119,7 +119,7 @@ export class HoneyNews {
   }
 
   public singleLoadFeeds(): void {
-    this.feedLoader.getFeedsSingleObserver(this.feedLoader.getFeedURLs())
+    from(getFeedsSingleObserver(this.feedLoader.getFeedURLs(), false))
       .subscribe({
         next: (posts: Post[]) => {
           this.lastUpdate = this.lastUpdate || posts[0].exaktdate;
@@ -155,7 +155,7 @@ export class HoneyNews {
       "rt.com/rss/",
       "https://codepen.io/spark/feed",
       "https://www.hongkiat.com/blog/feed/"
-    ]
+    ];
     from(predefinedURLs).subscribe((url) => this.feedLoader.addFeedUrl(url));
   }
 
@@ -232,10 +232,10 @@ export class HoneyNews {
     if (!this.feedLoader.getFeedURLs().includes(url)) {
 
       this.feedLoader.addFeedUrl(url);
-      this.feedLoader.getFeedsSingleObserver([url]).subscribe();
+      from(getFeedsSingleObserver([url], true)).subscribe();
       setTimeout(
         () => {
-          this.feedLoader.getFeedsSingleObserver([url]).subscribe();
+          from(getFeedsSingleObserver([url], false)).subscribe();
           from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
             .subscribe(
               (statisticDatas: StatisticData[]) => {
