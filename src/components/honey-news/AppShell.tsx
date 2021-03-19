@@ -57,7 +57,7 @@ export class AppShell {
   public connectedCallback() {
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
-    this.initialHostClass = this.hostElement.getAttribute("class") || "flex-container";
+    this.initialHostClass = this.hostElement.getAttribute("class") || null;
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
@@ -111,8 +111,10 @@ export class AppShell {
         class={this.getHostClass()}
         // disabled={this.hasNoFeeds()}
       >
-        <honey-news-feed/>
-        <honey-news-statistic/>
+        <div class="flex-container">
+          <honey-news-feed class="flex-item"/>
+          <honey-news-statistic class="flex-item"/>
+        </div>
       </Host>
     );
   }

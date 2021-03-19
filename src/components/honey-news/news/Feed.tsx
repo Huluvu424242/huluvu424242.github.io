@@ -60,8 +60,8 @@ export class Feed {
   lastUpdate: Date = null;
 
   @State() options: FeedOptions = {
-    disabledHostClass: "honey-news-disabled",
-    enabledHostClass: "flex-item",
+    disabledHostClass: "honey-news-feed-disabled",
+    enabledHostClass: "honey-news-feed-enabled",
     disabledTitleText: "Noch keine News verfügbar",
     titleText: "Aktuelle News aus den Feeds",
     ariaLabel: "Neuigkeiten der abonierten Feeds",
@@ -75,7 +75,7 @@ export class Feed {
   public connectedCallback() {
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
-    this.initialHostClass = this.hostElement.getAttribute("class") || "flex-item";
+    this.initialHostClass = this.hostElement.getAttribute("class") || null;
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";

@@ -57,8 +57,8 @@ export class Statistic {
   lastUpdate: Date = null;
 
   @State() options: StatisticOptions = {
-    disabledHostClass: "disabled",
-    enabledHostClass: "flex-item",
+    disabledHostClass: "honey-news-statistic-disabled",
+    enabledHostClass: "honey-news-statistic-enabled",
     disabledTitleText: "Noch keine Statistik verfügbar",
     titleText: "Statistische Übersicht",
     ariaLabel: "Statistiken zur Aufrufhäufigkeit der Feeds",
@@ -73,7 +73,7 @@ export class Statistic {
   public connectedCallback() {
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
-    this.initialHostClass = this.hostElement.getAttribute("class") || "flex-item";
+    this.initialHostClass = this.hostElement.getAttribute("class") || null;
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["alt"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
