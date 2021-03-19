@@ -73,7 +73,7 @@ export class Statistic {
   public connectedCallback() {
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
-    this.initialHostClass = this.hostElement.getAttribute("class") || null;
+    this.initialHostClass = this.hostElement.getAttribute("class") || "flex-item";
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["alt"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
@@ -160,26 +160,24 @@ export class Statistic {
         class={this.getHostClass()}
         disabled={this.hasNoStatistics()}
       >
-        <div class="flex-item">
-          <table>
+        <table>
+          <tr>
+            <th>Score</th>
+            <th>Url</th>
+            <th>Angefragt</th>
+            <th>Kontaktiert</th>
+            <th>Geantwortet</th>
+          </tr>
+          {this.statistic?.map((item: StatisticData) =>
             <tr>
-              <th>Score</th>
-              <th>Url</th>
-              <th>Angefragt</th>
-              <th>Kontaktiert</th>
-              <th>Geantwortet</th>
+              <td>{item.score}</td>
+              <td><a href={item.url} target="_blank">{item.url}</a></td>
+              <td>{item.countRequested}</td>
+              <td>{item.countContacted}</td>
+              <td>{item.countResponseOK}</td>
             </tr>
-            {this.statistic?.map((item: StatisticData) =>
-              <tr>
-                <td>{item.score}</td>
-                <td><a href={item.url} target="_blank">{item.url}</a></td>
-                <td>{item.countRequested}</td>
-                <td>{item.countContacted}</td>
-                <td>{item.countResponseOK}</td>
-              </tr>
-            )}
-          </table>
-        </div>
+          )}
+        </table>
       </Host>
     );
   }
