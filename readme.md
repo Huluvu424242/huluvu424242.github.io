@@ -64,7 +64,9 @@ To the [live demo](https://huluvu424242.github.io/honey-news/index.html)
 
 ### vX.X.X unpublished
 
-* bug and feature description
+### v1.0.0 unpublished
+
+* [issue 11](https://github.com/Huluvu424242/honey-news/issues/11) split into multiple webcomponents
 
 ### v0.0.1 published at 2021-03-15
 
