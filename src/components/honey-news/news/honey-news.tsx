@@ -1,13 +1,13 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
-import {Logger} from "../../libs/logger";
+import {Logger} from "../../../libs/logger";
 import {NewsOptions} from "./news-options";
 import {FeedLoader} from "./FeedLoader";
-import {getFeedsSingleObserver, Post} from "../../fetch-es6.worker";
+import {getFeedsSingleObserver, Post} from "../../../fetch-es6.worker";
 import {from, Subscription} from "rxjs";
-import {PipeOperators} from "./PipeOperators";
+import {PipeOperators} from "../PipeOperators";
 
 @Component({
-  tag: "honey-news",
+  tag: "honey-news-feed",
   styleUrl: "honey-news.css",
   assetsDirs: ['assets'],
   shadow: true
@@ -75,7 +75,7 @@ export class HoneyNews {
   public connectedCallback() {
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
-    this.initialHostClass = this.hostElement.getAttribute("class") || "";
+    this.initialHostClass = this.hostElement.getAttribute("class") || "flex-item";
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
@@ -263,25 +263,23 @@ export class HoneyNews {
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
-        <div class="flex-item">
-          <h2>Verwaltung</h2>
-          <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
-          <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
+        <h2>Verwaltung</h2>
+        <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
+        <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
 
-          <h2>News Feed
-            {
-              this.getNeuesteMeldung()
-            }
-          </h2>
-          <ol>
-            {this.feeds.map((post) =>
-              [
-                this.getUeberschrift(post),
-                this.getPostEntry(post)
-              ]
-            )}
-          </ol>
-        </div>
+        <h2>News Feed
+          {
+            this.getNeuesteMeldung()
+          }
+        </h2>
+        <ol>
+          {this.feeds.map((post) =>
+            [
+              this.getUeberschrift(post),
+              this.getPostEntry(post)
+            ]
+          )}
+        </ol>
       </Host>
     );
   }

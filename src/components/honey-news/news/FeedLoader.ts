@@ -1,5 +1,5 @@
 import {EMPTY, from, Observable, timer} from "rxjs";
-import {getFeedsSingleObserver, Post} from "../../fetch-es6.worker";
+import {getFeedsSingleObserver, Post} from "../../../fetch-es6.worker";
 import {catchError, mergeMap} from "rxjs/operators";
 
 export class FeedLoader {
