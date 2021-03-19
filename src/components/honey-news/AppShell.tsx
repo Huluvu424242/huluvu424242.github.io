@@ -1,6 +1,6 @@
 import {Component, Element, h, Host, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
-import {NewsOptions} from "./AppShellOptions";
+import {AppShellOptions} from "./AppShellOptions";
 
 @Component({
   tag: "honey-news",
@@ -14,11 +14,6 @@ export class AppShell {
    * Host Element
    */
   @Element() hostElement: HTMLElement;
-
-  /**
-   * Input Element
-   */
-  inputNewUrl: HTMLInputElement;
 
   /**
    * Id des Host Elements, falls nicht verfügbar wird diese generiert
@@ -46,7 +41,7 @@ export class AppShell {
   taborder: string = "0";
 
 
-  @State() options: NewsOptions = {
+  @State() options: AppShellOptions = {
     disabledHostClass: "honey-news-disabled",
     enabledHostClass: "honey-news",
     disabledTitleText: "News Reader nicht verfügbar",

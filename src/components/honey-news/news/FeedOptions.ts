@@ -1,4 +1,4 @@
-export interface NewsOptions {
+export interface FeedOptions {
   disabledHostClass?:string
   enabledHostClass?:string
   disabledTitleText?: string;

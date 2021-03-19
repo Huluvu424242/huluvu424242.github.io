@@ -5,14 +5,32 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { NewsOptions } from "./components/honey-news/news-options";
+import { FeedOptions } from "./components/honey-news/news/FeedOptions";
+import { StatisticOptions } from "./components/honey-news/statistic/StatisticOptions";
 export namespace Components {
     interface HoneyNews {
         /**
+          * enable console logging
+         */
+        "verbose": boolean;
+    }
+    interface HoneyNewsFeed {
+        /**
           * Update speaker options
+          * @param options : FeedOptions plain object to set the options
+         */
+        "updateOptions": (options: FeedOptions) => Promise<void>;
+        /**
+          * enable console logging
+         */
+        "verbose": boolean;
+    }
+    interface HoneyNewsStatistic {
+        /**
+          * Update statistic options
           * @param options : NewsOptions plain object to set the options
          */
-        "updateOptions": (options: NewsOptions) => Promise<void>;
+        "updateOptions": (options: StatisticOptions) => Promise<void>;
         /**
           * enable console logging
          */
@@ -26,8 +44,22 @@ declare global {
         prototype: HTMLHoneyNewsElement;
         new (): HTMLHoneyNewsElement;
     };
+    interface HTMLHoneyNewsFeedElement extends Components.HoneyNewsFeed, HTMLStencilElement {
+    }
+    var HTMLHoneyNewsFeedElement: {
+        prototype: HTMLHoneyNewsFeedElement;
+        new (): HTMLHoneyNewsFeedElement;
+    };
+    interface HTMLHoneyNewsStatisticElement extends Components.HoneyNewsStatistic, HTMLStencilElement {
+    }
+    var HTMLHoneyNewsStatisticElement: {
+        prototype: HTMLHoneyNewsStatisticElement;
+        new (): HTMLHoneyNewsStatisticElement;
+    };
     interface HTMLElementTagNameMap {
         "honey-news": HTMLHoneyNewsElement;
+        "honey-news-feed": HTMLHoneyNewsFeedElement;
+        "honey-news-statistic": HTMLHoneyNewsStatisticElement;
     }
 }
 declare namespace LocalJSX {
@@ -37,8 +69,22 @@ declare namespace LocalJSX {
          */
         "verbose"?: boolean;
     }
+    interface HoneyNewsFeed {
+        /**
+          * enable console logging
+         */
+        "verbose"?: boolean;
+    }
+    interface HoneyNewsStatistic {
+        /**
+          * enable console logging
+         */
+        "verbose"?: boolean;
+    }
     interface IntrinsicElements {
         "honey-news": HoneyNews;
+        "honey-news-feed": HoneyNewsFeed;
+        "honey-news-statistic": HoneyNewsStatistic;
     }
 }
 export { LocalJSX as JSX };
@@ -46,6 +92,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "honey-news": LocalJSX.HoneyNews & JSXBase.HTMLAttributes<HTMLHoneyNewsElement>;
+            "honey-news-feed": LocalJSX.HoneyNewsFeed & JSXBase.HTMLAttributes<HTMLHoneyNewsFeedElement>;
+            "honey-news-statistic": LocalJSX.HoneyNewsStatistic & JSXBase.HTMLAttributes<HTMLHoneyNewsStatisticElement>;
         }
     }
 }

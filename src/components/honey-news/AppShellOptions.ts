@@ -1,4 +1,4 @@
-export interface NewsOptions {
+export interface AppShellOptions {
   disabledHostClass?:string
   enabledHostClass?:string
   disabledTitleText?: string;
