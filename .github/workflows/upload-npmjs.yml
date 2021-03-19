@@ -6,6 +6,7 @@ on:
       - 'release/**'
       - '!release/**-snapshot'
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
