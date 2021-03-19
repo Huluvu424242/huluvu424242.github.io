@@ -1,10 +1,9 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
-import {EMPTY, from, Subscription, timer} from "rxjs";
-import {catchError, switchMap} from "rxjs/operators";
+import {Subscription} from "rxjs";
 import {Logger} from "../../../libs/logger";
-import {loadFeedRanking} from "../../../fetch-es6.worker";
 import {StatisticOptions} from "./StatisticOptions";
 import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
+import {StatisticLoader} from "./StatisticLoader";
 
 @Component({
   tag: "honey-news-statistic",
@@ -49,6 +48,8 @@ export class Statistic {
    */
   taborder: string = "0";
 
+  statisticLoader: StatisticLoader = new StatisticLoader();
+
 
   @State() statistic: StatisticData[];
   statisticSubscription: Subscription;
@@ -78,7 +79,7 @@ export class Statistic {
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
-    this.statisticSubscription = this.subscribeStatistiken();
+    this.statisticSubscription = this.subscribeStatistics();
   }
 
 
@@ -86,18 +87,9 @@ export class Statistic {
     this.statisticSubscription.unsubscribe();
   }
 
-  protected subscribeStatistiken(): Subscription {
-    return timer(0, 60000 * 10)
-      .pipe(
-        switchMap(
-          () => from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
-        )
-      )
-      .subscribe(
-        (statisticDatas: StatisticData[]) => {
-          this.statistic = [...statisticDatas];
-        }
-      );
+  protected subscribeStatistics(): Subscription {
+    return this.statisticLoader.subscribeStatistiken()
+      .subscribe((statisticDatas: StatisticData[]) => this.statistic = [...statisticDatas]);
   }
 
   /**
