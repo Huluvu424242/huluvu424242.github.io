@@ -1,7 +1,16 @@
-<!doctype html><html dir="ltr" lang="en" xmlns="http://www.w3.org/1999/html"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Stencil Component Starter</title> <script type="module" src="./build/honey-news.esm.js"></script> <script nomodule="" src="./build/honey-news.js"></script> <style>body{
+<!doctype html><html dir="ltr" lang="en" xmlns="http://www.w3.org/1999/html"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Stencil Component Starter</title> <script type="module" src="./build/honey-news.esm.js"></script> <script nomodule="" src="./build/honey-news.js"></script> <link rel="stylesheet" href="./build/honey-news.css"> <style>body{
     background-color: aqua;
   }
   .wichtig{
     color: red;
     font-size: 2rem;
-  }</style> </head> <body id="seite" style="display: block;"> <h1>Nutzung der honey-news Komponente</h1> <span class="wichtig">!!!</span> Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus diesem Grund ist auch die Statistik eingeschaltet <span class="wichtig">!!!</span><br> Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: url, anzahl der abfragen, anzahl valider responses<br> Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen Feed ein.<br> Vielen Dank für Ihr Verständnis. <br> <hr> <honey-news></honey-news></body></html>
+  }</style> </head> <body id="seite" style="display: block;"> <h1>Nutzung der honey-news Komponente</h1> <span class="wichtig">!!!</span> Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus diesem Grund ist auch die Statistik eingeschaltet <span class="wichtig">!!!</span><br> Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: url, anzahl der abfragen, anzahl valider responses<br> Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen Feed ein.<br> Vielen Dank für Ihr Verständnis. <br> <hr> <honey-news></honey-news><script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  // auto-unregister service worker during dev mode
+  navigator.serviceWorker.getRegistration().then(function(registration) {
+  if (registration) {
+    registration.unregister().then(function() { location.reload(true) });
+  }
+  });
+}
+</script></body></html>

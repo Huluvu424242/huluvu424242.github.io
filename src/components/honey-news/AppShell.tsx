@@ -112,8 +112,9 @@ export class AppShell {
         // disabled={this.hasNoFeeds()}
       >
         <div class="flex-container">
+          <honey-news-header class="flex-item"/>
           <honey-news-feed class="flex-item"/>
-          <honey-news-statistic class="flex-item"/>
+          {/*<honey-news-statistic class="flex-item"/>*/}
         </div>
       </Host>
     );

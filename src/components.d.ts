@@ -25,6 +25,8 @@ export namespace Components {
          */
         "verbose": boolean;
     }
+    interface HoneyNewsHeader {
+    }
     interface HoneyNewsStatistic {
         /**
           * Update statistic options
@@ -50,6 +52,12 @@ declare global {
         prototype: HTMLHoneyNewsFeedElement;
         new (): HTMLHoneyNewsFeedElement;
     };
+    interface HTMLHoneyNewsHeaderElement extends Components.HoneyNewsHeader, HTMLStencilElement {
+    }
+    var HTMLHoneyNewsHeaderElement: {
+        prototype: HTMLHoneyNewsHeaderElement;
+        new (): HTMLHoneyNewsHeaderElement;
+    };
     interface HTMLHoneyNewsStatisticElement extends Components.HoneyNewsStatistic, HTMLStencilElement {
     }
     var HTMLHoneyNewsStatisticElement: {
@@ -59,6 +67,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "honey-news": HTMLHoneyNewsElement;
         "honey-news-feed": HTMLHoneyNewsFeedElement;
+        "honey-news-header": HTMLHoneyNewsHeaderElement;
         "honey-news-statistic": HTMLHoneyNewsStatisticElement;
     }
 }
@@ -75,6 +84,8 @@ declare namespace LocalJSX {
          */
         "verbose"?: boolean;
     }
+    interface HoneyNewsHeader {
+    }
     interface HoneyNewsStatistic {
         /**
           * enable console logging
@@ -84,6 +95,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "honey-news": HoneyNews;
         "honey-news-feed": HoneyNewsFeed;
+        "honey-news-header": HoneyNewsHeader;
         "honey-news-statistic": HoneyNewsStatistic;
     }
 }
@@ -93,6 +105,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "honey-news": LocalJSX.HoneyNews & JSXBase.HTMLAttributes<HTMLHoneyNewsElement>;
             "honey-news-feed": LocalJSX.HoneyNewsFeed & JSXBase.HTMLAttributes<HTMLHoneyNewsFeedElement>;
+            "honey-news-header": LocalJSX.HoneyNewsHeader & JSXBase.HTMLAttributes<HTMLHoneyNewsHeaderElement>;
             "honey-news-statistic": LocalJSX.HoneyNewsStatistic & JSXBase.HTMLAttributes<HTMLHoneyNewsStatisticElement>;
         }
     }
