@@ -26,7 +26,7 @@
     "webcomponent",
     "custom-element"
   ],
-  "author": "Huluvu424242 alias FunThomas424242 (Thomas Schubert)",
+  "author": "Huluvu424242 alias FunThomas424242 and in real life Thomas Schubert",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Huluvu424242/honey-news/issues"
@@ -40,7 +40,7 @@
     "prepare-deliver": "npm run build",
     "deliver": "npm publish --access=public",
     "pruefeVersionen": "npm outdated",
-    "print-credits": "npx license-report --only=prod"
+    "check-credits": "npx license-checker --failOn 'AGPL' --production >credits.txt"
   },
   "engines": {
     "node": "14.15.0"
@@ -61,6 +61,6 @@
     "ts-node": "9.0.0",
     "typescript": "4.0.5",
     "rollup-plugin-node-polyfills": "0.2.1",
-    "license-report": "4.5.0"
+    "license-checker": "25.0.1"
   }
 }
