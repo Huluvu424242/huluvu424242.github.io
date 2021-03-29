@@ -18,24 +18,25 @@ export class Header {
     return (
       <Host>
         <div class="headline">
-          <button
-            ref={(el) => this.burgerButton = el as HTMLButtonElement}
-            onClick={() => this.menuIsOpen = !this.menuIsOpen}
-          >
-            <img src="build/assets/burgermenu-fasil.svg" class="headitem burgermenu"/>
-            < span
-              class="sr-only">
+          <div class="vertical">
+            <button
+              ref={(el) => this.burgerButton = el as HTMLButtonElement}
+              onClick={() => this.menuIsOpen = !this.menuIsOpen}
+            >
+              <img src="build/assets/burgermenu-fasil.svg" class="headitem burgermenu"/>
+              < span
+                class="sr-only">
               {this.menuIsOpen ? "Menü schließen" : "Menü öffnen"}
             </span>
-          </button>
-          {this.menuIsOpen ?
-            <ul role="menu" class="vertical-menu">
-              <li role="menuitem"><a href="#" class="active">Home</a></li>
-              <li role="menuitem"><a href="#">Link 1</a></li>
-            </ul>
-            : ""
-          }
-
+            </button>
+            {this.menuIsOpen ?
+              <ul role="menu" class="vertical-menu">
+                <li role="menuitem"><a href="#" class="active">Home</a></li>
+                <li role="menuitem"><a href="#">Link 1</a></li>
+              </ul>
+              : ""
+            }
+          </div>
           <span class="headitem headingtext">RSS/Atom Feed Reader</span>
         </div>
 

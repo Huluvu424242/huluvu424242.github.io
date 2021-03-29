@@ -1,6 +1,6 @@
 
 .headline {
-  display: inline;
+  display: flex;
   height: 1.5rem;
 
 }
@@ -18,6 +18,14 @@
   font-size: 1.5rem;
 }
 
+.vertical{
+  flex-direction: column;
+}
+
+.vertical-menu{
+  padding: 0;
+  list-style: none;
+}
 
 .sr-only {
   position: absolute;
