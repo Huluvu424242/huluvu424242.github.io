@@ -118,5 +118,5 @@ const patchCloneNodeFix = (HTMLElementPrototype) => {
 
 patchBrowser().then(options => {
   globalScripts();
-  return bootstrapLazy([["honey-news",[[1,"honey-news",{"verbose":[4],"options":[32]}]]],["honey-news-statistic",[[1,"honey-news-statistic",{"verbose":[4],"statistic":[32],"options":[32],"updateOptions":[64]}]]],["honey-news-feed",[[1,"honey-news-feed",{"verbose":[4],"feeds":[32],"options":[32],"updateOptions":[64]}]]],["honey-news-header",[[1,"honey-news-header",{"menuIsOpen":[32]}]]]], options);
+  return bootstrapLazy([["honey-news-feed",[[1,"honey-news-feed",{"verbose":[4],"feeds":[32],"options":[32],"updateOptions":[64]}]]],["honey-news-header",[[1,"honey-news-header",{"menuIsOpen":[32]}]]],["honey-news-statistic",[[1,"honey-news-statistic",{"verbose":[4],"statistic":[32],"options":[32],"updateOptions":[64]}]]],["honey-news",[[1,"honey-news",{"verbose":[4],"options":[32]}]]]], options);
 });

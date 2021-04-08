@@ -1,39 +1,40 @@
+@import url("../assets/paper.min.css");
 
-.headline {
-  display: flex;
-  height: 1.5rem;
+/*.headline {*/
+/*  display: flex;*/
+/*  height: 1.5rem;*/
 
-}
+/*}*/
 
-.headitem {
-  height: 1.5rem;
-  vertical-align: middle;
-}
+/*.headitem {*/
+/*  height: 1.5rem;*/
+/*  vertical-align: middle;*/
+/*}*/
 
-.burgermenu{
-  border: blue solid 1px;
-}
+/*.burgermenu{*/
+/*  border: blue solid 1px;*/
+/*}*/
 
-.headingtext{
-  font-size: 1.5rem;
-}
+/*.headingtext{*/
+/*  font-size: 1.5rem;*/
+/*}*/
 
-.vertical{
-  flex-direction: column;
-}
+/*.vertical{*/
+/*  flex-direction: column;*/
+/*}*/
 
-.vertical-menu{
-  padding: 0;
-  list-style: none;
-}
+/*.vertical-menu{*/
+/*  padding: 0;*/
+/*  list-style: none;*/
+/*}*/
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  border: 0;
-}
+/*.sr-only {*/
+/*  position: absolute;*/
+/*  width: 1px;*/
+/*  height: 1px;*/
+/*  padding: 0;*/
+/*  margin: -1px;*/
+/*  overflow: hidden;*/
+/*  clip: rect(0,0,0,0);*/
+/*  border: 0;*/
+/*}*/

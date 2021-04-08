@@ -3346,6 +3346,86 @@ class ZipBufferIterator extends SimpleOuterSubscriber {
 }
 //# sourceMappingURL=zip.js.map
 
+let pendingIds = 0;
+let callbackIds = 0;
+const pending = new Map();
+const callbacks = new Map();
+
+const createWorker = (workerPath, workerName, workerMsgId) => {
+  const worker = new Worker(workerPath, {name:workerName});
+
+  worker.addEventListener('message', ({data}) => {
+  if (data) {
+    const workerMsg = data[0];
+    const id = data[1];
+    const value = data[2];
+
+    if (workerMsg === workerMsgId) {
+    const err = data[3];
+    const [resolve, reject, callbackIds] = pending.get(id);
+    pending.delete(id);
+
+    if (err) {
+      const errObj = (err.isError)
+      ? Object.assign(new Error(err.value.message), err.value)
+      : err.value;
+
+      consoleError(errObj);
+      reject(errObj);
+    } else {
+      if (callbackIds) {
+      callbackIds.forEach(id => callbacks.delete(id));
+      }
+      resolve(value);
+    }
+    } else if (workerMsg === workerMsgId + '.cb') {
+    try {
+      callbacks.get(id)(...value);
+    } catch (e) {
+      consoleError(e);
+    }
+    }
+  }
+  });
+
+  return worker;
+};
+
+const createWorkerProxy = (worker, workerMsgId, exportedMethod) => (
+  (...args) => new Promise((resolve, reject) => {
+  let pendingId = pendingIds++;
+  let i = 0;
+  let argLen = args.length;
+  let mainData = [resolve, reject];
+  pending.set(pendingId, mainData);
+
+  for (; i < argLen; i++) {
+    if (typeof args[i] === 'function') {
+    const callbackId = callbackIds++;
+    callbacks.set(callbackId, args[i]);
+    args[i] = [workerMsgId + '.cb', callbackId];
+    (mainData[2] = mainData[2] || []).push(callbackId);
+    }
+  }
+  const postMessage = (w) => (
+    w.postMessage(
+    [workerMsgId, pendingId, exportedMethod, args],
+    args.filter(a => a instanceof ArrayBuffer)
+    )
+  );
+  if (worker.then) {
+    worker.then(postMessage);
+  } else {
+    postMessage(worker);
+  }
+  })
+);
+
+const workerPromise = import('./fetch-es6.worker-693822fb.js').then(m => m.worker);
+const getFeedsSingleObserver = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'getFeedsSingleObserver');
+const loadFeedData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedData');
+const loadFeedRanking = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedRanking');
+
 function audit(durationSelector) {
     return function auditOperatorFunction(source) {
         return source.lift(new AuditOperator(durationSelector));
@@ -7046,85 +7126,5 @@ function zip$1(...observables) {
 function zipAll(project) {
     return (source) => source.lift(new ZipOperator(project));
 }
-
-let pendingIds = 0;
-let callbackIds = 0;
-const pending = new Map();
-const callbacks = new Map();
-
-const createWorker = (workerPath, workerName, workerMsgId) => {
-  const worker = new Worker(workerPath, {name:workerName});
-
-  worker.addEventListener('message', ({data}) => {
-  if (data) {
-    const workerMsg = data[0];
-    const id = data[1];
-    const value = data[2];
-
-    if (workerMsg === workerMsgId) {
-    const err = data[3];
-    const [resolve, reject, callbackIds] = pending.get(id);
-    pending.delete(id);
-
-    if (err) {
-      const errObj = (err.isError)
-      ? Object.assign(new Error(err.value.message), err.value)
-      : err.value;
-
-      consoleError(errObj);
-      reject(errObj);
-    } else {
-      if (callbackIds) {
-      callbackIds.forEach(id => callbacks.delete(id));
-      }
-      resolve(value);
-    }
-    } else if (workerMsg === workerMsgId + '.cb') {
-    try {
-      callbacks.get(id)(...value);
-    } catch (e) {
-      consoleError(e);
-    }
-    }
-  }
-  });
-
-  return worker;
-};
-
-const createWorkerProxy = (worker, workerMsgId, exportedMethod) => (
-  (...args) => new Promise((resolve, reject) => {
-  let pendingId = pendingIds++;
-  let i = 0;
-  let argLen = args.length;
-  let mainData = [resolve, reject];
-  pending.set(pendingId, mainData);
-
-  for (; i < argLen; i++) {
-    if (typeof args[i] === 'function') {
-    const callbackId = callbackIds++;
-    callbacks.set(callbackId, args[i]);
-    args[i] = [workerMsgId + '.cb', callbackId];
-    (mainData[2] = mainData[2] || []).push(callbackId);
-    }
-  }
-  const postMessage = (w) => (
-    w.postMessage(
-    [workerMsgId, pendingId, exportedMethod, args],
-    args.filter(a => a instanceof ArrayBuffer)
-    )
-  );
-  if (worker.then) {
-    worker.then(postMessage);
-  } else {
-    postMessage(worker);
-  }
-  })
-);
-
-const workerPromise = import('./fetch-es6.worker-9bbc25d8.js').then(m => m.worker);
-const getFeedsSingleObserver = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'getFeedsSingleObserver');
-const loadFeedData = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedData');
-const loadFeedRanking = /*@__PURE__*/createWorkerProxy(workerPromise, 'stencil.fetch-es6.worker', 'loadFeedRanking');
 
 export { EMPTY as E, toArray as a, map as b, catchError as c, createWorker as d, from as f, getFeedsSingleObserver as g, loadFeedRanking as l, mergeMap as m, switchMap as s, timer as t };

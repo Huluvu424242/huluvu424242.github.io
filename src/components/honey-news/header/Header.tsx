@@ -17,30 +17,43 @@ export class Header {
     Logger.debugMessage('##RENDER##');
     return (
       <Host>
-        <div class="headline">
-          <div class="vertical">
-            <button
-              ref={(el) => this.burgerButton = el as HTMLButtonElement}
-              onClick={() => this.menuIsOpen = !this.menuIsOpen}
-            >
-              <img src="build/assets/burgermenu-fasil.svg" class="headitem burgermenu"/>
-              < span
-                class="sr-only">
-              {this.menuIsOpen ? "Menü schließen" : "Menü öffnen"}
-            </span>
-            </button>
-            {this.menuIsOpen ?
-              <ul role="menu" class="vertical-menu">
-                <li role="menuitem"><a href="#" class="active">Home</a></li>
-                <li role="menuitem"><a href="#">Link 1</a></li>
-              </ul>
-              : ""
-            }
+        <div class="row flex-spaces">
+          <input class="alert-state" id="disclaimer" type="checkbox"/>
+          <div class="alert alert-danger dismissible">
+              <span>!!! Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus
+                diesem Grund ist
+                auch die Statistik eingeschaltet !!!
+                Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: url, anzahl der abfragen,
+                anzahl valider
+                responses
+                Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen Feed ein.
+                Vielen Dank für Ihr Verständnis.
+              </span>
+            <label class="btn-close" htmlFor="disclaimer">X</label>
           </div>
-          <span class="headitem headingtext">RSS/Atom Feed Reader</span>
         </div>
-
-
+        <nav class="border fixed split-nav">
+          <div class="nav-brand">
+            <h3><a href="#">RSS/Atom Feed Reader</a></h3>
+          </div>
+          <div class="collapsible">
+            <input id="collapsible1" type="checkbox" name="collapsible1"/>
+            <label htmlFor="collapsible1">
+              <div class="Home"></div>
+              <div class="About"></div>
+              <div class="Github"></div>
+              <div class="Credits"></div>
+            </label>
+            <div class="collapsible-body">
+              <ul class="inline">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Github</a></li>
+                <li><a href="#">Credits</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
       </Host>
     );
   }
