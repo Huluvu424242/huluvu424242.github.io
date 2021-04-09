@@ -19,10 +19,6 @@ export class Feed {
    */
   @Element() hostElement: HTMLElement;
 
-  /**
-   * Input Element
-   */
-  inputNewUrl: HTMLInputElement;
 
   /**
    * Id des Host Elements, falls nicht verfügbar wird diese generiert
@@ -201,27 +197,6 @@ export class Feed {
     return null
   }
 
-  addUrl(event: UIEvent) {
-    event = event;
-    const url = this.inputNewUrl.value;
-    if (!this.feedLoader.getFeedURLs().includes(url)) {
-
-      this.feedLoader.addFeedUrl(url);
-      from(getFeedsSingleObserver([url], true)).subscribe();
-      setTimeout(
-        () => {
-          from(getFeedsSingleObserver([url], false)).subscribe();
-          // from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
-          //   .subscribe(
-          //     (statisticDatas: StatisticData[]) => {
-          //       this.statistic = [...statisticDatas];
-          //     }
-          //   );
-        }
-        , 3000
-      );
-    }
-  }
 
   lastHour: Date = null;
 
@@ -263,10 +238,6 @@ export class Feed {
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
-        <h2>Verwaltung</h2>
-        <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
-        <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
-
         <h2>News Feed
           {
             this.getNeuesteMeldung()

@@ -57,7 +57,7 @@ export class AppShell {
   public connectedCallback() {
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
-    this.initialHostClass = this.hostElement.getAttribute("class") || null;
+    this.initialHostClass = this.hostElement.getAttribute("class") || "paper container";
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
@@ -101,6 +101,21 @@ export class AppShell {
   }
 
 
+  public istStatistic(): boolean {
+    return window.location.pathname === "/statistic";
+  }
+
+  protected getBody(): string {
+    switch (window.location.pathname) {
+      case "/statistic":
+        return <honey-news-statistic/>;
+      case "/feeds":
+        return <honey-news-feeds/>;
+      default:
+        return <honey-news-feed/>;
+    }
+  }
+
   public render() {
     Logger.debugMessage('##RENDER##');
     return (
@@ -111,11 +126,29 @@ export class AppShell {
         class={this.getHostClass()}
         // disabled={this.hasNoFeeds()}
       >
-        <div class="paper container">
-          <honey-news-header/>
-          <honey-news-feed/>
-          <honey-news-statistic/>
-        </div>
+        <stencil-router id="router">
+          <stencil-route
+            url="/feeds"
+            component="honey-news-feeds"
+            router="#router"
+            exact={true}
+          />
+          <stencil-route
+            url="/"
+            component="honey-news"
+            router="#router"
+            exact={true}
+          />
+
+          <stencil-route
+            url="/statistic"
+            component="honey-news-statistic"
+            router="#router"
+            exact={true}
+          />
+        </stencil-router>
+        <honey-news-header/>
+        {this.getBody()}
       </Host>
     );
   }

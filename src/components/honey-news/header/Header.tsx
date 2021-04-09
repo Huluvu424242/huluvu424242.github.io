@@ -1,4 +1,4 @@
-import {Component, h, Host, State} from "@stencil/core";
+import {Component, h, Host} from "@stencil/core";
 import {Logger} from "../../../libs/logger";
 
 @Component({
@@ -8,10 +8,6 @@ import {Logger} from "../../../libs/logger";
   shadow: true
 })
 export class Header {
-
-  @State() menuIsOpen: boolean = false;
-
-  burgerButton: HTMLButtonElement
 
   public render() {
     Logger.debugMessage('##RENDER##');
@@ -38,25 +34,30 @@ export class Header {
             <label class="btn-close" htmlFor="disclaimer">X</label>
           </div>
         </div>
-        <nav class="border fixed split-nav">
+        <nav class="border split-nav">
           <div class="nav-brand">
             <h3><a href="#">RSS/Atom Feed Reader</a></h3>
           </div>
           <div class="collapsible">
             <input id="collapsible1" type="checkbox" name="collapsible1"/>
             <label htmlFor="collapsible1">
-              <div class="Feeds"></div>
-              <div class="News"></div>
-              <div class="Statistik"></div>
-              <div class="About"></div>
-              <div class="Github"></div>
+              <div class="Feeds"/>
+              <div class="News"/>
+              <div class="Statistik"/>
+              <div class="About"/>
+              <div class="Github"/>
             </label>
             <div class="collapsible-body">
               <ul class="inline">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Github</a></li>
-                <li><a href="#">Credits</a></li>
+                <li><a href="/feeds">Feeds</a></li>
+                <li>
+                  <a href="/">News</a>
+                </li>
+                <li>
+                  <a href="/statistic">Statistik</a>
+                </li>
+                <li><a href="https://github.com/Huluvu424242/honey-news" target="_blank">Github</a></li>
+                <li><a href="/credits">Credits</a></li>
               </ul>
             </div>
           </div>

@@ -25,6 +25,8 @@ export namespace Components {
          */
         "verbose": boolean;
     }
+    interface HoneyNewsFeeds {
+    }
     interface HoneyNewsHeader {
     }
     interface HoneyNewsStatistic {
@@ -52,6 +54,12 @@ declare global {
         prototype: HTMLHoneyNewsFeedElement;
         new (): HTMLHoneyNewsFeedElement;
     };
+    interface HTMLHoneyNewsFeedsElement extends Components.HoneyNewsFeeds, HTMLStencilElement {
+    }
+    var HTMLHoneyNewsFeedsElement: {
+        prototype: HTMLHoneyNewsFeedsElement;
+        new (): HTMLHoneyNewsFeedsElement;
+    };
     interface HTMLHoneyNewsHeaderElement extends Components.HoneyNewsHeader, HTMLStencilElement {
     }
     var HTMLHoneyNewsHeaderElement: {
@@ -67,6 +75,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "honey-news": HTMLHoneyNewsElement;
         "honey-news-feed": HTMLHoneyNewsFeedElement;
+        "honey-news-feeds": HTMLHoneyNewsFeedsElement;
         "honey-news-header": HTMLHoneyNewsHeaderElement;
         "honey-news-statistic": HTMLHoneyNewsStatisticElement;
     }
@@ -84,6 +93,8 @@ declare namespace LocalJSX {
          */
         "verbose"?: boolean;
     }
+    interface HoneyNewsFeeds {
+    }
     interface HoneyNewsHeader {
     }
     interface HoneyNewsStatistic {
@@ -95,6 +106,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "honey-news": HoneyNews;
         "honey-news-feed": HoneyNewsFeed;
+        "honey-news-feeds": HoneyNewsFeeds;
         "honey-news-header": HoneyNewsHeader;
         "honey-news-statistic": HoneyNewsStatistic;
     }
@@ -105,6 +117,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "honey-news": LocalJSX.HoneyNews & JSXBase.HTMLAttributes<HTMLHoneyNewsElement>;
             "honey-news-feed": LocalJSX.HoneyNewsFeed & JSXBase.HTMLAttributes<HTMLHoneyNewsFeedElement>;
+            "honey-news-feeds": LocalJSX.HoneyNewsFeeds & JSXBase.HTMLAttributes<HTMLHoneyNewsFeedsElement>;
             "honey-news-header": LocalJSX.HoneyNewsHeader & JSXBase.HTMLAttributes<HTMLHoneyNewsHeaderElement>;
             "honey-news-statistic": LocalJSX.HoneyNewsStatistic & JSXBase.HTMLAttributes<HTMLHoneyNewsStatisticElement>;
         }
