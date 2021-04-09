@@ -1,4 +1,4 @@
-<!doctype html><html dir="ltr" lang="en" xmlns="http://www.w3.org/1999/html"><head> <meta charset="UTF-8"> <!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">--> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <meta http-equiv="X-UA-Compatible" content="ie=edge"> <title>Stencil Component Starter</title> <script type="module" src="./build/honey-news.esm.js"></script> <script nomodule="" src="./build/honey-news.js"></script> <style>:root {
+:root {
   --primary: #41403e;
   --secondary: #0071de;
   --success: #86a361;
@@ -47,4 +47,6 @@
   --shadow-color-regular: rgba(0, 0, 0, 0.2);
   --shadow-color-hover: rgba(0, 0, 0, 0.3);
   --primary-inverse: #fff;
-}</style> </head> <body id="seite"> <honey-news></honey-news></body></html>
+}
+
+
