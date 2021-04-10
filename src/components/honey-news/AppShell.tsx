@@ -1,6 +1,9 @@
 import {Component, Element, h, Host, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {AppShellOptions} from "./AppShellOptions";
+import {createRouter, href, Route} from 'stencil-router-v2';
+
+const Router = createRouter();
 
 @Component({
   tag: "honey-news",
@@ -111,6 +114,62 @@ export class AppShell {
     }
   }
 
+  protected getHeader(){
+    return ([
+      <div class="row flex-spaces">
+        <input class="alert-state" id="disclaimer" type="checkbox"/>
+        <div class="alert alert-danger dismissible">
+          <div class="row">
+            <p>!!! Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus
+              diesem Grund ist auch die Statistik eingeschaltet !!!
+            </p>
+            <div class="background-warning">
+              <p>
+                Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: url, anzahl der
+                abfragen,
+                anzahl valider responses
+              </p>
+              <p>
+                Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen Feed ein.
+                Vielen Dank für Ihr Verständnis.
+              </p>
+            </div>
+          </div>
+          <label class="btn-close" htmlFor="disclaimer">X</label>
+        </div>
+      </div>,
+      <nav class="border split-nav">
+        <div class="nav-brand">
+          <h3><a href="#">RSS/Atom Feed Reader</a></h3>
+        </div>
+        <div class="collapsible">
+          <input id="collapsible1" type="checkbox" name="collapsible1"/>
+          <label htmlFor="collapsible1">
+            <div class="bar1"/>
+            <div class="bar2"/>
+            <div class="bar3"/>
+            <div class="bar4"/>
+            <div class="bar5"/>
+          </label>
+          <div class="collapsible-body">
+            <ul class="inline">
+              <li><a {...href('/feeds')}>Feeds</a></li>
+              <li>
+                <a {...href('/')}>News</a>
+              </li>
+              <li>
+                <a {...href('/statistic')}>Statistik</a>
+              </li>
+              <li><a href="https://github.com/Huluvu424242/honey-news" target="_blank">Github</a></li>
+              <li><a {...href('/feeds')} >Credits</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    ]);
+  }
+
+
   public render() {
     Logger.debugMessage('##RENDER##');
     return (
@@ -121,29 +180,26 @@ export class AppShell {
         class={this.getHostClass()}
         // disabled={this.hasNoFeeds()}
       >
-        <stencil-router id="router">
-          <stencil-route
-            url="/feeds"
-            component="honey-news-feeds"
-            router="#router"
-            exact={true}
-          />
-          <stencil-route
-            url="/"
-            component="honey-news"
-            router="#router"
-            exact={true}
-          />
 
-          <stencil-route
-            url="/statistic"
-            component="honey-news-statistic"
-            router="#router"
-            exact={true}
-          />
-        </stencil-router>
-        <honey-news-header/>
-        {this.getBody()}
+
+        <Router.Switch>
+
+          <Route path="/">
+            {this.getHeader()}
+            <honey-news-feed/>
+          </Route>
+
+          <Route path="/feeds">
+            {this.getHeader()}
+            <honey-news-feeds/>
+          </Route>
+
+          <Route path="/statistic">
+            {this.getHeader()}
+            <honey-news-statistic/>
+          </Route>
+
+        </Router.Switch>
       </Host>
     );
   }

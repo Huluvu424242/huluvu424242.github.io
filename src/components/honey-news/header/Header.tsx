@@ -1,5 +1,4 @@
 import {Component, h, Host} from "@stencil/core";
-import {Logger} from "../../../libs/logger";
 
 @Component({
   tag: "honey-news-header",
@@ -10,16 +9,13 @@ import {Logger} from "../../../libs/logger";
 export class Header {
 
   navigateTo(event: Event) {
-    // event.preventDefault();
+    event.preventDefault();
     const path = event.currentTarget["pathname"];
     console.info(path);
-    // if (path) {
-    //   href(path)
-    // }
   }
 
   public render() {
-    Logger.debugMessage('##RENDER##');
+    console.info('##Router##');
     return (
       <Host>
         <div class="row flex-spaces">
@@ -71,6 +67,8 @@ export class Header {
             </div>
           </div>
         </nav>
+
+
       </Host>
     );
   }

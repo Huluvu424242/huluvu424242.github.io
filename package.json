@@ -48,7 +48,7 @@
   "dependencies": {
     "@stencil/core": "2.4.0-3",
     "@stencil/store": "1.4.1",
-    "@stencil/router": "2.0.0-2",
+    "stencil-router-v2": "0.6.0",
     "object-hash": "2.1.1",
     "rxjs": "6.6.3",
     "feedme": "2.0.2",
