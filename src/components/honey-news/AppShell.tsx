@@ -100,11 +100,6 @@ export class AppShell {
     return hostClass;
   }
 
-
-  public istStatistic(): boolean {
-    return window.location.pathname === "/statistic";
-  }
-
   protected getBody(): string {
     switch (window.location.pathname) {
       case "/statistic":

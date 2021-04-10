@@ -9,6 +9,15 @@ import {Logger} from "../../../libs/logger";
 })
 export class Header {
 
+  navigateTo(event: Event) {
+    // event.preventDefault();
+    const path = event.currentTarget["pathname"];
+    console.info(path);
+    // if (path) {
+    //   href(path)
+    // }
+  }
+
   public render() {
     Logger.debugMessage('##RENDER##');
     return (
@@ -41,23 +50,23 @@ export class Header {
           <div class="collapsible">
             <input id="collapsible1" type="checkbox" name="collapsible1"/>
             <label htmlFor="collapsible1">
-              <div class="Feeds"/>
-              <div class="News"/>
-              <div class="Statistik"/>
-              <div class="About"/>
-              <div class="Github"/>
+              <div class="bar1"/>
+              <div class="bar2"/>
+              <div class="bar3"/>
+              <div class="bar4"/>
+              <div class="bar5"/>
             </label>
             <div class="collapsible-body">
               <ul class="inline">
-                <li><a href="/feeds">Feeds</a></li>
+                <li><a href="/feeds" onClick={this.navigateTo.bind(this)}>Feeds</a></li>
                 <li>
-                  <a href="/">News</a>
+                  <a href="/" onClick={this.navigateTo.bind(this)}>News</a>
                 </li>
                 <li>
-                  <a href="/statistic">Statistik</a>
+                  <a href="/statistic" onClick={this.navigateTo.bind(this)}>Statistik</a>
                 </li>
                 <li><a href="https://github.com/Huluvu424242/honey-news" target="_blank">Github</a></li>
-                <li><a href="/credits">Credits</a></li>
+                <li><a href="/credits" onClick={this.navigateTo.bind(this)}>Credits</a></li>
               </ul>
             </div>
           </div>
