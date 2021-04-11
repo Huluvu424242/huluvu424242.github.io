@@ -1,4 +1,4 @@
-import {News} from "./Feed";
+import {News} from "./News";
 
 describe('Unit test: honey-news satisfy', () => {
 
