@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 export const Header: FunctionalComponent<HeaderProps> = () => ([
-  <Disclaimer/>,
-  <Navbar/>
+  <Navbar/>,
+  <Disclaimer/>
 ]);
 
