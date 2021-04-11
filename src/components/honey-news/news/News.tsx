@@ -1,18 +1,18 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Logger} from "../../../libs/logger";
-import {FeedOptions} from "./FeedOptions";
-import {FeedLoader} from "./FeedLoader";
+import {NewsOptions} from "./NewsOptions";
+import {NewsLoader} from "./NewsLoader";
 import {getFeedsSingleObserver, Post} from "../../../fetch-es6.worker";
 import {from, Subscription} from "rxjs";
 import {PipeOperators} from "../PipeOperators";
 
 @Component({
   tag: "honey-news-feed",
-  styleUrl: "Feed.css",
+  styleUrl: "News.css",
   assetsDirs: ['assets'],
   shadow: true
 })
-export class Feed {
+export class News {
 
   /**
    * Host Element
@@ -48,14 +48,14 @@ export class Feed {
   /**
    * Hilfsklasse zum Laden der Daten
    */
-  feedLoader: FeedLoader = new FeedLoader([]);
+  feedLoader: NewsLoader = new NewsLoader([]);
 
   @State() feeds: Post[] = [];
   feedsSubscription: Subscription;
 
   lastUpdate: Date = null;
 
-  @State() options: FeedOptions = {
+  @State() options: NewsOptions = {
     disabledHostClass: "honey-news-feed-disabled",
     enabledHostClass: "honey-news-feed-enabled",
     disabledTitleText: "Noch keine News verfügbar",
@@ -133,10 +133,10 @@ export class Feed {
 
   /**
    * Update speaker options
-   * @param options : FeedOptions plain object to set the options
+   * @param options : NewsOptions plain object to set the options
    */
   @Method()
-  public async updateOptions(options: FeedOptions) {
+  public async updateOptions(options: NewsOptions) {
     for (let prop in options) {
       if (options.hasOwnProperty(prop)) {
         this.options[prop] = options[prop];

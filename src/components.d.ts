@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { FeedOptions } from "./components/honey-news/news/FeedOptions";
+import { NewsOptions } from "./components/honey-news/news/NewsOptions";
 import { StatisticOptions } from "./components/honey-news/statistic/StatisticOptions";
 export namespace Components {
     interface HoneyNews {
@@ -17,9 +17,9 @@ export namespace Components {
     interface HoneyNewsFeed {
         /**
           * Update speaker options
-          * @param options : FeedOptions plain object to set the options
+          * @param options : NewsOptions plain object to set the options
          */
-        "updateOptions": (options: FeedOptions) => Promise<void>;
+        "updateOptions": (options: NewsOptions) => Promise<void>;
         /**
           * enable console logging
          */

@@ -14,7 +14,7 @@
 
 ## Methods
 
-### `updateOptions(options: FeedOptions) => Promise<void>`
+### `updateOptions(options: NewsOptions) => Promise<void>`
 
 Update speaker options
 
