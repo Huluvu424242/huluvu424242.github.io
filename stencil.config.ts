@@ -4,7 +4,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 export const config: Config = {
   namespace: 'honey-news',
-  globalStyle: 'src/global/variables.css',
+  globalStyle: 'src/global/variables.default.css',
   globalScript: 'src/global/app.ts',
   testing: {
     /**

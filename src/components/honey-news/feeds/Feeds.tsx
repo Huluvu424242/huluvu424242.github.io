@@ -1,4 +1,4 @@
-import {Component, h, Host} from "@stencil/core";
+import {Component, h} from "@stencil/core";
 import {Logger} from "../../../libs/logger";
 
 @Component({
@@ -39,11 +39,12 @@ export class Feeds {
   public render() {
     Logger.debugMessage('##RENDER##');
     return (
-      <Host>
+      <div class="paper form-group">
         <h2>Verwaltung</h2>
+
         <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
         <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
-      </Host>
+      </div>
     );
   }
 }
