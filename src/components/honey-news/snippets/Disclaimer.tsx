@@ -11,22 +11,19 @@ export const Disclaimer: FunctionalComponent<DisclaimerProps> = () => (
     <input class="alert-state" id="disclaimer" type="checkbox"/>
     <div class="alert alert-danger dismissible">
       <div class="row">
-        <p>!!! Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus
+        <h3>!!! Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus
           diesem Grund ist auch die Statistik eingeschaltet !!!
-        </p>
+        </h3>
         <div class="background-warning">
           <p>
-            Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: url, anzahl der
-            abfragen,
-            anzahl valider responses
-          </p>
-          <p>
+            Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: URL, Anzahl der
+            Abfragen und Anzahl valider Anworten.
             Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen Feed ein.
             Vielen Dank für Ihr Verständnis.
           </p>
         </div>
       </div>
-      <label class="btn-close" htmlFor="disclaimer">X</label>
+      <label class="paper-btn" title="Hinweis Ausblenden" htmlFor="disclaimer">X</label>
     </div>
   </div>
 );
