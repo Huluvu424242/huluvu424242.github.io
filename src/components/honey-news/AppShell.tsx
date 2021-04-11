@@ -2,7 +2,8 @@ import {Component, Element, h, Host, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {createRouter, Route} from 'stencil-router-v2';
-import {About, Header} from "./header/Header";
+import {Header} from "./snippets/Header";
+import {About} from "./snippets/About";
 
 const Router = createRouter();
 
