@@ -1,12 +1,13 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {href} from "stencil-router-v2";
 
-interface HeaderProps {
+
+interface DisclaimerProps {
   // hier könnten properties für Parameterübergaben rein
   // title: string;
 }
 
-export const Header: FunctionalComponent<HeaderProps> = () => ([
+export const Disclaimer: FunctionalComponent<DisclaimerProps> = () => (
   <div class="row flex-spaces">
     <input class="alert-state" id="disclaimer" type="checkbox"/>
     <div class="alert alert-danger dismissible">
@@ -28,7 +29,16 @@ export const Header: FunctionalComponent<HeaderProps> = () => ([
       </div>
       <label class="btn-close" htmlFor="disclaimer">X</label>
     </div>
-  </div>,
+  </div>
+);
+
+
+interface NavbarProps {
+  // hier könnten properties für Parameterübergaben rein
+  // title: string;
+}
+
+export const Navbar: FunctionalComponent<NavbarProps> = () => (
   <nav class="border split-nav">
     <div class="nav-brand">
       <h3><a href="#">RSS/Atom Feed Reader</a></h3>
@@ -57,7 +67,16 @@ export const Header: FunctionalComponent<HeaderProps> = () => ([
       </div>
     </div>
   </nav>
+);
 
+interface HeaderProps {
+  // hier könnten properties für Parameterübergaben rein
+  // title: string;
+}
+
+export const Header: FunctionalComponent<HeaderProps> = () => ([
+  <Disclaimer/>,
+  <Navbar/>
 ]);
 
 
