@@ -46,7 +46,7 @@
     "node": "14.15.0"
   },
   "dependencies": {
-    "@stencil/core": "2.4.0-3",
+    "@stencil/core": "2.5.2",
     "@stencil/store": "1.4.1",
     "stencil-router-v2": "0.6.0",
     "object-hash": "2.1.1",
@@ -55,7 +55,7 @@
     "@huluvu424242/liona-feeds": "2.3.0"
   },
   "devDependencies": {
-    "@types/jest": "26.0.15",
+    "@types/jest": "26.0.22",
     "@types/puppeteer": "5.4.0",
     "jest": "26.6.3",
     "jest-cli": "26.6.3",
