@@ -144,6 +144,9 @@ export class AppShell {
       >
 
         <Header/>
+
+        <p>{this.route}</p>
+
         {this.route === "/" ? <honey-news-feed/> : null}
         {this.route === "/feeds" ? <honey-news-feeds/> : null}
         {this.route === "/statistic" ? <honey-news-statistic/> : null}
