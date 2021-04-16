@@ -24,8 +24,8 @@ export const href = (route: string) => {
 };
 export const listenRouteChanges = (): Subject<string> => {
   return router.getSubject();
-}
+};
 
 export const closeRouter = (): void => {
   router.getSubject().unsubscribe();
-}
+};
