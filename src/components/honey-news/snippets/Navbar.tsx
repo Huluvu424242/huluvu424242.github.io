@@ -1,11 +1,20 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {href} from "stencil-router-v2";
+import {href} from "../../../Router";
+// import {href} from "../../../Router";
 
 
 interface NavbarProps {
   // hier könnten properties für Parameterübergaben rein
   // title: string;
 }
+
+
+function navigateTo(event:Event):void{
+  event.preventDefault();
+  console.info(event.currentTarget);
+  href(event.currentTarget["pathname"]);
+}
+
 
 export const Navbar: FunctionalComponent<NavbarProps> = () => (
   <nav class="border split-nav">
@@ -23,11 +32,11 @@ export const Navbar: FunctionalComponent<NavbarProps> = () => (
       </label>
       <div class="collapsible-body">
         <ul role="listbox" class="inline">
-          <li role="item"><span role="heading" aria-level="2"><a {...href('/feeds')}>Feeds</a></span></li>
-          <li role="item"><span role="heading" aria-level="2"><a {...href('/')}>News</a></span></li>
-          <li role="item"><span role="heading" aria-level="2"><a {...href('/statistic')}>Statistik</a></span></li>
+          <li role="item"><span role="heading" aria-level="2"><a href="/feeds" onClick={navigateTo} >Feeds</a></span></li>
+          <li role="item"><span role="heading" aria-level="2"><a href="/" onClick={navigateTo} >News</a></span></li>
+          <li role="item"><span role="heading" aria-level="2"><a href="/statistic" onClick={navigateTo} >Statistik</a></span></li>
           <li role="item"><span role="heading" aria-level="2"><a href="https://github.com/Huluvu424242/honey-news" target="_blank">Github</a></span></li>
-          <li role="item"><span role="heading" aria-level="2"><a {...href('/about')}>About</a></span></li>
+          <li role="item"><span role="heading" aria-level="2"><a href="/about" onClick={navigateTo}>About</a></span></li>
         </ul>
       </div>
     </div>

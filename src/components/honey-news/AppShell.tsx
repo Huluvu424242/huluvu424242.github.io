@@ -1,11 +1,10 @@
 import {Component, Element, h, Host, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {AppShellOptions} from "./AppShellOptions";
-import {createRouter, Route} from 'stencil-router-v2';
 import {Header} from "./snippets/Header";
 import {About} from "./snippets/About";
-
-const Router = createRouter();
+import {Subscription} from "rxjs";
+import {listenRouteChanges} from "../../Router";
 
 @Component({
   tag: "honey-news",
@@ -46,6 +45,10 @@ export class AppShell {
   taborder: string = "0";
 
 
+  routerSubscription: Subscription = null;
+  @State() route: string = "";
+
+
   @State() options: AppShellOptions = {
     disabledHostClass: "honey-news-disabled",
     enabledHostClass: "honey-news",
@@ -66,10 +69,22 @@ export class AppShell {
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
+    this.routerSubscription = listenRouteChanges().subscribe((route: string) => {
+        this.route = route;
+      },
+      (error) => {
+        console.error(error);
+      },
+      () => {
+        console.info("Router Subject' complete");
+      });
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
   }
 
+  // public disconnectedCallback() {
+  //   this.routerSubscription.unsubscribe();
+  // }
 
   protected createNewTitleText(): string {
     // if (this.) {
@@ -128,30 +143,12 @@ export class AppShell {
         class="paper"
       >
 
+        <Header/>
+        {this.route === "/" ? <honey-news-feed/> : null}
+        {this.route === "/feeds" ? <honey-news-feeds/> : null}
+        {this.route === "/statistic" ? <honey-news-statistic/> : null}
+        {this.route === "/about" ? <About/> : null}
 
-        <Router.Switch>
-
-          <Route path="/">
-            <Header/>
-            <honey-news-feed/>
-          </Route>
-
-          <Route path="/feeds">
-            <Header/>
-            <honey-news-feeds/>
-          </Route>
-
-          <Route path="/statistic">
-            <Header/>
-            <honey-news-statistic/>
-          </Route>
-
-          <Route path="/about">
-            <Header/>
-            <About/>
-          </Route>
-
-        </Router.Switch>
       </Host>
     );
   }
