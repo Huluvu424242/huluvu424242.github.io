@@ -1,5 +1,5 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
-import {Logger} from "../../../libs/logger";
+import {Logger} from "../../../shared/logger";
 import {NewsOptions} from "./NewsOptions";
 import {NewsLoader} from "./NewsLoader";
 import {getFeedsSingleObserver, Post} from "../../../fetch-es6.worker";

@@ -1,6 +1,6 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
 import {Subscription} from "rxjs";
-import {Logger} from "../../../libs/logger";
+import {Logger} from "../../../shared/logger";
 import {StatisticOptions} from "./StatisticOptions";
 import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
 import {StatisticLoader} from "./StatisticLoader";

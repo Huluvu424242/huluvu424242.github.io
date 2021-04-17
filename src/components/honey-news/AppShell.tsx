@@ -1,5 +1,5 @@
 import {Component, Element, h, Host, Prop, State} from "@stencil/core";
-import {Logger} from "../../libs/logger";
+import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {About} from "./snippets/About";
 import {Subscription} from "rxjs";

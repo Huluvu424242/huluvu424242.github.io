@@ -1,5 +1,5 @@
 import {Component, h} from "@stencil/core";
-import {Logger} from "../../../libs/logger";
+import {Logger} from "../../../shared/logger";
 
 @Component({
   tag: "honey-news-feeds",

@@ -4,7 +4,7 @@ import {map, toArray} from "rxjs/operators";
 import {FeedItem} from "feedme/dist/parser";
 import * as objectHash from "object-hash";
 import DateTimeFormat = Intl.DateTimeFormat;
-import {Logger} from "../../libs/logger";
+import {Logger} from "../../shared/logger";
 
 export class PipeOperators {
 
