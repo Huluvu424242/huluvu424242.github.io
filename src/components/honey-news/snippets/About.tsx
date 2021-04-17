@@ -20,8 +20,11 @@ export const About: FunctionalComponent<AboutProps> = () => ([
                 </pre>
   </p>,
   <p>
-    Das Routing der SPA wurde über stencil-router-v2 realisiert. Somit wird bei Klick auf einen Link zwar der URL
-    geändert aber nicht die ganze Seite neu geladen - was ja praktisch den Kern des Routings in SPAs darstellt.
+    Das Routing der SPA wurde versucht über stencil-router sowie stencil-router-v2 zu realisieren. Leider konnte dies
+    nicht erfolgreich durchgeführt werden. Daher wurde begonnen einen eigenen Hilfsrouter zu schreiben.
+    Dieser verdient den Namen Router noch gar nicht, da er weder die URL noch die Browserhistorie verändert. Eigentlich
+    ist es nur ein Zustandsgesteuerter Komponenten Ein-/Ausblender. Vielleicht wird er mal ein richtiger Router aber
+    aktuell genügt sein Verhalten um die fachlichen Anforderungen abzudecken.
   </p>,
   <p>
     Für das Backend wurde ein nodejs express server verwendet und auf heroku deployed. Ein separates Backend war
