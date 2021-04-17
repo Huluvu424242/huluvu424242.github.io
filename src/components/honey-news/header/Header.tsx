@@ -1,25 +1,18 @@
 import {Component, Element, h, Host, State} from '@stencil/core';
 import {href, listenRouteChanges} from "../../../Router";
-import {Disclaimer} from "./Disclaimer";
+import {Disclaimer} from "../snippets/Disclaimer";
 import {Subscription} from "rxjs";
 
 @Component({
-    tag: "honey-news-navbar",
-    styleUrl: "Navbar.css",
+    tag: "honey-news-header",
+    styleUrl: "Header.css",
     assetsDirs: ['../assets', 'assets'],
     shadow: true
 })
-export class Navbar {
+export class Header {
 
 
     @Element() hostElement;
-
-    readerLink: HTMLAnchorElement;
-    feedsLink: HTMLAnchorElement;
-    newsLink: HTMLAnchorElement;
-    statisticLink: HTMLAnchorElement;
-    aboutLink: HTMLAnchorElement;
-
 
     routerSubscription: Subscription = null;
     @State() route: string = "";
@@ -54,7 +47,6 @@ export class Navbar {
                 <nav class="border split-nav">
                     <div class="nav-brand">
                         <h3 role="heading" aria-level="1"><a href="/"
-                                                             ref={(el) => this.readerLink = el as HTMLAnchorElement}
                                                              onClick={this.navigateTo}
                                                              class={this.route === "/" ? "selected" : null}
                         > RSS/Atom Feed Reader</a></h3>
@@ -73,17 +65,17 @@ export class Navbar {
                                 <li role="listitem"><span role="heading" aria-level="2"><a href="/feeds"
                                                                                            onClick={this.navigateTo}
                                                                                            class={this.route === "/feeds" ? "selected" : null}
-                                                                                           ref={(el) => this.feedsLink = el as HTMLAnchorElement}>Feeds</a></span>
+                                                                                           >Feeds</a></span>
                                 </li>
                                 <li role="listitem"><span role="heading" aria-level="2"><a href="/news"
                                                                                            onClick={this.navigateTo}
                                                                                            class={this.route === "/news" ? "selected" : null}
-                                                                                           ref={(el) => this.newsLink = el as HTMLAnchorElement}>News</a></span>
+                                                                                           >News</a></span>
                                 </li>
                                 <li role="listitem"><span role="heading" aria-level="2"><a href="/statistic"
                                                                                            onClick={this.navigateTo}
                                                                                            class={this.route === "/statistic" ? "selected" : null}
-                                                                                           ref={(el) => this.statisticLink = el as HTMLAnchorElement}>Statistik</a></span>
+                                                                                           >Statistik</a></span>
                                 </li>
                                 <li role="listitem"><span role="heading" aria-level="2"><a
                                     href="https://github.com/Huluvu424242/honey-news"
@@ -91,7 +83,7 @@ export class Navbar {
                                 <li role="listitem"><span role="heading" aria-level="2"><a href="/about"
                                                                                            onClick={this.navigateTo}
                                                                                            class={this.route === "/about" ? "selected" : null}
-                                                                                           ref={(el) => this.aboutLink = el as HTMLAnchorElement}>About</a></span>
+                                                                                          >About</a></span>
                                 </li>
                             </ul>
                         </div>

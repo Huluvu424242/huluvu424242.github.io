@@ -142,7 +142,7 @@ export class AppShell {
         class="paper"
       >
 
-        <honey-news-navbar/>
+        <honey-news-header/>
 
         <div class="row flex-left">
           <div class="sm-2 col background-primary">Route: {this.route}</div>
