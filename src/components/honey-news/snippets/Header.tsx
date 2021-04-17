@@ -1,6 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {Disclaimer} from "./Disclaimer";
-import {Navbar} from "./Navbar";
 
 
 interface HeaderProps {
@@ -9,7 +8,7 @@ interface HeaderProps {
 }
 
 export const Header: FunctionalComponent<HeaderProps> = () => ([
-  <Navbar/>,
+  <honey-news-navbar/>,
   <Disclaimer/>
 ]);
 

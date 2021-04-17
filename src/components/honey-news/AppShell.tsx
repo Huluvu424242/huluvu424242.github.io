@@ -1,7 +1,6 @@
 import {Component, Element, h, Host, Prop, State} from "@stencil/core";
 import {Logger} from "../../libs/logger";
 import {AppShellOptions} from "./AppShellOptions";
-import {Header} from "./snippets/Header";
 import {About} from "./snippets/About";
 import {Subscription} from "rxjs";
 import {listenRouteChanges} from "../../Router";
@@ -143,7 +142,7 @@ export class AppShell {
         class="paper"
       >
 
-        <Header/>
+        <honey-news-navbar/>
 
         <div class="row flex-left">
           <div class="sm-2 col background-primary">Route: {this.route}</div>

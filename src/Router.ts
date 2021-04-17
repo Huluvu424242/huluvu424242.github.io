@@ -45,7 +45,7 @@ export const closeRouter = (): void => {
 
 
 export function getClass(elem: HTMLAnchorElement, ...classNames:string[]): string {
-  if(!elem) return "";
+  if(!elem) return null;
 
   const path = elem?.pathname;
   if (path && path === internalRoute) {
@@ -57,5 +57,9 @@ export function getClass(elem: HTMLAnchorElement, ...classNames:string[]): strin
     elem.classList.add(className);
   });
 
-  return elem.classList.toString();
+  if(elem.classList.length===0){
+    return null;
+  }else {
+    return elem.classList.toString();
+  }
 }
