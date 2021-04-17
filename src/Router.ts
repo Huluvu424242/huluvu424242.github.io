@@ -19,19 +19,16 @@ class Router {
 }
 
 export const router: Router = new Router();
-// let internalRoute:string;
-// const routerSubscription = router.getSubject().subscribe((route: string) => {
-//     internalRoute = route;
-//   },
-//   (error) => {
-//     console.error(error);
-//   },
-//   () => {
-//     console.info("Router Subject' complete");
-//   });
-
-
-
+let internalRoute: string;
+const routerSubscription = router.getSubject().subscribe((route: string) => {
+    internalRoute = route;
+  },
+  (error) => {
+    console.error("Internal Route:" + error);
+  },
+  () => {
+    console.info("InternalRoute Subject' complete");
+  });
 
 
 export const href = (route: string) => {
@@ -43,20 +40,22 @@ export const listenRouteChanges = (): Subject<string> => {
 
 export const closeRouter = (): void => {
   router.getSubject().unsubscribe();
+  routerSubscription.unsubscribe();
 };
 
-//
-// function getClass():string{
-//   const path = this?.href.pathname;
-//   if(path==="/statistic"){
-//     return "selected";
-//   }else{
-//     return "";
-//   }
-//   // if(path==="/statistic"){
-//   //   this?.classList.add("selected");
-//   // }else{
-//   //   this?.classList.remove("selected");
-//   // }
-//   // return this?.classList.toString();
-// }
+
+export function getClass(elem: HTMLAnchorElement): string {
+  if(!elem) return "";
+  const path = elem?.pathname;
+  if (path === internalRoute) {
+    return "selected";
+  } else {
+    return "";
+  }
+  // if(path==="/statistic"){
+  //   this?.classList.add("selected");
+  // }else{
+  //   this?.classList.remove("selected");
+  // }
+  // return this?.classList.toString();
+}
