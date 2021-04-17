@@ -82,9 +82,9 @@ export class AppShell {
     Logger.toggleLogging(this.verbose);
   }
 
-  // public disconnectedCallback() {
-  //   this.routerSubscription.unsubscribe();
-  // }
+  public disconnectedCallback() {
+    this.routerSubscription.unsubscribe();
+  }
 
   protected createNewTitleText(): string {
     // if (this.) {

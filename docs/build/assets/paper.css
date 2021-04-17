@@ -3224,8 +3224,8 @@ nav a {
   padding-bottom: 0.1rem;
 }
 nav a:hover {
-  border-color: #41403e;
-  border-color: var(--primary-light);
+  /*border-color: #41403e;*/
+  border-color: var(--primary-light,#41403e);
   border-bottom-style: solid;
   border-bottom-width: 5px;
 }
