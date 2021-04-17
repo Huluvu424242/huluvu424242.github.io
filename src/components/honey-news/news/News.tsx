@@ -4,7 +4,7 @@ import {NewsOptions} from "./NewsOptions";
 import {NewsLoader} from "./NewsLoader";
 import {getFeedsSingleObserver, Post} from "../../../fetch-es6.worker";
 import {from, Subscription} from "rxjs";
-import {PipeOperators} from "../PipeOperators";
+import {PipeOperators} from "../../../shared/PipeOperators";
 
 @Component({
   tag: "honey-news-feed",

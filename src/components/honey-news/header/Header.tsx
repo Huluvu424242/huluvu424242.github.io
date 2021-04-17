@@ -43,7 +43,7 @@ export class Header {
 
     render() {
         return (
-            <Host>
+            <Host class="paper">
                 <nav class="border split-nav">
                     <div class="nav-brand">
                         <h3 role="heading" aria-level="1"><a href="/"
@@ -52,8 +52,8 @@ export class Header {
                         > RSS/Atom Feed Reader</a></h3>
                     </div>
                     <div class="collapsible">
-                        <input id="appmenu" type="radio" name="appmenu"/>
-                        <label htmlFor="appmenu">
+                        <input id="collapsible0" type="checkbox" name="collapsible0"/>
+                        <label htmlFor="collapsible0">
                             <div class="bar1"/>
                             <div class="bar2"/>
                             <div class="bar3"/>
