@@ -1,8 +1,8 @@
-import {Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 class Router {
 
-  protected route: Subject<string> = new Subject();
+  protected route: Subject<string> = new BehaviorSubject<string>("/");
 
   constructor() {
     this.route.next("/");
