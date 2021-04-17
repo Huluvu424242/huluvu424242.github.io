@@ -145,7 +145,9 @@ export class AppShell {
 
         <Header/>
 
-        <p>{this.route}</p>
+        <div class="row flex-left">
+          <div class="sm-2 col background-primary">Route: {this.route}</div>
+        </div>
 
         {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed/> : null}
         {this.route === "/feeds" ? <honey-news-feeds/> : null}
