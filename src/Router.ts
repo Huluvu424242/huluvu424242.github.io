@@ -44,18 +44,18 @@ export const closeRouter = (): void => {
 };
 
 
-export function getClass(elem: HTMLAnchorElement): string {
+export function getClass(elem: HTMLAnchorElement, ...classNames:string[]): string {
   if(!elem) return "";
+
   const path = elem?.pathname;
-  if (path === internalRoute) {
-    return "selected";
+  if (path && path === internalRoute) {
+    elem.classList.add("selected");
   } else {
-    return "";
+    elem.classList.remove("selected");
   }
-  // if(path==="/statistic"){
-  //   this?.classList.add("selected");
-  // }else{
-  //   this?.classList.remove("selected");
-  // }
-  // return this?.classList.toString();
+  classNames.forEach((className:string)=>{
+    elem.classList.add(className);
+  })
+
+  return elem.classList.toString();
 }

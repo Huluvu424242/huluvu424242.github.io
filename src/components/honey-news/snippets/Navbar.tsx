@@ -40,7 +40,7 @@ export const Navbar: FunctionalComponent<NavbarProps> = () => (
       <div class="collapsible-body">
         <ul role="listbox" class="inline">
           <li role="item"><span role="heading" aria-level="2"><a href="/feeds" onClick={navigateTo} class={getClass(feedsLink)} ref={(el) => feedsLink = el as HTMLAnchorElement}>Feeds</a></span></li>
-          <li role="item"><span role="heading" aria-level="2"><a href="/news" onClick={navigateTo} class={getClass(newsLink)}  ref={(el) => newsLink = el as HTMLAnchorElement}>News</a></span></li>
+          <li role="item"><span role="heading" aria-level="2"><a href="/news" onClick={navigateTo} class={getClass(newsLink,"huluvu")}  ref={(el) => newsLink = el as HTMLAnchorElement}>News</a></span></li>
           <li role="item"><span role="heading" aria-level="2"><a href="/statistic" onClick={navigateTo} class={getClass(statisticLink)}  ref={(el) => statisticLink = el as HTMLAnchorElement}>Statistik</a></span></li>
           <li role="item"><span role="heading" aria-level="2"><a href="https://github.com/Huluvu424242/honey-news" target="_blank">Github</a></span></li>
           <li role="item"><span role="heading" aria-level="2"><a href="/about" onClick={navigateTo} class={getClass(aboutLink)}  ref={(el) => aboutLink = el as HTMLAnchorElement}>About</a></span></li>
