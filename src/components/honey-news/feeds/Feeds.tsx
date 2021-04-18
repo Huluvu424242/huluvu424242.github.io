@@ -1,6 +1,8 @@
 import {Component, h, Prop} from "@stencil/core";
 import {Logger} from "../../../shared/logger";
 import {NewsLoader} from "../news/NewsLoader";
+import {from} from "rxjs";
+import {getFeedsSingleObserver} from "../../../fetch-es6.worker";
 
 @Component({
   tag: "honey-news-feeds",
@@ -22,24 +24,24 @@ export class Feeds {
 
   addUrl(event: UIEvent): void {
     event = event;
-    // const url = this.inputNewUrl.value;
-    // if (!this.feedLoader.getFeedURLs().includes(url)) {
-    //
-    //   this.feedLoader.addFeedUrl(url);
-    //   from(getFeedsSingleObserver([url], true)).subscribe();
-    //   setTimeout(
-    //     () => {
-    //       from(getFeedsSingleObserver([url], false)).subscribe();
-    //       // from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
-    //       //   .subscribe(
-    //       //     (statisticDatas: StatisticData[]) => {
-    //       //       this.statistic = [...statisticDatas];
-    //       //     }
-    //       //   );
-    //     }
-    //     , 3000
-    //   );
-    // }
+    const url = this.inputNewUrl.value;
+    if (!this.feedLoader.getFeedURLs().includes(url)) {
+
+      this.feedLoader.addFeedUrl(url);
+      from(getFeedsSingleObserver([url], true)).subscribe();
+      // setTimeout(
+      //   () => {
+      //     from(getFeedsSingleObserver([url], false)).subscribe();
+      //     // from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
+      //     //   .subscribe(
+      //     //     (statisticDatas: StatisticData[]) => {
+      //     //       this.statistic = [...statisticDatas];
+      //     //     }
+      //     //   );
+      //   }
+      //   , 3000
+      // );
+    }
   }
 
   public render() {
