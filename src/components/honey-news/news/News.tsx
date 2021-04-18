@@ -1,30 +1,24 @@
 import {Component, Element, h, Host, Method, Prop, State} from "@stencil/core";
-import {Logger} from "../../libs/logger";
-import {NewsOptions} from "./news-options";
-import {FeedLoader} from "./FeedLoader";
-import {getFeedsSingleObserver, loadFeedRanking, Post} from "../../fetch-es6.worker";
-import {EMPTY, from, Subscription, timer} from "rxjs";
-import {PipeOperators} from "./PipeOperators";
-import {catchError, switchMap} from "rxjs/operators";
-import {StatisticData} from "@huluvu424242/liona-feeds/dist/esm/feeds/statistic";
+import {Logger} from "../../../shared/logger";
+import {NewsOptions} from "./NewsOptions";
+import {NewsLoader} from "./NewsLoader";
+import {getFeedsSingleObserver, Post} from "../../../fetch-es6.worker";
+import {from, Subscription} from "rxjs";
+import {PipeOperators} from "../../../shared/PipeOperators";
 
 @Component({
-  tag: "honey-news",
-  styleUrl: "honey-news.css",
+  tag: "honey-news-feed",
+  styleUrl: "News.css",
   assetsDirs: ['assets'],
   shadow: true
 })
-export class HoneyNews {
+export class News {
 
   /**
    * Host Element
    */
   @Element() hostElement: HTMLElement;
 
-  /**
-   * Input Element
-   */
-  inputNewUrl: HTMLInputElement;
 
   /**
    * Id des Host Elements, falls nicht verfügbar wird diese generiert
@@ -39,7 +33,7 @@ export class HoneyNews {
   /**
    * true wenn das Tag ohne alt Attribute deklariert wurde
    */
-  createAltText: boolean = false;
+  createAriaLabel: boolean = false;
 
   /**
    * true wenn das Tag ohne title Attribut deklariert wurde
@@ -54,26 +48,19 @@ export class HoneyNews {
   /**
    * Hilfsklasse zum Laden der Daten
    */
-  feedLoader: FeedLoader = new FeedLoader([]);
+  feedLoader: NewsLoader = new NewsLoader([]);
 
   @State() feeds: Post[] = [];
   feedsSubscription: Subscription;
 
-  @State() statistic: StatisticData[];
-  statisticSubscription: Subscription;
-
   lastUpdate: Date = null;
 
   @State() options: NewsOptions = {
-    disabledHostClass: "speaker-disabled",
-    enabledHostClass: "flex-container",
-    disabledTitleText: "Vorlesen deaktiviert, da keine Texte verfügbar",
-    pressedTitleText: "Liest gerade vor",
-    titleText: "Vorlesen",
-    altText: "Symbol eines tönenden Lautsprechers",
-    unpressedAltText: "Symbol eines angehaltenen, tönenden Lautsprechers",
-    pressedPureAltText: "Symbol eines tönenden Lautsprechers",
-    unpressedPureAltText: "Symbol eines ausgeschaltenen Lautsprechers"
+    disabledHostClass: "honey-news-feed-disabled",
+    enabledHostClass: "honey-news-feed-enabled",
+    disabledTitleText: "Noch keine News verfügbar",
+    titleText: "Aktuelle News aus den Feeds",
+    ariaLabel: "Neuigkeiten der abonierten Feeds",
   };
 
   /**
@@ -84,15 +71,14 @@ export class HoneyNews {
   public connectedCallback() {
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
-    this.initialHostClass = this.hostElement.getAttribute("class") || "";
+    this.initialHostClass = this.hostElement.getAttribute("class") || null;
     this.createTitleText = !this.hostElement.title;
-    this.createAltText = !this.hostElement["alt"];
+    this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
     this.initialisiereUrls();
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
     this.feedsSubscription = this.subscribeFeeds();
-    this.statisticSubscription = this.subscribeStatistiken();
   }
 
   public async componentWillLoad() {
@@ -100,22 +86,7 @@ export class HoneyNews {
   }
 
   public disconnectedCallback() {
-    this.statisticSubscription.unsubscribe();
     this.feedsSubscription.unsubscribe();
-  }
-
-  protected subscribeStatistiken(): Subscription {
-    return timer(0, 60000 * 10)
-      .pipe(
-        switchMap(
-          () => from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
-        )
-      )
-      .subscribe(
-        (statisticDatas: StatisticData[]) => {
-          this.statistic = [...statisticDatas];
-        }
-      );
   }
 
   public singleLoadFeeds(): void {
@@ -196,14 +167,14 @@ export class HoneyNews {
   }
 
   protected createNewAltText(): string {
-    return this.options.altText;
+    return this.options.ariaLabel;
   }
 
   protected getAltText(): string {
-    if (this.createAltText) {
+    if (this.createAriaLabel) {
       return this.createNewAltText();
     } else {
-      return this.hostElement.getAttribute("alt");
+      return this.hostElement.getAttribute("aria-label");
     }
   }
 
@@ -226,27 +197,6 @@ export class HoneyNews {
     return null
   }
 
-  addUrl(event: UIEvent) {
-    event = event;
-    const url = this.inputNewUrl.value;
-    if (!this.feedLoader.getFeedURLs().includes(url)) {
-
-      this.feedLoader.addFeedUrl(url);
-      from(getFeedsSingleObserver([url], true)).subscribe();
-      setTimeout(
-        () => {
-          from(getFeedsSingleObserver([url], false)).subscribe();
-          from(loadFeedRanking("https://huluvu424242.herokuapp.com/feeds")).pipe(catchError(() => EMPTY))
-            .subscribe(
-              (statisticDatas: StatisticData[]) => {
-                this.statistic = [...statisticDatas];
-              }
-            );
-        }
-        , 3000
-      );
-    }
-  }
 
   lastHour: Date = null;
 
@@ -284,53 +234,23 @@ export class HoneyNews {
       <Host
         title={this.getTitleText()}
         alt={this.getAltText()}
-        role="button"
         tabindex={this.hasNoFeeds() ? -1 : this.taborder}
         class={this.getHostClass()}
         disabled={this.hasNoFeeds()}
       >
-        <div class="flex-container">
-          <div class="flex-item">
-            <h2>Verwaltung</h2>
-            <input id="newurl" ref={(el) => this.inputNewUrl = el as HTMLInputElement}/>
-            <button id="addurl" onClick={(event: UIEvent) => this.addUrl(event)}>Add Feed URL</button>
-
-
-            <h2>News Feed
-              {
-                this.getNeuesteMeldung()
-              }
-            </h2>
-            <ol>
-              {this.feeds.map((post) =>
-                [
-                  this.getUeberschrift(post),
-                  this.getPostEntry(post)
-                ]
-              )}
-            </ol>
-          </div>
-          <div class="flex-item">
-            <table>
-              <tr>
-                <th>Score</th>
-                <th>Url</th>
-                <th>Angefragt</th>
-                <th>Kontaktiert</th>
-                <th>Geantwortet</th>
-              </tr>
-              {this.statistic?.map((item: StatisticData) =>
-                <tr>
-                  <td>{item.score}</td>
-                  <td><a href={item.url} target="_blank">{item.url}</a></td>
-                  <td>{item.countRequested}</td>
-                  <td>{item.countContacted}</td>
-                  <td>{item.countResponseOK}</td>
-                </tr>
-              )}
-            </table>
-          </div>
-        </div>
+        <h2>News Feed
+          {
+            this.getNeuesteMeldung()
+          }
+        </h2>
+        <ol>
+          {this.feeds.map((post) =>
+            [
+              this.getUeberschrift(post),
+              this.getPostEntry(post)
+            ]
+          )}
+        </ol>
       </Host>
     );
   }

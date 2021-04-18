@@ -1,5 +1,7 @@
 # honey-news
 
+
+
 <!-- Auto Generated Below -->
 
 
@@ -10,23 +12,30 @@
 | `verbose` | `verbose` | enable console logging | `boolean` | `false` |
 
 
+## Methods
+
+### `updateOptions(options: NewsOptions) => Promise<void>`
+
+Update speaker options
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ## Dependencies
 
-### Depends on
+### Used by
 
-- [honey-news-statistic](statistic)
-- [honey-news-feeds](feeds)
-- [honey-news-feed](news)
-- [honey-news-header](header)
+ - [honey-news](..)
 
 ### Graph
 ```mermaid
 graph TD;
-  honey-news --> honey-news-statistic
-  honey-news --> honey-news-feeds
   honey-news --> honey-news-feed
-  honey-news --> honey-news-header
-  style honey-news fill:#f9f,stroke:#333,stroke-width:4px
+  style honey-news-feed fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

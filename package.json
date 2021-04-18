@@ -1,6 +1,6 @@
 {
   "name": "@huluvu424242/honey-news",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "News reader web component for custom urls.",
   "main": "dist/index.cjs.js",
   "module": "dist/custom-elements/index.js",
@@ -26,7 +26,7 @@
     "webcomponent",
     "custom-element"
   ],
-  "author": "Huluvu424242 alias FunThomas424242 (Thomas Schubert)",
+  "author": "Huluvu424242 alias FunThomas424242 and in real life Thomas Schubert",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Huluvu424242/honey-news/issues"
@@ -39,7 +39,8 @@
     "generate": "stencil generate",
     "prepare-deliver": "npm run build",
     "deliver": "npm publish --access=public",
-    "pruefeVersionen": "npm outdated"
+    "pruefeVersionen": "npm outdated",
+    "check-credits": "npx license-checker --failOn 'AGPL' --production >credits.txt"
   },
   "engines": {
     "node": "14.15.0"
@@ -51,14 +52,16 @@
     "@huluvu424242/liona-feeds": "2.3.0"
   },
   "devDependencies": {
-    "@stencil/core": "2.4.0-3",
-    "@types/jest": "26.0.15",
+    "@stencil/core": "2.5.2",
+    "@stencil/store": "1.4.1",
+    "@types/jest": "26.0.22",
     "@types/puppeteer": "5.4.0",
     "jest": "26.6.3",
     "jest-cli": "26.6.3",
     "puppeteer": "5.4.1",
     "ts-node": "9.0.0",
     "typescript": "4.0.5",
-    "rollup-plugin-node-polyfills": "0.2.1"
+    "rollup-plugin-node-polyfills": "0.2.1",
+    "license-checker": "25.0.1"
   }
 }

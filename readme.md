@@ -43,7 +43,7 @@ To the [demo site](https://huluvu424242.github.io/honey-news/index.html)
 <h1>Nutzung der honey-news Komponente</h1>
 <span class="wichtig">!!!</span> Das ist eine Demo Seite welche alle Feature der App zeigen soll - aus diesem Grund ist auch die Statistik eingeschaltet <span class="wichtig">!!!</span><br>
 Es werden nur Daten zu den abgerufenen Feeds gespeichert (in memory) wie: url, anzahl der abfragen, anzahl valider responses<br>
-Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen Feed ein.<br>
+Sollten Sie die Speicherung nicht wünschen - dann geben Sie bitte keinen neuen News ein.<br>
 Vielen Dank für Ihr Verständnis. <br>
 <hr>
 <honey-news />
@@ -64,7 +64,13 @@ To the [live demo](https://huluvu424242.github.io/honey-news/index.html)
 
 ### vX.X.X unpublished
 
-* bug and feature description
+### v1.0.0 unpublished
+
+* [issue 11](https://github.com/Huluvu424242/honey-news/issues/11) split into multiple webcomponents
+
+### v0.0.2 published at 2021-04-11
+
+* developer release DO NOT USE
 
 ### v0.0.1 published at 2021-03-15
 
