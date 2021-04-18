@@ -123,7 +123,8 @@ export class News {
       "http://newsfeed.zeit.de",
       "http://www.stern.de/feed/standard/all",
       "https://www.spiegel.de/international/index.rss",
-      "rt.com/rss/",
+      "https://rss.golem.de/rss.php",
+      "https://www.heise.de/rss/heise.rdf",
       "https://codepen.io/spark/feed",
       "https://www.hongkiat.com/blog/feed/"
     ];
