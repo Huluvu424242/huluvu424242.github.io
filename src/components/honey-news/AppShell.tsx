@@ -3,7 +3,7 @@ import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {About} from "./snippets/About";
 import {Subscription} from "rxjs";
-import {listenRouteChanges} from "../../Router";
+import {listenRouteChanges} from "./routing/Router";
 import {NewsLoader} from "./news/NewsLoader";
 import {News} from "./news/News";
 
