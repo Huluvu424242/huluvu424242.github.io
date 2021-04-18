@@ -75,12 +75,14 @@ export class AppShell {
    * News reader Komponente
    */
     // @ts-ignore
-  @Prop() newsFeed: HTMLHoneyNewsFeedElement;
+  @Prop({mutable:true}) newsFeed: HTMLHoneyNewsFeedElement;
 
   @Watch("newsFeed")
-  newsWatcher(newValue: News, oldValue: News){
+  newsWatcher(newValue: HTMLHoneyNewsFeedElement, oldValue: HTMLHoneyNewsFeedElement){
     if(!oldValue && newValue){
-      this.newsFeed.feedLoader=this.feedLoader;
+      if(this.newsFeed) {
+        this.newsFeed.feedLoader = this.feedLoader;
+      }
     }
   }
 
@@ -89,12 +91,14 @@ export class AppShell {
    * Feeds Administration Komponente
    */
     // @ts-ignore
-  @Prop() feedAdministration: HTMLHoneyNewsFeedsElement;
+  @Prop({mutable:true}) feedAdministration: HTMLHoneyNewsFeedsElement;
 
   @Watch("newsFeed")
   feedWatcher(newValue: News, oldValue: News){
     if(!oldValue && newValue){
-      this.feedAdministration.feedLoader=this.feedLoader;
+      if(this.feedAdministration) {
+        this.feedAdministration.feedLoader = this.feedLoader;
+      }
     }
   }
 
@@ -192,7 +196,7 @@ export class AppShell {
         }}/> : null}
         {this.route === "/feeds" ? <honey-news-feeds ref={(el)=> {
           // @ts-ignore
-          this.newsFeed = el as HTMLHoneyNewsFeedsElement}
+          this.newsFeed = el as HTMLHoneyNewsFeedElement}
         }/> : null}
         {this.route === "/statistic" ? <honey-news-statistic/> : null}
         {this.route === "/about" ? <About/> : null}

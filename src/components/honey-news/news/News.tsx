@@ -48,7 +48,7 @@ export class News {
   /**
    * Hilfsklasse zum Laden der Daten
    */
-  @Prop() feedLoader: NewsLoader;
+  @Prop({mutable:true}) feedLoader: NewsLoader;
 
   @State() feeds: Post[] = [];
   feedsSubscription: Subscription;

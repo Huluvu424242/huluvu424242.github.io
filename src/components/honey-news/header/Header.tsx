@@ -43,7 +43,7 @@ export class Header {
 
     render() {
         return (
-            <Host class="paper">
+            <Host>
                 <nav class="border split-nav">
                     <div class="nav-brand">
                         <h3 role="heading" aria-level="1"><a href="/"

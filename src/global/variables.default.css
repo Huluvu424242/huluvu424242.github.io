@@ -90,6 +90,10 @@
   --primary-inverse: #fff;
 }
 
+/*Nutzer definiert*/
+:root{
+  --background-color-dark: #E8CD9A;
+}
 body{
   background-color: var(--main-background);
   color: var(--primary);
