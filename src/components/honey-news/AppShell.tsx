@@ -1,9 +1,11 @@
-import {Component, Element, h, Host, Prop, State} from "@stencil/core";
+import {Component, Element, h, Host, Prop, State, Watch} from "@stencil/core";
 import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {About} from "./snippets/About";
 import {Subscription} from "rxjs";
 import {listenRouteChanges} from "../../Router";
+import {NewsLoader} from "./news/NewsLoader";
+import {News} from "./news/News";
 
 @Component({
   tag: "honey-news",
@@ -14,9 +16,30 @@ import {listenRouteChanges} from "../../Router";
 export class AppShell {
 
   /**
+   * News reader Komponente
+   */
+  @Prop() newsFeed: HTMLHoneyNewsFeedElement;
+
+  feedLoader:NewsLoader = new NewsLoader([]);
+
+  @Watch("newsFeed")
+  newsFeedWatcher(newValue: News, oldValue: News){
+    if(!oldValue && newValue){
+      this.newsFeed.feedLoader=this.feedLoader;
+    }
+  }
+
+  /**
+   * AppShell
+   */
+
+
+  /**
    * Host Element
    */
   @Element() hostElement: HTMLElement;
+
+
 
   /**
    * Id des Host Elements, falls nicht verfügbar wird diese generiert
@@ -148,7 +171,7 @@ export class AppShell {
           <div class="sm-2 col background-primary">Route: {this.route}</div>
         </div>
 
-        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed/> : null}
+        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed ref={(el)=> this.newsFeed = el as HTMLHoneyNewsFeedElement}/> : null}
         {this.route === "/feeds" ? <honey-news-feeds/> : null}
         {this.route === "/statistic" ? <honey-news-statistic/> : null}
         {this.route === "/about" ? <About/> : null}
