@@ -9,7 +9,7 @@ export const About: FunctionalComponent<AboutProps> = () => ([
     Eine SPA auf Basis mehrerer Webkomponenten, gebaut mit Stencil und styled by papercss.
   </p>,
   <p>
-    Das minifizierte Stylesheet von PaperCSS wurde über den assets Folder für alle Komponenten zugänglich gemacht.
+    Das nicht minifizierte Stylesheet von PaperCSS wurde über den assets Folder für alle Komponenten zugänglich gemacht.
     Es wurde dann pro Komponente per @import url(...) importiert - was eigentlich ein AntiPattern ist aber ich habe
     aktuell nix besseres gefunden. Daher - warten auf ConstructedStyleSheets Spec ...
     Beim @import url(...) hat sich herausgestellt, dass die CSS Properties (Variablen) nicht mit geladen wurden.
