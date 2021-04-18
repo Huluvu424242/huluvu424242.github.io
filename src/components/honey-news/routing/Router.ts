@@ -10,6 +10,8 @@ class Router {
 
   public navigateTo(route: string) {
     this.route.next(route);
+    const stateObj = {route: route};
+    history.pushState(stateObj, "Route " + route, route);
   }
 
   public getSubject(): Subject<string> {
@@ -44,8 +46,8 @@ export const closeRouter = (): void => {
 };
 
 
-export function getClass(elem: HTMLAnchorElement, ...classNames:string[]): string {
-  if(!elem) return null;
+export function getClass(elem: HTMLAnchorElement, ...classNames: string[]): string {
+  if (!elem) return null;
 
   const path = elem?.pathname;
   if (path && path === internalRoute) {
@@ -53,13 +55,13 @@ export function getClass(elem: HTMLAnchorElement, ...classNames:string[]): strin
   } else {
     elem.classList.remove("selected");
   }
-  classNames.forEach((className:string)=>{
+  classNames.forEach((className: string) => {
     elem.classList.add(className);
   });
 
-  if(elem.classList.length===0){
+  if (elem.classList.length === 0) {
     return null;
-  }else {
+  } else {
     return elem.classList.toString();
   }
 }
