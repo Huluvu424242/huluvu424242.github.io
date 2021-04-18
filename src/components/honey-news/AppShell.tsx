@@ -16,25 +16,6 @@ import {News} from "./news/News";
 export class AppShell {
 
   /**
-   * News reader Komponente
-   */
-  @Prop() newsFeed: HTMLHoneyNewsFeedElement;
-
-  feedLoader:NewsLoader = new NewsLoader([]);
-
-  @Watch("newsFeed")
-  newsFeedWatcher(newValue: News, oldValue: News){
-    if(!oldValue && newValue){
-      this.newsFeed.feedLoader=this.feedLoader;
-    }
-  }
-
-  /**
-   * AppShell
-   */
-
-
-  /**
    * Host Element
    */
   @Element() hostElement: HTMLElement;
@@ -83,6 +64,40 @@ export class AppShell {
    * enable console logging
    */
   @Prop() verbose: boolean = false;
+
+  /**
+   * Shared State of AppShell
+   */
+  feedLoader:NewsLoader = new NewsLoader([]);
+
+
+  /**
+   * News reader Komponente
+   */
+    // @ts-ignore
+  @Prop() newsFeed: HTMLHoneyNewsFeedElement;
+
+  @Watch("newsFeed")
+  newsWatcher(newValue: News, oldValue: News){
+    if(!oldValue && newValue){
+      this.newsFeed.feedLoader=this.feedLoader;
+    }
+  }
+
+
+  /**
+   * Feeds Administration Komponente
+   */
+    // @ts-ignore
+  @Prop() feedAdministration: HTMLHoneyNewsFeedsElement;
+
+  @Watch("newsFeed")
+  feedWatcher(newValue: News, oldValue: News){
+    if(!oldValue && newValue){
+      this.feedAdministration.feedLoader=this.feedLoader;
+    }
+  }
+
 
   public connectedCallback() {
     // States initialisieren
@@ -171,8 +186,14 @@ export class AppShell {
           <div class="sm-2 col background-primary">Route: {this.route}</div>
         </div>
 
-        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed ref={(el)=> this.newsFeed = el as HTMLHoneyNewsFeedElement}/> : null}
-        {this.route === "/feeds" ? <honey-news-feeds/> : null}
+        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed ref={(el)=> {
+          // @ts-ignore
+          this.newsFeed = el as HTMLHoneyNewsFeedElement
+        }}/> : null}
+        {this.route === "/feeds" ? <honey-news-feeds ref={(el)=> {
+          // @ts-ignore
+          this.newsFeed = el as HTMLHoneyNewsFeedsElement}
+        }/> : null}
         {this.route === "/statistic" ? <honey-news-statistic/> : null}
         {this.route === "/about" ? <About/> : null}
 

@@ -118,5 +118,5 @@ const patchCloneNodeFix = (HTMLElementPrototype) => {
 
 patchBrowser().then(options => {
   globalScripts();
-  return bootstrapLazy([["honey-news-feed",[[1,"honey-news-feed",{"feedLoader":[16],"verbose":[4],"feeds":[32],"options":[32],"updateOptions":[64]}]]],["honey-news-feeds",[[1,"honey-news-feeds"]]],["honey-news-header",[[1,"honey-news-header",{"route":[32]}]]],["honey-news-statistic",[[1,"honey-news-statistic",{"verbose":[4],"statistic":[32],"options":[32],"updateOptions":[64]}]]],["honey-news",[[1,"honey-news",{"newsFeed":[16],"verbose":[4],"route":[32],"options":[32]}]]]], options);
+  return bootstrapLazy([["honey-news-feed",[[1,"honey-news-feed",{"feedLoader":[16],"verbose":[4],"feeds":[32],"options":[32],"updateOptions":[64]}]]],["honey-news-feeds",[[1,"honey-news-feeds",{"feedLoader":[16]}]]],["honey-news-header",[[1,"honey-news-header",{"route":[32]}]]],["honey-news-statistic",[[1,"honey-news-statistic",{"verbose":[4],"statistic":[32],"options":[32],"updateOptions":[64]}]]],["honey-news",[[1,"honey-news",{"verbose":[4],"newsFeed":[16],"feedAdministration":[16],"route":[32],"options":[32]}]]]], options);
 });

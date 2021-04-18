@@ -11,6 +11,10 @@ import { StatisticOptions } from "./components/honey-news/statistic/StatisticOpt
 export namespace Components {
     interface HoneyNews {
         /**
+          * Feeds Administration Komponente
+         */
+        "feedAdministration": HTMLHoneyNewsFeedsElement;
+        /**
           * News reader Komponente
          */
         "newsFeed": HTMLHoneyNewsFeedElement;
@@ -35,6 +39,10 @@ export namespace Components {
         "verbose": boolean;
     }
     interface HoneyNewsFeeds {
+        /**
+          * Hilfsklasse zum Laden der Daten
+         */
+        "feedLoader": NewsLoader;
     }
     interface HoneyNewsHeader {
     }
@@ -92,6 +100,10 @@ declare global {
 declare namespace LocalJSX {
     interface HoneyNews {
         /**
+          * Feeds Administration Komponente
+         */
+        "feedAdministration"?: HTMLHoneyNewsFeedsElement;
+        /**
           * News reader Komponente
          */
         "newsFeed"?: HTMLHoneyNewsFeedElement;
@@ -111,6 +123,10 @@ declare namespace LocalJSX {
         "verbose"?: boolean;
     }
     interface HoneyNewsFeeds {
+        /**
+          * Hilfsklasse zum Laden der Daten
+         */
+        "feedLoader"?: NewsLoader;
     }
     interface HoneyNewsHeader {
     }

@@ -1,5 +1,6 @@
-import {Component, h} from "@stencil/core";
+import {Component, h, Prop} from "@stencil/core";
 import {Logger} from "../../../shared/logger";
+import {NewsLoader} from "../news/NewsLoader";
 
 @Component({
   tag: "honey-news-feeds",
@@ -13,6 +14,11 @@ export class Feeds {
    * Input Element
    */
   inputNewUrl: HTMLInputElement;
+
+  /**
+   * Hilfsklasse zum Laden der Daten
+   */
+  @Prop() feedLoader: NewsLoader;
 
   addUrl(event: UIEvent): void {
     event = event;
