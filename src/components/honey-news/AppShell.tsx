@@ -139,20 +139,28 @@ export class AppShell {
         // tabindex={this.hasNoFeeds() ? -1 : this.taborder}
         // class={this.getHostClass()}
         // disabled={this.hasNoFeeds()}
-        class="paper"
+        class=""
       >
+        <div id="top" class="row site">
+          <div class="sm-12 md-8 col">
+            <div class="paper">
 
-        <honey-news-header/>
+              <honey-news-header/>
+              <div class="to-top">
+                <a href="#top" class="paper-btn margin">^</a>
+              </div>
+              <div class="row flex-left">
+                <div class="sm-2 col background-primary">Route: {this.route}</div>
+              </div>
 
-        <div class="row flex-left">
-          <div class="sm-2 col background-primary">Route: {this.route}</div>
+
+              {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed/> : null}
+              {this.route === "/feeds" ? <honey-news-feeds/> : null}
+              {this.route === "/statistic" ? <honey-news-statistic/> : null}
+              {this.route === "/about" ? <About/> : null}
+            </div>
+          </div>
         </div>
-
-        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed/> : null}
-        {this.route === "/feeds" ? <honey-news-feeds/> : null}
-        {this.route === "/statistic" ? <honey-news-statistic/> : null}
-        {this.route === "/about" ? <About/> : null}
-
       </Host>
     );
   }
