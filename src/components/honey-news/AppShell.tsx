@@ -1,9 +1,11 @@
-import {Component, Element, h, Host, Prop, State} from "@stencil/core";
+import {Component, Element, h, Host, Prop, State, Watch} from "@stencil/core";
 import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {About} from "./snippets/About";
 import {Subscription} from "rxjs";
 import {listenRouteChanges} from "../../Router";
+import {NewsLoader} from "./news/NewsLoader";
+import {News} from "./news/News";
 
 @Component({
   tag: "honey-news",
@@ -17,6 +19,8 @@ export class AppShell {
    * Host Element
    */
   @Element() hostElement: HTMLElement;
+
+
 
   /**
    * Id des Host Elements, falls nicht verfügbar wird diese generiert
@@ -60,6 +64,44 @@ export class AppShell {
    * enable console logging
    */
   @Prop() verbose: boolean = false;
+
+  /**
+   * Shared State of AppShell
+   */
+  feedLoader:NewsLoader = new NewsLoader([]);
+
+
+  /**
+   * News reader Komponente
+   */
+    // @ts-ignore
+  @Prop({mutable:true}) newsFeed: HTMLHoneyNewsFeedElement;
+
+  @Watch("newsFeed")
+  newsWatcher(newValue: HTMLHoneyNewsFeedElement, oldValue: HTMLHoneyNewsFeedElement){
+    if(!oldValue && newValue){
+      if(this.newsFeed) {
+        this.newsFeed.feedLoader = this.feedLoader;
+      }
+    }
+  }
+
+
+  /**
+   * Feeds Administration Komponente
+   */
+    // @ts-ignore
+  @Prop({mutable:true}) feedAdministration: HTMLHoneyNewsFeedsElement;
+
+  @Watch("newsFeed")
+  feedWatcher(newValue: News, oldValue: News){
+    if(!oldValue && newValue){
+      if(this.feedAdministration) {
+        this.feedAdministration.feedLoader = this.feedLoader;
+      }
+    }
+  }
+
 
   public connectedCallback() {
     // States initialisieren
@@ -148,8 +190,14 @@ export class AppShell {
           <div class="sm-2 col background-primary">Route: {this.route}</div>
         </div>
 
-        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed/> : null}
-        {this.route === "/feeds" ? <honey-news-feeds/> : null}
+        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed ref={(el)=> {
+          // @ts-ignore
+          this.newsFeed = el as HTMLHoneyNewsFeedElement
+        }}/> : null}
+        {this.route === "/feeds" ? <honey-news-feeds ref={(el)=> {
+          // @ts-ignore
+          this.newsFeed = el as HTMLHoneyNewsFeedElement}
+        }/> : null}
         {this.route === "/statistic" ? <honey-news-statistic/> : null}
         {this.route === "/about" ? <About/> : null}
 

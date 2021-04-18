@@ -48,7 +48,7 @@ export class News {
   /**
    * Hilfsklasse zum Laden der Daten
    */
-  feedLoader: NewsLoader = new NewsLoader([]);
+  @Prop({mutable:true}) feedLoader: NewsLoader;
 
   @State() feeds: Post[] = [];
   feedsSubscription: Subscription;
@@ -77,8 +77,8 @@ export class News {
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
     this.initialisiereUrls();
     // Properties auswerten
-    Logger.toggleLogging(this.verbose);
     this.feedsSubscription = this.subscribeFeeds();
+    Logger.toggleLogging(this.verbose);
   }
 
   public async componentWillLoad() {

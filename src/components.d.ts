@@ -5,16 +5,29 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { NewsLoader } from "./components/honey-news/news/NewsLoader";
 import { NewsOptions } from "./components/honey-news/news/NewsOptions";
 import { StatisticOptions } from "./components/honey-news/statistic/StatisticOptions";
 export namespace Components {
     interface HoneyNews {
+        /**
+          * Feeds Administration Komponente
+         */
+        "feedAdministration": HTMLHoneyNewsFeedsElement;
+        /**
+          * News reader Komponente
+         */
+        "newsFeed": HTMLHoneyNewsFeedElement;
         /**
           * enable console logging
          */
         "verbose": boolean;
     }
     interface HoneyNewsFeed {
+        /**
+          * Hilfsklasse zum Laden der Daten
+         */
+        "feedLoader": NewsLoader;
         /**
           * Update speaker options
           * @param options : NewsOptions plain object to set the options
@@ -26,6 +39,10 @@ export namespace Components {
         "verbose": boolean;
     }
     interface HoneyNewsFeeds {
+        /**
+          * Hilfsklasse zum Laden der Daten
+         */
+        "feedLoader": NewsLoader;
     }
     interface HoneyNewsHeader {
     }
@@ -83,17 +100,33 @@ declare global {
 declare namespace LocalJSX {
     interface HoneyNews {
         /**
+          * Feeds Administration Komponente
+         */
+        "feedAdministration"?: HTMLHoneyNewsFeedsElement;
+        /**
+          * News reader Komponente
+         */
+        "newsFeed"?: HTMLHoneyNewsFeedElement;
+        /**
           * enable console logging
          */
         "verbose"?: boolean;
     }
     interface HoneyNewsFeed {
         /**
+          * Hilfsklasse zum Laden der Daten
+         */
+        "feedLoader"?: NewsLoader;
+        /**
           * enable console logging
          */
         "verbose"?: boolean;
     }
     interface HoneyNewsFeeds {
+        /**
+          * Hilfsklasse zum Laden der Daten
+         */
+        "feedLoader"?: NewsLoader;
     }
     interface HoneyNewsHeader {
     }
