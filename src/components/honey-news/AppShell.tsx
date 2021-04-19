@@ -2,9 +2,10 @@ import {Component, Element, h, Host, Prop, State, Watch} from "@stencil/core";
 import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {Subscription} from "rxjs";
-import {addRoute, setRouterSlotElement} from "./routing/SimpleRouter";
+import {router} from "./routing/SimpleRouter";
 import {NewsLoader} from "./news/NewsLoader";
 import {News} from "./news/News";
+import {About} from "./snippets/About";
 
 @Component({
   tag: "honey-news",
@@ -46,6 +47,9 @@ export class AppShell {
   taborder: string = "0";
 
 
+  /**
+   * Routing
+   */
   routerSubscription: Subscription = null;
   @State() route: string = "";
 
@@ -110,6 +114,15 @@ export class AppShell {
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
+    this.routerSubscription = router.getRouteListener().subscribe((route: string) => {
+        this.route = route;
+      },
+      (error) => {
+        console.error(error);
+      },
+      () => {
+        console.info("Router Subject' complete");
+      });
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
   }
@@ -156,12 +169,12 @@ export class AppShell {
   public render() {
     Logger.debugMessage('##RENDER##');
 
-    addRoute("", "<h1>Root empty</h1>");
-    addRoute("/", "<h1>Root</h1>");
-    addRoute("/news", "<h1>News</h1>");
-    addRoute("/feeds", "<h1>Feeds</h1>");
-    addRoute("/statistic", "<h1>Statistik</h1>");
-    addRoute("/about", "<h1>About</h1>");
+    // addRoute("", "<h1>Root empty</h1>");
+    // addRoute("/", "<h1>Root</h1>");
+    // addRoute("/news", "<h1>News</h1>");
+    // addRoute("/feeds", "<h1>Feeds</h1>");
+    // addRoute("/statistic", "<h1>Statistik</h1>");
+    // addRoute("/about", "<h1>About</h1>");
 
 
     return (
@@ -180,7 +193,17 @@ export class AppShell {
           <div class="sm-2 col background-primary">Route: {window.location.pathname}</div>
         </div>
 
-        <div ref={(el) => setRouterSlotElement(el)}/>
+        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed ref={(el) => {
+          // @ts-ignore
+          this.newsFeed = el as HTMLHoneyNewsFeedElement
+        }}/> : null}
+        {this.route === "/feeds" ? <honey-news-feeds ref={(el) => {
+          // @ts-ignore
+          this.feedAdministration = el as HTMLHoneyNewsFeedsElement
+        }
+        }/> : null}
+        {this.route === "/statistic" ? <honey-news-statistic/> : null}
+        {this.route === "/about" ? <About/> : null}
 
       </Host>
     );

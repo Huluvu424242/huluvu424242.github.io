@@ -11,10 +11,12 @@ class SimpleRouter {
   constructor() {
     this.routes = new Map();
     window.onpopstate = () => {
-      const route: string = this.routes.get(window.location.pathname);
+      // push route name
+      const route: string = window.location.pathname;
       this.route.next(route);
       if (this.slot) {
-        this.slot.innerHTML = route;
+        // push route context
+        this.slot.innerHTML = this.routes.get(route);
       }
     }
   }
@@ -24,13 +26,17 @@ class SimpleRouter {
   }
 
   addRouteToSlot(route: string, content: string) {
+    // assign context to route
     this.routes.set(route, content);
   }
 
   public navigateToRoute(route: string) {
+    // push route name to browser history
     window.history.pushState({}, route, window.location.origin + route);
+    // push route name
     this.route.next(route);
     if (this.slot) {
+      // push route context
       this.slot.innerHTML = this.routes.get(route);
     }
   }
