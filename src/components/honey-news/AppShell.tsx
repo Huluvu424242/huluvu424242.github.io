@@ -3,7 +3,7 @@ import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {About} from "./snippets/About";
 import {Subscription} from "rxjs";
-import {listenRouteChanges} from "./routing/NoneRouter";
+import {addRoute, setRouterSlotElement} from "./routing/Router";
 import {NewsLoader} from "./news/NewsLoader";
 import {News} from "./news/News";
 
@@ -19,7 +19,6 @@ export class AppShell {
    * Host Element
    */
   @Element() hostElement: HTMLElement;
-
 
 
   /**
@@ -68,19 +67,20 @@ export class AppShell {
   /**
    * Shared State of AppShell
    */
-  feedLoader:NewsLoader = new NewsLoader([]);
+  feedLoader: NewsLoader = new NewsLoader([]);
 
 
   /**
    * News reader Komponente
    */
     // @ts-ignore
-  @Prop({mutable:true}) newsFeed: HTMLHoneyNewsFeedElement;
+  @Prop({mutable: true}) newsFeed: HTMLHoneyNewsFeedElement;
 
   @Watch("newsFeed")
-  newsWatcher(newValue: HTMLHoneyNewsFeedElement, oldValue: HTMLHoneyNewsFeedElement){
-    if(!oldValue && newValue){
-      if(this.newsFeed) {
+  newsWatcher(newValue: HTMLHoneyNewsFeedElement, oldValue: HTMLHoneyNewsFeedElement) {
+    oldValue = oldValue;
+    if (newValue) {
+      if (this.newsFeed) {
         this.newsFeed.feedLoader = this.feedLoader;
       }
     }
@@ -91,12 +91,13 @@ export class AppShell {
    * Feeds Administration Komponente
    */
     // @ts-ignore
-  @Prop({mutable:true}) feedAdministration: HTMLHoneyNewsFeedsElement;
+  @Prop({mutable: true}) feedAdministration: HTMLHoneyNewsFeedsElement;
 
   @Watch("newsFeed")
-  feedWatcher(newValue: News, oldValue: News){
-    if(!oldValue && newValue){
-      if(this.feedAdministration) {
+  feedWatcher(newValue: News, oldValue: News) {
+    oldValue = oldValue;
+    if (newValue) {
+      if (this.feedAdministration) {
         this.feedAdministration.feedLoader = this.feedLoader;
       }
     }
@@ -110,15 +111,6 @@ export class AppShell {
     this.createTitleText = !this.hostElement.title;
     this.createAriaLabel = !this.hostElement["aria-label"];
     this.taborder = this.hostElement.getAttribute("tabindex") ? (this.hostElement.tabIndex + "") : "0";
-    this.routerSubscription = listenRouteChanges().subscribe((route: string) => {
-        this.route = route;
-      },
-      (error) => {
-        console.error(error);
-      },
-      () => {
-        console.info("Router Subject' complete");
-      });
     // Properties auswerten
     Logger.toggleLogging(this.verbose);
   }
@@ -162,9 +154,25 @@ export class AppShell {
   }
 
 
-
   public render() {
     Logger.debugMessage('##RENDER##');
+
+    addRoute("/", <honey-news-feed ref={(el) => {
+      // @ts-ignore
+      this.newsFeed = el as HTMLHoneyNewsFeedElement
+    }}/>);
+    addRoute("/news", <honey-news-feed ref={(el) => {
+      // @ts-ignore
+      this.newsFeed = el as HTMLHoneyNewsFeedElement
+    }}/>);
+    addRoute("/feeds", <honey-news-feeds ref={(el) => {
+      // @ts-ignore
+      this.feedAdministration = el as HTMLHoneyNewsFeedsElement
+    }}/>);
+    addRoute("/statistic", <honey-news-statistic/>);
+    addRoute("/about", <About/>);
+
+
     return (
       <Host
         title={this.getTitleText()}
@@ -181,16 +189,7 @@ export class AppShell {
           <div class="sm-2 col background-primary">Route: {this.route}</div>
         </div>
 
-        {!this.route || this.route === "/" || this.route === "/news" ? <honey-news-feed ref={(el)=> {
-          // @ts-ignore
-          this.newsFeed = el as HTMLHoneyNewsFeedElement
-        }}/> : null}
-        {this.route === "/feeds" ? <honey-news-feeds ref={(el)=> {
-          // @ts-ignore
-          this.newsFeed = el as HTMLHoneyNewsFeedElement}
-        }/> : null}
-        {this.route === "/statistic" ? <honey-news-statistic/> : null}
-        {this.route === "/about" ? <About/> : null}
+        <div ref={(el) => setRouterSlotElement(el)}/>
 
       </Host>
     );
