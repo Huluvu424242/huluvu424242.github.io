@@ -2,7 +2,7 @@ import {Component, Element, h, Host, Prop, State, Watch} from "@stencil/core";
 import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {Subscription} from "rxjs";
-import {addRoute, setRouterSlotElement} from "./routing/Router";
+import {addRoute, setRouterSlotElement} from "./routing/SimpleRouter";
 import {NewsLoader} from "./news/NewsLoader";
 import {News} from "./news/News";
 
@@ -156,6 +156,7 @@ export class AppShell {
   public render() {
     Logger.debugMessage('##RENDER##');
 
+    addRoute("", "<h1>Root empty</h1>");
     addRoute("/", "<h1>Root</h1>");
     addRoute("/news", "<h1>News</h1>");
     addRoute("/feeds", "<h1>Feeds</h1>");
