@@ -96,7 +96,7 @@ export class AppShell {
     // @ts-ignore
   @Prop({mutable: true}) feedAdministration: HTMLHoneyNewsFeedsElement;
 
-  @Watch("newsFeed")
+  @Watch("feedAdministration")
   feedWatcher(newValue: News, oldValue: News) {
     oldValue = oldValue;
     if (newValue) {
