@@ -1,6 +1,6 @@
 import {BehaviorSubject, Subject} from "rxjs";
 
-class Router {
+class NoneRouter {
 
   protected route: Subject<string> = new BehaviorSubject<string>("/");
 
@@ -19,7 +19,7 @@ class Router {
 
 }
 
-export const router: Router = new Router();
+export const router: NoneRouter = new NoneRouter();
 let internalRoute: string;
 const routerSubscription = router.getSubject().subscribe((route: string) => {
     internalRoute = route;

@@ -3,7 +3,7 @@ import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
 import {About} from "./snippets/About";
 import {Subscription} from "rxjs";
-import {listenRouteChanges} from "./routing/Router";
+import {listenRouteChanges} from "./routing/NoneRouter";
 import {NewsLoader} from "./news/NewsLoader";
 import {News} from "./news/News";
 
@@ -161,16 +161,7 @@ export class AppShell {
     return hostClass;
   }
 
-  protected getBody(): string {
-    switch (window.location.pathname) {
-      case "/statistic":
-        return <honey-news-statistic/>;
-      case "/feeds":
-        return <honey-news-feeds/>;
-      default:
-        return <honey-news-feed/>;
-    }
-  }
+
 
   public render() {
     Logger.debugMessage('##RENDER##');

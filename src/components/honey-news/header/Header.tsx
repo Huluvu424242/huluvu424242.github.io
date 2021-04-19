@@ -1,5 +1,5 @@
 import {Component, Element, h, Host, State} from '@stencil/core';
-import {href, listenRouteChanges} from "../routing/Router";
+import {href, listenRouteChanges} from "../routing/NoneRouter";
 import {Disclaimer} from "../snippets/Disclaimer";
 import {Subscription} from "rxjs";
 
