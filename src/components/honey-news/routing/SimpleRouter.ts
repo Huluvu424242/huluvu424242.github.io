@@ -6,18 +6,28 @@ class SimpleRouter {
 
   protected route: Subject<string> = new ReplaySubject<string>();
 
+  protected routenprefix: string;
+
   protected slot: HTMLElement;
 
   constructor() {
+    this.routenprefix = "";
     this.routes = new Map();
     window.onpopstate = () => {
       // push route name
       const route: string = window.location.pathname;
-      this.route.next(route);
+
+      this.route.next(route.replace(this.routenprefix, ""));
       if (this.slot) {
         // push route context
         this.slot.innerHTML = this.routes.get(route);
       }
+    }
+  }
+
+  setRoutenPrefix(routenprefix: string) {
+    if (routenprefix && routenprefix !== "/") {
+      this.routenprefix = routenprefix;
     }
   }
 
@@ -32,7 +42,7 @@ class SimpleRouter {
 
   public navigateToRoute(route: string) {
     // push route name to browser history
-    window.history.pushState({}, route, window.location.origin + route);
+    window.history.pushState({}, route, window.location.origin + this.routenprefix + route);
     // push route name
     this.route.next(route);
     if (this.slot) {

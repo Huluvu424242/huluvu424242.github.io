@@ -108,6 +108,8 @@ export class AppShell {
 
 
   public connectedCallback() {
+    // external objects initialisieren
+    router.setRoutenPrefix(window.location.pathname);
     // States initialisieren
     this.ident = this.hostElement.id ? this.hostElement.id : Math.random().toString(36).substring(7);
     this.initialHostClass = this.hostElement.getAttribute("class") || null;
