@@ -1,7 +1,6 @@
 import {Component, Element, h, Host, Prop, State, Watch} from "@stencil/core";
 import {Logger} from "../../shared/logger";
 import {AppShellOptions} from "./AppShellOptions";
-import {About} from "./snippets/About";
 import {Subscription} from "rxjs";
 import {addRoute, setRouterSlotElement} from "./routing/Router";
 import {NewsLoader} from "./news/NewsLoader";
@@ -157,20 +156,11 @@ export class AppShell {
   public render() {
     Logger.debugMessage('##RENDER##');
 
-    addRoute("/", <honey-news-feed ref={(el) => {
-      // @ts-ignore
-      this.newsFeed = el as HTMLHoneyNewsFeedElement
-    }}/>);
-    addRoute("/news", <honey-news-feed ref={(el) => {
-      // @ts-ignore
-      this.newsFeed = el as HTMLHoneyNewsFeedElement
-    }}/>);
-    addRoute("/feeds", <honey-news-feeds ref={(el) => {
-      // @ts-ignore
-      this.feedAdministration = el as HTMLHoneyNewsFeedsElement
-    }}/>);
-    addRoute("/statistic", <honey-news-statistic/>);
-    addRoute("/about", <About/>);
+    addRoute("/", "<h1>Root</h1>");
+    addRoute("/news", "<h1>News</h1>");
+    addRoute("/feeds", "<h1>Feeds</h1>");
+    addRoute("/statistic", "<h1>Statistik</h1>");
+    addRoute("/about", "<h1>About</h1>");
 
 
     return (
@@ -186,7 +176,7 @@ export class AppShell {
         <honey-news-header/>
 
         <div class="row flex-left">
-          <div class="sm-2 col background-primary">Route: {this.route}</div>
+          <div class="sm-2 col background-primary">Route: {window.location.pathname}</div>
         </div>
 
         <div ref={(el) => setRouterSlotElement(el)}/>

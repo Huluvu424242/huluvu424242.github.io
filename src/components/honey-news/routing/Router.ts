@@ -6,6 +6,11 @@ class Router {
 
   constructor() {
     this.routes = new Map();
+    window.onpopstate = () => {
+      if(this.slot) {
+        this.slot.innerHTML = this.routes.get(window.location.pathname);
+      }
+    }
   }
 
   setSlotElement(slot: HTMLElement) {
@@ -17,7 +22,7 @@ class Router {
   }
 
   public navigateTo(route: string) {
-    history.pushState({}, route, window.location.origin + route);
+    window.history.pushState({}, route, window.location.origin + route);
     this.slot.innerHTML = this.routes.get(route);
   }
 
